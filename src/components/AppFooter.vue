@@ -146,6 +146,8 @@ const handleSubmit = () => {
     padding: 0;
     transition: 0.2s;
     position: relative;
+    justify-self: end;
+    min-inline-size: 288px;
 
     &:has(input:focus) {
       border-block-end-color: $color-dark;
@@ -192,6 +194,7 @@ const handleSubmit = () => {
     column-gap: 30px;
     list-style: none;
     align-items: center;
+    justify-self: end;
 
     &-text {
       display: none;
@@ -220,6 +223,14 @@ const handleSubmit = () => {
         "socials"
         "copyright";
       row-gap: 50px;
+    }
+
+    &__form {
+      justify-self: start;
+    }
+
+    &__soc1als {
+      justify-self: start;
     }
   }
 
