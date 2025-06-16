@@ -4,114 +4,130 @@
       <BaseInput
         placeholder="Search"
         class="shop-filters__search-input"
-        v-model="filters.search"/>
-        <button class="shop-filters__search-button" @click="applyFilters"><IconSearch/></button>
+        v-model="filters.search"
+      />
+      <button class="shop-filters__search-button" @click="applyFilters">
+        <IconSearch />
+      </button>
     </div>
 
     <div class="shop-filters__container">
       <select class="shop-filters__select" v-model="filters.category">
         <option value="">Category</option>
-        <option v-for="category in categories" :key="category" :value="category">
+        <option
+          v-for="category in categories"
+          :key="category"
+          :value="category"
+        >
           {{ category }}
         </option>
       </select>
-  
+
       <select class="shop-filters__select" v-model="filters.sortBy">
         <option value="">Sort By</option>
         <option value="price-asc">Price: Low to High</option>
         <option value="price-desc">Price: High to Low</option>
         <option value="name-asc">Name: A-Z</option>
       </select>
-  
-      <RangeSlider 
+
+      <RangeSlider
         v-model="filters.priceRange"
         :min="0"
         :max="200"
         :step="1"
         @apply="applyFilters"
       />
-  
+
       <label class="shop-filters__toggle">
         On sale
         <IosSwitch v-model="filters.onSale" />
       </label>
-  
+
       <label class="shop-filters__toggle">
         In stock
         <IosSwitch v-model="filters.inStock" />
       </label>
     </div>
-
   </aside>
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, watch, onMounted } from 'vue'
-import IconSearch from '@/components/icons/IconSearch.vue'
-import BaseInput from '@/components/ui/BaseInput.vue'
-import RangeSlider from './RangeSlider.vue'
-import type { Filters } from '@/types/Filters'
-import { useRoute, useRouter } from 'vue-router'
-import IosSwitch from './IosSwitch.vue'
-import { useProductsStore } from '@/stores/useProductsStore'
+import { ref, defineEmits, watch, onMounted } from "vue";
+import IconSearch from "@/components/icons/IconSearch.vue";
+import BaseInput from "@/components/ui/BaseInput.vue";
+import RangeSlider from "./RangeSlider.vue";
+import type { Filters } from "@/types/Filters";
+import { useRoute, useRouter } from "vue-router";
+import IosSwitch from "./IosSwitch.vue";
+import { useProductsStore } from "@/stores/useProductsStore";
 
-const route = useRoute()
-const router = useRouter()
-const emit = defineEmits(['update:filters'])
-const store = useProductsStore()
+const route = useRoute();
+const router = useRouter();
+const emit = defineEmits(["update:filters"]);
+const store = useProductsStore();
 
 const filters = ref<Filters>({
-  search: '',
-  category: '',
-  sortBy: '',
+  search: "",
+  category: "",
+  sortBy: "",
   priceRange: [0, 200],
   onSale: false,
   inStock: false,
-})
+});
 
-const categories = ['jewelery', 'electronics', 'clothing']
+const categories = ["jewelery", "electronics", "clothing"];
 
 onMounted(() => {
-  const query = route.query
+  const query = route.query;
 
   filters.value = {
-    search: (query.search as string) || '',
-    category: (query.category as string) || '',
-    sortBy: (query.sortBy as string) || '',
+    search: (query.search as string) || "",
+    category: (query.category as string) || "",
+    sortBy: (query.sortBy as string) || "",
     priceRange: query.priceRange
-      ? (query.priceRange as string).split(',').map(Number) as [number, number]
+      ? ((query.priceRange as string).split(",").map(Number) as [
+          number,
+          number,
+        ])
       : [0, 200],
-    onSale: query.onSale === 'true',
-    inStock: query.inStock === 'true',
-  }
+    onSale: query.onSale === "true",
+    inStock: query.inStock === "true",
+  };
 
   if (filters.value.category) {
-    fetchCategory(filters.value.category)
+    fetchCategory(filters.value.category);
   } else {
-    store.fetchAllProducts()
+    store.fetchAllProducts();
   }
 
-  applyFilters()
-})
+  applyFilters();
+});
 
 //Делаем запрос при выборе категории
-watch(() => filters.value.category, (newCategory) => {
-  if (newCategory) {
-    fetchCategory(newCategory)
-  } else {
-    store.fetchAllProducts()
-  }
-  applyFilters()
-})
+watch(
+  () => filters.value.category,
+  (newCategory) => {
+    if (newCategory) {
+      fetchCategory(newCategory);
+    } else {
+      store.fetchAllProducts();
+    }
+    applyFilters();
+  },
+);
 
 //Следим за локальными фильтрами
-watch(filters, () => {
-  updateQuery()
-  applyFilters()
-}, { deep: true })
+watch(
+  filters,
+  () => {
+    updateQuery();
+    applyFilters();
+  },
+  { deep: true },
+);
 
 async function fetchCategory(category: string) {
-  await store.fetchProductsByCategory(category)
+  await store.fetchProductsByCategory(category);
 }
 
 //Обновление query строки
@@ -121,20 +137,19 @@ function updateQuery() {
     search: filters.value.search || undefined,
     category: filters.value.category || undefined,
     sortBy: filters.value.sortBy || undefined,
-    priceRange: filters.value.priceRange.join(','),
-    onSale: filters.value.onSale ? 'true' : undefined,
-    inStock: filters.value.inStock ? 'true' : undefined,
-  }
+    priceRange: filters.value.priceRange.join(","),
+    onSale: filters.value.onSale ? "true" : undefined,
+    inStock: filters.value.inStock ? "true" : undefined,
+  };
 
-  router.replace({ query })
+  router.replace({ query });
 }
 
 // Передаём наружу все фильтры
 function applyFilters() {
-  emit('update:filters', { ...filters.value })
+  emit("update:filters", { ...filters.value });
 }
 </script>
-
 
 <style scoped lang="scss">
 .shop-filters {
@@ -154,25 +169,25 @@ function applyFilters() {
       width: 100%;
       padding-inline-end: 2rem;
     }
-  
+
     &-button {
       background: transparent;
       border: none;
       transition: 0.3s;
       cursor: pointer;
-  
+
       &:hover {
         opacity: 0.5;
       }
     }
   }
-  
+
   &__container {
     display: flex;
     flex-direction: column;
     gap: 39px;
   }
-  
+
   &__select {
     padding: 12px 16px;
     border: 1px solid $color-ligth-gray;
@@ -180,7 +195,7 @@ function applyFilters() {
     font-size: 14px;
     cursor: pointer;
   }
-  
+
   &__toggle {
     display: flex;
     justify-content: space-between;

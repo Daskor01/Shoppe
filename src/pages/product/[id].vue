@@ -52,42 +52,48 @@
   </section>
 </template>
 
-
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
-import { useCartStore } from '~/stores/useCartStore'
-import { useFavoritesStore } from '~/stores/useFavoriteStore'
+import { useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
+import { useCartStore } from "~/stores/useCartStore";
+import { useFavoritesStore } from "~/stores/useFavoriteStore";
 
-const route = useRoute()
-const cartStore = useCartStore()
-const favoritesStore = useFavoritesStore()
+const route = useRoute();
+const cartStore = useCartStore();
+const favoritesStore = useFavoritesStore();
 
-const product = ref<any>(null)
-const quantity = ref(1)
-const activeIndex = ref(0)
-const productImages = ref<string[]>([])
+const product = ref<any>(null);
+const quantity = ref(1);
+const activeIndex = ref(0);
+const productImages = ref<string[]>([]);
 
-const increase = () => quantity.value++
-const decrease = () => quantity.value = Math.max(1, quantity.value - 1)
+const increase = () => quantity.value++;
+const decrease = () => (quantity.value = Math.max(1, quantity.value - 1));
 
 const addToCart = () => {
-  cartStore.addToCart(product.value)
-}
+  cartStore.addToCart(product.value);
+};
 
 const toggleFavorite = () => {
-  favoritesStore.toggle(product.value)
-}
+  favoritesStore.toggle(product.value);
+};
 
 onMounted(async () => {
-  const res = await fetch(`https://fakestoreapi.com/products/${route.params.id}`)
-  product.value = await res.json()
-  productImages.value = [product.value.image, product.value.image, product.value.image, product.value.image]
-})
+  const res = await fetch(
+    `https://fakestoreapi.com/products/${route.params.id}`,
+  );
+  product.value = await res.json();
+  productImages.value = [
+    product.value.image,
+    product.value.image,
+    product.value.image,
+    product.value.image,
+  ];
+});
 </script>
 
 <style scoped lang="scss">
-  .product-page {
+.product-page {
   display: flex;
   gap: 2rem;
   margin-block-start: 2rem;

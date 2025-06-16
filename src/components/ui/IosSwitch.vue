@@ -16,8 +16,8 @@ defineProps({
     type: Boolean,
     required: true,
   },
-})
-defineEmits(['update:modelValue'])
+});
+defineEmits(["update:modelValue"]);
 </script>
 
 <style lang="scss" scoped>

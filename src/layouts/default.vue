@@ -11,7 +11,6 @@
 @use "sass:map";
 
 .container {
-
   inline-size: calc(100% - 240px);
   margin: 0 auto;
   max-inline-size: 1680px;
@@ -21,7 +20,7 @@
     max-inline-size: 1248px;
     padding: 0 96px;
   }
-  
+
   @media (max-width: $breakpoints-xl) {
     max-inline-size: 936px;
     padding: 0 36px;
