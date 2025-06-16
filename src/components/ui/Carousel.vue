@@ -62,6 +62,7 @@ const images = data;
   margin: auto;
 
   &-pagination-bullet {
+    margin-block-end: 20px !important;
     background: $color-light;
     opacity: 1;
   }
@@ -73,6 +74,7 @@ const images = data;
 
   @media (max-width: $breakpoints-s) {
     &-pagination-bullet {
+      margin-block-end: 8px !important;
       width: 6px;
       height: 6px;
     }

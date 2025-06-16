@@ -1,6 +1,8 @@
+
 <template>
 <<<<<<< Updated upstream
   <AppCarousel />
+  <ProductList />
 </template>
 
 <style scoped lang="scss">

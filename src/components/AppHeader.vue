@@ -7,7 +7,7 @@
 
       <div class="header__nav-container">
         <nav class="header__nav">
-          <NuxtLink to="/" class="header__link">Shop</NuxtLink>
+          <NuxtLink to="/Shop" class="header__link">Shop</NuxtLink>
           <NuxtLink to="/" class="header__link">Blog</NuxtLink>
           <NuxtLink to="/" class="header__link">Our Story</NuxtLink>
         </nav>
@@ -18,9 +18,9 @@
           <button type="button" class="header__icons-button">
             <IconSearch />
           </button>
-          <button type="button" class="header__icons-button">
+          <NuxtLink to="/Cart" class="header__icons-button">
             <IconCart />
-          </button>
+          </NuxtLink>
           <button type="button" class="header__icons-button">
             <IconUser />
           </button>
@@ -42,7 +42,7 @@
       <SearchInput />
       <nav class="header__mobile-nav">
         <NuxtLink to="/" class="header__mobile-link">Home</NuxtLink>
-        <NuxtLink to="/" class="header__mobile-link">Shop</NuxtLink>
+        <NuxtLink to="/Shop" class="header__mobile-link">Shop</NuxtLink>
         <NuxtLink to="/" class="header__mobile-link">About</NuxtLink>
         <NuxtLink to="/" class="header__mobile-link">Blog</NuxtLink>
         <NuxtLink to="/" class="header__mobile-link">Help</NuxtLink>

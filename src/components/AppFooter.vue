@@ -103,7 +103,7 @@ const handleSubmit = () => {
 
 .footer {
   inline-size: 100%;
-  padding-block-start: 2rem;
+  padding-block: 12.5rem 2rem;
 
   &__container {
     display: grid;
