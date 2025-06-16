@@ -5,24 +5,28 @@
       <NuxtLink to="/Shop" class="latest-products__link">View All</NuxtLink>
     </div>
     <div class="latest-products__grid">
-      <ProductCard v-for="item in store.products.slice(0, 6)" :key="item.id" :product="item" />
+      <ProductCard
+        v-for="item in store.products.slice(0, 6)"
+        :key="item.id"
+        :product="item"
+      />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { useProductsStore } from '@/stores/useProductsStore'
-import ProductCard from '@/components/ui/ProductCard.vue'
+import { useProductsStore } from "@/stores/useProductsStore";
+import ProductCard from "@/components/ui/ProductCard.vue";
 
-const store = useProductsStore()
+const store = useProductsStore();
 
 onMounted(() => {
-  store.fetchAllProducts()
-})
+  store.fetchAllProducts();
+});
 </script>
 
 <style scoped lang="scss">
-  .latest-products {
+.latest-products {
   &__header {
     display: flex;
     justify-content: space-between;
@@ -53,9 +57,8 @@ onMounted(() => {
     justify-self: center;
     gap: clamp(1rem, 0.2679rem + 3.6607vw, 3.5625rem);
   }
-  
-  @media (max-width: $breakpoints-xl) {
 
+  @media (max-width: $breakpoints-xl) {
     &__link {
       font-size: 15px;
     }

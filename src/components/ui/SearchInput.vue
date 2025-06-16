@@ -1,21 +1,22 @@
 <template>
-  <input type="text" class="search-input" 
-  placeholder="Search" 
-  v-model="query"
+  <input
+    type="text"
+    class="search-input"
+    placeholder="Search"
+    v-model="query"
   />
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits } from "vue";
 
-const query = ref('')
-const emit = defineEmits(['search'])
+const query = ref("");
+const emit = defineEmits(["search"]);
 
 function handleSearch() {
-  emit('search', query.value)
+  emit("search", query.value);
 }
 </script>
-
 
 <style lang="scss" scoped>
 

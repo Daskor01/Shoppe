@@ -13,46 +13,48 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onUnmounted, onMounted } from 'vue'
-import IconClose from '@/components/icons/IconClose.vue'
+import { watch, onUnmounted, onMounted } from "vue";
+import IconClose from "@/components/icons/IconClose.vue";
 
-const props = defineProps<{ modelValue: boolean }>()
-const emit = defineEmits(['update:modelValue'])
+const props = defineProps<{ modelValue: boolean }>();
+const emit = defineEmits(["update:modelValue"]);
 
 function close() {
-  emit('update:modelValue', false)
+  emit("update:modelValue", false);
 }
 
 function disableBodyScroll() {
-  document.body.style.overflow = 'hidden'
+  document.body.style.overflow = "hidden";
 }
 
 function enableBodyScroll() {
-  document.body.style.overflow = ''
+  document.body.style.overflow = "";
 }
 
-watch(() => props.modelValue, (newVal) => {
-  if (newVal) disableBodyScroll()
-  else enableBodyScroll()
-})
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (newVal) disableBodyScroll();
+    else enableBodyScroll();
+  },
+);
 
 onUnmounted(() => {
-  enableBodyScroll()
-  window.removeEventListener('resize', handleResize)
-})
+  enableBodyScroll();
+  window.removeEventListener("resize", handleResize);
+});
 
 //resize обработчик
 function handleResize() {
   if (window.innerWidth >= 1280 && props.modelValue) {
-    close()
+    close();
   }
 }
 
 onMounted(() => {
-  window.addEventListener('resize', handleResize)
-})
+  window.addEventListener("resize", handleResize);
+});
 </script>
-
 
 <style scoped lang="scss">
 .slide-panel {
@@ -112,4 +114,3 @@ onMounted(() => {
   }
 }
 </style>
-

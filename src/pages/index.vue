@@ -1,4 +1,3 @@
-
 <template>
 <<<<<<< Updated upstream
   <AppCarousel />

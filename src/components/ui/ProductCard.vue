@@ -1,12 +1,29 @@
 <template>
   <div class="product-card" @click="handleClick">
-    <div class="product-card__image-wrapper" @mouseenter="hover = true" @mouseleave="hover = false">
-      <img :src="product.image" :alt="product.title" class="product-card__image" />
-      
+    <div
+      class="product-card__image-wrapper"
+      @mouseenter="hover = true"
+      @mouseleave="hover = false"
+    >
+      <img
+        :src="product.image"
+        :alt="product.title"
+        class="product-card__image"
+      />
+
       <div v-if="hover && !isMobile" class="product-card__icons">
-        <button class="product-card__icon-button" @click.stop="addToCart"><IconCart /></button>
-        <NuxtLink class="product-card__icon-link" :to="`/product/${product.id}`" @click.stop><IconEye /></NuxtLink>
-        <button class="product-card__icon-button" @click.stop="toggleFavorite"><IconLike :class="{ active: isFavorite }" /></button>
+        <button class="product-card__icon-button" @click.stop="addToCart">
+          <IconCart />
+        </button>
+        <NuxtLink
+          class="product-card__icon-link"
+          :to="`/product/${product.id}`"
+          @click.stop
+          ><IconEye
+        /></NuxtLink>
+        <button class="product-card__icon-button" @click.stop="toggleFavorite">
+          <IconLike :class="{ active: isFavorite }" />
+        </button>
       </div>
     </div>
     <h3 class="product-card__title">{{ product.title }}</h3>
@@ -15,52 +32,52 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
-import { useRouter } from 'vue-router'
-import { useCartStore } from '@/stores/useCartStore'
-import { useFavoritesStore } from '@/stores/useFavoriteStore'
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { useRouter } from "vue-router";
+import { useCartStore } from "@/stores/useCartStore";
+import { useFavoritesStore } from "@/stores/useFavoriteStore";
 
 const props = defineProps<{
   product: {
-    id: number,
-    title: string,
-    price: number,
-    image: string
-  }
-}>()
+    id: number;
+    title: string;
+    price: number;
+    image: string;
+  };
+}>();
 
-const hover = ref(false)
-const isMobile = ref(false)
-const router = useRouter()
+const hover = ref(false);
+const isMobile = ref(false);
+const router = useRouter();
 
-const cartStore = useCartStore()
-const favoritesStore = useFavoritesStore()
+const cartStore = useCartStore();
+const favoritesStore = useFavoritesStore();
 
 const isFavorite = computed(() =>
-  favoritesStore.favorites.some(p => p.id === props.product.id)
-)
+  favoritesStore.favorites.some((p) => p.id === props.product.id),
+);
 
-const addToCart = () => cartStore.addToCart(props.product)
-const toggleFavorite = () => favoritesStore.toggle(props.product)
+const addToCart = () => cartStore.addToCart(props.product);
+const toggleFavorite = () => favoritesStore.toggle(props.product);
 
 //Отслеживаем ширину экрана
 function handleResize() {
-  isMobile.value = window.innerWidth < 1180
+  isMobile.value = window.innerWidth < 1180;
 }
 
 onMounted(() => {
-  handleResize()
-  window.addEventListener('resize', handleResize)
-})
+  handleResize();
+  window.addEventListener("resize", handleResize);
+});
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', handleResize)
-})
+  window.removeEventListener("resize", handleResize);
+});
 
 // Обработчик клика для мобилки
 function handleClick() {
   if (isMobile.value) {
-    router.push(`/product/${props.product.id}`)
+    router.push(`/product/${props.product.id}`);
   }
 }
 </script>
@@ -79,7 +96,7 @@ function handleClick() {
     position: relative;
 
     &::after {
-      content: '';
+      content: "";
       transition: 0.3s;
     }
 
@@ -124,7 +141,7 @@ function handleClick() {
 
   &__title {
     inline-size: 100%;
-    font-size: clamp(0.875rem, 0.7679rem + 0.5357vw, 1.25rem);    
+    font-size: clamp(0.875rem, 0.7679rem + 0.5357vw, 1.25rem);
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -144,4 +161,3 @@ function handleClick() {
   }
 }
 </style>
-

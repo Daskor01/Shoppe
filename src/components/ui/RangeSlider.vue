@@ -5,25 +5,25 @@
         class="range-slider__range"
         :style="{
           left: ((modelValue[0] - min) / (max - min)) * 100 + '%',
-          width: ((modelValue[1] - modelValue[0]) / (max - min)) * 100 + '%'
+          width: ((modelValue[1] - modelValue[0]) / (max - min)) * 100 + '%',
         }"
       ></div>
-      
+
       <input
-      type="range"
-      :min="min"
-      :max="max"
-      v-model.number="localMin"
-      @input="onMinChange"
-      class="thumb thumb--left"
+        type="range"
+        :min="min"
+        :max="max"
+        v-model.number="localMin"
+        @input="onMinChange"
+        class="thumb thumb--left"
       />
       <input
-      type="range"
-      :min="min"
-      :max="max"
-      v-model.number="localMax"
-      @input="onMaxChange"
-      class="thumb thumb--right"
+        type="range"
+        :min="min"
+        :max="max"
+        v-model.number="localMax"
+        @input="onMaxChange"
+        class="thumb thumb--right"
       />
     </div>
     <div class="range-slider__text-container">
@@ -34,44 +34,44 @@
 </template>
 
 <script setup lang="ts">
-import { watch, defineProps, defineEmits, ref } from 'vue'
+import { watch, defineProps, defineEmits, ref } from "vue";
 
 const props = defineProps<{
-  modelValue: [number, number]
-  min?: number
-  max?: number
-  step?: number
-}>()
+  modelValue: [number, number];
+  min?: number;
+  max?: number;
+  step?: number;
+}>();
 
-const emit = defineEmits(['update:modelValue', 'apply'])
+const emit = defineEmits(["update:modelValue", "apply"]);
 
-const min = props.min ?? 0
-const max = props.max ?? 1000
-const step = props.step ?? 1
+const min = props.min ?? 0;
+const max = props.max ?? 1000;
+const step = props.step ?? 1;
 
-const localMin = ref(props.modelValue[0])
-const localMax = ref(props.modelValue[1])
+const localMin = ref(props.modelValue[0]);
+const localMax = ref(props.modelValue[1]);
 
 watch(
   () => props.modelValue,
   ([newMin, newMax]) => {
-    localMin.value = newMin
-    localMax.value = newMax
-  }
-)
+    localMin.value = newMin;
+    localMax.value = newMax;
+  },
+);
 
 function onMinChange() {
   if (localMin.value >= localMax.value - step) {
-    localMin.value = localMax.value - step
+    localMin.value = localMax.value - step;
   }
-  emit('update:modelValue', [localMin.value, localMax.value])
+  emit("update:modelValue", [localMin.value, localMax.value]);
 }
 
 function onMaxChange() {
   if (localMax.value <= localMin.value + step) {
-    localMax.value = localMin.value + step
+    localMax.value = localMin.value + step;
   }
-  emit('update:modelValue', [localMin.value, localMax.value])
+  emit("update:modelValue", [localMin.value, localMax.value]);
 }
 </script>
 
@@ -110,7 +110,7 @@ function onMaxChange() {
   border-radius: 2px;
 }
 
-input[type='range'] {
+input[type="range"] {
   position: absolute;
   inline-size: 100%;
   block-size: 0;
@@ -120,7 +120,7 @@ input[type='range'] {
   z-index: 2;
 }
 
-input[type='range']::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   pointer-events: all;
   inline-size: 4px;
   block-size: 10px;
