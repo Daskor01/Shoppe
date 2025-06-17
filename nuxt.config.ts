@@ -1,11 +1,5 @@
 export default defineNuxtConfig({
-  srcDir: 'src',
-
-  css: [
-    '~/assets/scss/main.scss',
-    'swiper/css',
-    'swiper/css/pagination'
-  ],
+  css: ['~/assets/scss/main.scss'],
 
   modules: ['@pinia/nuxt'],
 
@@ -18,7 +12,7 @@ export default defineNuxtConfig({
             @use "./assets/scss/mixins" as *;
           `
         }
-      },
+      }
     }
   },
 
