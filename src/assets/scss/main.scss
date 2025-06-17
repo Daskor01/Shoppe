@@ -1,0 +1,15 @@
+@use "./variables" as *;
+@use "./mixins" as *;
+@use "./fonts" as *;
+
+body {
+  background-color: $color-light;
+  font-family: $main-font;
+  margin: 0;
+  padding: 0;
+}
+
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
