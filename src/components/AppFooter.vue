@@ -2,15 +2,24 @@
   <footer class="footer">
     <div class="footer__container">
       <nav class="footer__nav">
-        <NuxtLink to="/" class="footer__link">Contact</NuxtLink>
-        <NuxtLink to="/" class="footer__link">Terms Of Services</NuxtLink>
-        <NuxtLink to="/" class="footer__link">Shipping And Returns</NuxtLink>
+        <NuxtLink
+          :to="link.path"
+          class="footer__link"
+          v-for="link in footerLinks"
+          :key="link.path"
+        >
+          {{ link.name }}
+        </NuxtLink>
       </nav>
 
       <div class="footer__copyright">
         © 2021 Shelly.
-        <NuxtLink to="/" class="footer__link">Terms of use</NuxtLink> and
-        <NuxtLink to="/" class="footer__link">Privacy policy</NuxtLink>
+        <template v-for="(link, index) in copyrightLinks" :key="link.name">
+          <NuxtLink :to="link.path" class="footer__link">
+            {{ link.name }}
+          </NuxtLink>
+          <span v-if="index < copyrightLinks.length - 1"> and </span>
+        </template>
       </div>
 
       <form
@@ -50,14 +59,13 @@
       <div class="footer__soc1als">
         <p class="footer__soc1als-text">Follow us</p>
         <div class="footer__soc1als-separator"></div>
-        <NuxtLink to="/" class="footer__soc1als-link">
-          <IconFacebook />
-        </NuxtLink>
-        <NuxtLink to="/" class="footer__soc1als-link">
-          <IconInstagram />
-        </NuxtLink>
-        <NuxtLink to="/" class="footer__soc1als-link">
-          <IconTwitter />
+        <NuxtLink
+          :to="link.path"
+          class="footer__soc1als-link"
+          v-for="link in socialLinks"
+          :key="link.name"
+        >
+          <component :is="link.icon" />
         </NuxtLink>
       </div>
     </div>
@@ -65,9 +73,10 @@
 </template>
 
 <script setup lang="ts">
-import BaseInput from "./ui/BaseInput.vue";
+import BaseInput from "@/components/ui/BaseInput.vue";
 import { ref } from "vue";
-import { useFormValidation } from "../composables/useFormValidation";
+import { useFormValidation } from "@/composables/useFormValidation";
+import { copyrightLinks, footerLinks, socialLinks } from "@/config/navigation";
 
 const email = ref("");
 const showErrors = ref(false);
@@ -99,8 +108,6 @@ const handleSubmit = () => {
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/scss/variables";
-
 .footer {
   inline-size: 100%;
   padding-block-start: 2rem;

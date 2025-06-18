@@ -2,11 +2,7 @@
   <input type="text" class="search-input" placeholder="Search" />
 </template>
 
-<script setup></script>
-
 <style lang="scss" scoped>
-@use "../../assets/scss/variables";
-
 .search-input {
   inline-size: calc(100% - 20px);
   border: none;
@@ -17,7 +13,7 @@
 
   &::placeholder {
     padding-inline-start: 18px;
-    background: url("../../assets/icon/icon-search.svg") no-repeat left;
+    background: url("@/assets/icon/icon-search.svg") no-repeat left;
   }
 }
 </style>

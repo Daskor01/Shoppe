@@ -17,8 +17,6 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/scss/variables" as *;
-
 .base-input {
   background-color: transparent;
   border: none;

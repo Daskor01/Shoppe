@@ -34,7 +34,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import { useApi } from "../../composables/useApi";
+import { useApi } from "@/composables/useApi";
 
 interface ImageItem {
   id: string;
@@ -53,8 +53,6 @@ const images = data;
 </script>
 
 <style lang="scss">
-@use "../../assets/scss/variables";
-
 .swiper {
   inline-size: 100%;
   max-inline-size: 1248px;

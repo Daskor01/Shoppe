@@ -1,5 +1,5 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import { validateInput } from "../src/utils/validateInput";
+import { validateInput } from "@/utils/validateInput";
 
 export function useFormValidation(formRef: Ref<HTMLFormElement | null>) {
   const errors = ref<Record<string, string>>({});

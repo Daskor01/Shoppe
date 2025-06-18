@@ -2,7 +2,7 @@
   <header class="header">
     <div class="header__container">
       <NuxtLink to="/" class="header__logo">
-        <img src="../assets/Logo.png" alt="Logo" class="header__logo-image" />
+        <img src="@/assets/Logo.png" alt="Logo" class="header__logo-image" />
       </NuxtLink>
 
       <div class="header__nav-container">
@@ -41,13 +41,14 @@
     <div class="header__mobile-menu" v-if="mobileOpen">
       <SearchInput />
       <nav class="header__mobile-nav">
-        <NuxtLink to="/" class="header__mobile-link">Home</NuxtLink>
-        <NuxtLink to="/" class="header__mobile-link">Shop</NuxtLink>
-        <NuxtLink to="/" class="header__mobile-link">About</NuxtLink>
-        <NuxtLink to="/" class="header__mobile-link">Blog</NuxtLink>
-        <NuxtLink to="/" class="header__mobile-link">Help</NuxtLink>
-        <NuxtLink to="/" class="header__mobile-link">Contact</NuxtLink>
-        <NuxtLink to="/" class="header__mobile-link">Search</NuxtLink>
+        <NuxtLink
+          :to="link.path"
+          class="header__mobile-link"
+          v-for="link in links"
+          :key="link.name"
+        >
+          {{ link.name }}
+        </NuxtLink>
       </nav>
       <div class="header__separator"></div>
       <div class="header__mobile-nav">
@@ -65,8 +66,11 @@
 </template>
 
 <script setup lang="ts">
-import SearchInput from "./ui/SearchInput.vue";
+import SearchInput from "@/components/ui/SearchInput.vue";
 import { watch } from "vue";
+import { navigationLinks } from "@/config/navigation";
+
+const links = navigationLinks;
 
 const mobileOpen = ref(false);
 const toggleMenu = () => {
@@ -81,8 +85,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@use "@/assets/scss/variables";
-
 .header {
   position: sticky;
   inline-size: 100%;
