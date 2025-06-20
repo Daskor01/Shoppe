@@ -1,12 +1,27 @@
 import IconFacebook from "@/components/icons/IconFacebook.vue";
 import IconTwitter from "@/components/icons/IconTwitter.vue";
 import IconInstagram from "@/components/icons/IconInstagram.vue";
+import IconSearch from '@/components/icons/IconSearch.vue';
+import IconCart from '@/components/icons/IconCart.vue';
+import IconUser from '@/components/icons/IconUser.vue';
 
 export interface LinkItem {
   name: string;
   path: string;
   icon?: any;
 }
+
+export const headerLinks = [
+  { name: 'Shop', path: '/Shop' },
+  { name: 'Blog', path: '/' },
+  { name: 'Our Story', path: '/' }
+]
+
+export const headerActions = [
+  { icon: IconSearch, action: 'openSearch' },
+  { icon: IconCart, action: 'openCart' },
+  { icon: IconUser, action: 'openUser' }
+]
 
 export const navigationLinks: LinkItem[] = [
   { name: "Home", path: "/" },

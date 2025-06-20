@@ -1,7 +1,8 @@
 <template>
-  <AppCarousel />
+  <Carousel />
 </template>
 
-<style scoped lang="scss">
-@use "@/assets/scss/variables" as *;
-</style>
+<script setup>
+import Carousel from '@/components/ui/Carousel.vue';
+</script>
+

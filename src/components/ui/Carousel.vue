@@ -53,27 +53,30 @@ const images = data;
 </script>
 
 <style lang="scss">
+
 .swiper {
   inline-size: 100%;
-  max-inline-size: 1248px;
-  max-block-size: 646px;
-  margin: auto;
+  block-size: auto;
 
   &-pagination-bullet {
+    margin: 15px 8px !important;
     background: $color-light;
     opacity: 1;
+
+    @media (max-width: $breakpoints-l) {
+      width: 6px;
+      height: 6px;
+      margin: 10px 5px !important;
+    }
+
+    @media (max-width: $breakpoints-s) {
+      margin: 5px 3px !important;
+    }
   }
 
   &-pagination-bullet-active {
     background: transparent;
     border: 1px solid $color-light;
-  }
-
-  @media (max-width: $breakpoints-s) {
-    &-pagination-bullet {
-      width: 6px;
-      height: 6px;
-    }
   }
 }
 
@@ -94,6 +97,7 @@ const images = data;
 }
 
 .carousel {
+
   &-info {
     position: absolute;
     inset-block-start: 40%;

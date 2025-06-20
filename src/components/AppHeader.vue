@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header class="header" ref="headerRef">
     <div class="header__container">
       <NuxtLink to="/" class="header__logo">
         <img src="@/assets/Logo.png" alt="Logo" class="header__logo-image" />
@@ -7,22 +7,27 @@
 
       <div class="header__nav-container">
         <nav class="header__nav">
-          <NuxtLink to="/" class="header__link">Shop</NuxtLink>
-          <NuxtLink to="/" class="header__link">Blog</NuxtLink>
-          <NuxtLink to="/" class="header__link">Our Story</NuxtLink>
+          <NuxtLink
+            v-for="link in headerLinks"
+            :key="link.name"
+            :to="link.path"
+            class="header__link"
+          >
+            {{ link.name }}
+          </NuxtLink>
         </nav>
 
         <div class="header__divider" />
 
         <div class="header__icons">
-          <button type="button" class="header__icons-button">
-            <IconSearch />
-          </button>
-          <button type="button" class="header__icons-button">
-            <IconCart />
-          </button>
-          <button type="button" class="header__icons-button">
-            <IconUser />
+          <button
+            v-for="(item, index) in headerActions"
+            :key="index"
+            type="button"
+            class="header__icons-button"
+            @click="handleAction(item.action)"
+          >
+            <component :is="item.icon" />
           </button>
         </div>
       </div>
@@ -33,18 +38,23 @@
         </button>
 
         <button type="button" class="header__button" @click="toggleMenu">
-          <IconMenu />
+          <IconMenu v-if="!mobileOpen" />
+          <IconClose v-else />
         </button>
       </div>
     </div>
 
-    <div class="header__mobile-menu" v-if="mobileOpen">
+    <SlidePanel 
+    v-model="mobileOpen" 
+    :top-offset="`${headerHeight}px`"
+    :show-close-button="false"
+    >
       <SearchInput />
       <nav class="header__mobile-nav">
         <NuxtLink
           :to="link.path"
           class="header__mobile-link"
-          v-for="link in links"
+          v-for="link in navigationLinks"
           :key="link.name"
         >
           {{ link.name }}
@@ -61,32 +71,56 @@
           Logout
         </NuxtLink>
       </div>
-    </div>
+    </SlidePanel>
+
   </header>
 </template>
 
 <script setup lang="ts">
 import SearchInput from "@/components/ui/SearchInput.vue";
-import { watch } from "vue";
-import { navigationLinks } from "@/config/navigation";
-
-const links = navigationLinks;
+import { navigationLinks, headerLinks, headerActions } from "@/config/navigation";
+import SlidePanel from "@/components/ui/SlidePanel.vue";
 
 const mobileOpen = ref(false);
 const toggleMenu = () => {
   mobileOpen.value = !mobileOpen.value;
 };
 
+function handleAction(action: string) {
+  switch (action) {
+    case 'openSearch':
+      console.log('Поиск открыт')
+      break
+    case 'openCart':
+      console.log('Корзина открыта')
+      break
+    case 'openUser':
+      console.log('Профиль открыт')
+      break
+  }
+}
+
+//Определяем высоту header
+const headerRef = ref<HTMLElement | null>(null)
+const headerHeight = ref(0)
+
 onMounted(() => {
-  watch(mobileOpen, (isOpen) => {
-    document.body.classList.toggle("no-scroll", isOpen);
-  });
-});
+  const header = document.querySelector('.header')
+  if (header) {
+    const rect = header.getBoundingClientRect()
+    const style = window.getComputedStyle(header)
+
+    const marginTop = parseFloat(style.marginTop)
+
+    headerHeight.value = rect.height + marginTop
+  }
+})
 </script>
 
 <style scoped lang="scss">
 .header {
   position: sticky;
+  z-index: 2000;
   inline-size: 100%;
   margin: 23px auto;
   background-color: transparent;
@@ -137,7 +171,7 @@ onMounted(() => {
 
   &__buttons-container {
     display: flex;
-    gap: 16px;
+    gap: 17px;
   }
 
   &__button {
@@ -150,12 +184,6 @@ onMounted(() => {
     &:hover {
       opacity: 0.5;
     }
-  }
-
-  &__mobile-menu {
-    overflow: auto;
-    inset: 0;
-    background-color: $color-light;
   }
 
   &__mobile-nav {
