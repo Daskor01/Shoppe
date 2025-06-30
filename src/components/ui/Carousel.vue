@@ -28,128 +28,127 @@
 </template>
 
 <script setup lang="ts">
-import { Swiper, SwiperSlide } from "swiper/vue";
-import { Autoplay, Pagination } from "swiper/modules";
+  import { Swiper, SwiperSlide } from 'swiper/vue'
+  import { Autoplay, Pagination } from 'swiper/modules'
 
-import "swiper/css";
-import "swiper/css/pagination";
+  import 'swiper/css'
+  import 'swiper/css/pagination'
 
-import { useApi } from "@/composables/useApi";
+  import { useApi } from '@/composables/useApi'
 
-interface ImageItem {
-  id: string;
-  author: string;
-  download_url: string;
-}
+  interface ImageItem {
+    id: string
+    author: string
+    download_url: string
+  }
 
-const { data, pending, error } = await useApi<ImageItem[]>("/v2/list", {
-  query: {
-    page: 1,
-    limit: 10,
-  },
-});
+  const { data, pending, error } = await useApi<ImageItem[]>('/v2/list', {
+    query: {
+      page: 1,
+      limit: 10,
+    },
+  })
 
-const images = data;
+  const images = data
 </script>
 
 <style lang="scss">
-@use "../../assets/scss/variables";
+  @use '../../assets/scss/variables';
 
-.swiper {
-  inline-size: 100%;
-  max-inline-size: 1248px;
-  max-block-size: 646px;
-  margin: auto;
-
-  &-pagination-bullet {
-    margin-block-end: 20px !important;
-    background: $color-light;
-    opacity: 1;
-  }
-
-  &-pagination-bullet-active {
-    background: transparent;
-    border: 1px solid $color-light;
-  }
-
-  @media (max-width: $breakpoints-s) {
-    &-pagination-bullet {
-      margin-block-end: 8px !important;
-      width: 6px;
-      height: 6px;
-    }
-  }
-}
-
-.slide {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 16px;
-  overflow: hidden;
-
-  img {
+  .swiper {
     inline-size: 100%;
-    block-size: 100%;
-    min-block-size: 354px;
     max-block-size: 646px;
-    object-fit: cover;
-  }
-}
+    margin: auto;
 
-.carousel {
-  &-info {
-    position: absolute;
-    inset-block-start: 40%;
-    inset-inline-start: 40px;
-    color: $color-light;
-    z-index: 2;
-    display: grid;
-    gap: 3rem;
-
-    &__title {
-      font-size: 33px;
-      margin-block-end: 8px;
+    &-pagination-bullet {
+      margin-block-end: 20px !important;
+      background: $color-light;
+      opacity: 1;
     }
 
-    &__subtitle {
-      font-size: 26px;
-      margin-block-end: 16px;
-    }
-
-    &__link {
-      color: $color-light;
-      text-decoration: none;
-      padding: 13px 30px;
+    &-pagination-bullet-active {
+      background: transparent;
       border: 1px solid $color-light;
-      border-radius: 6px;
-      transition: 0.2s;
-      @include flexCenter;
-
-      &:hover {
-        background-color: $color-light;
-        color: $color-dark;
-      }
     }
 
     @media (max-width: $breakpoints-s) {
-      gap: 10px;
-      inset-inline-start: 8px;
-      inset-block-start: 180px;
-
-      &__title {
-        font-size: 20px;
-      }
-
-      &__subtitle {
-        font-size: 14px;
-      }
-
-      &__link {
-        padding: 6px 9px;
-        font-size: 14px;
+      &-pagination-bullet {
+        margin-block-end: 8px !important;
+        width: 6px;
+        height: 6px;
       }
     }
   }
-}
+
+  .slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 16px;
+    overflow: hidden;
+
+    img {
+      inline-size: 100%;
+      block-size: 100%;
+      min-block-size: 354px;
+      max-block-size: 646px;
+      object-fit: cover;
+    }
+  }
+
+  .carousel {
+    &-info {
+      position: absolute;
+      inset-block-start: 40%;
+      inset-inline-start: 40px;
+      color: $color-light;
+      z-index: 2;
+      display: grid;
+      gap: 3rem;
+
+      &__title {
+        font-size: 33px;
+        margin-block-end: 8px;
+      }
+
+      &__subtitle {
+        font-size: 26px;
+        margin-block-end: 16px;
+      }
+
+      &__link {
+        color: $color-light;
+        text-decoration: none;
+        padding: 13px 30px;
+        border: 1px solid $color-light;
+        border-radius: 6px;
+        transition: 0.2s;
+        @include flexCenter;
+
+        &:hover {
+          background-color: $color-light;
+          color: $color-dark;
+        }
+      }
+
+      @media (max-width: $breakpoints-s) {
+        gap: 10px;
+        inset-inline-start: 8px;
+        inset-block-start: 180px;
+
+        &__title {
+          font-size: 20px;
+        }
+
+        &__subtitle {
+          font-size: 14px;
+        }
+
+        &__link {
+          padding: 6px 9px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
 </style>

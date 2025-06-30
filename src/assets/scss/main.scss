@@ -1,6 +1,6 @@
-@use "./variables" as *;
-@use "./mixins" as *;
-@use "./fonts" as *;
+@use './variables' as *;
+@use './mixins' as *;
+@use './fonts' as *;
 
 body {
   background-color: $color-light;

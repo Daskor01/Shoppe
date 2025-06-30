@@ -9,227 +9,169 @@
       </button>
     </div>
 
-    <SlidePanel v-model="showFilters">
-      <h2 class="filter-mobile__title">Filters</h2>
-      <ShopFilters v-model:filters="filters" />
-    </SlidePanel>
-
-    <div class="filter-container">
-      <div class="filter-desktop" v-if="!isMobile">
-        <h2>Shop The Latest</h2>
-        <ShopFilters v-model:filters="filters" />
+    <div class="filter-container" v-else>
+      <div class="filter-desktop">
+        <h2 class="filter-desktop__title">Shop The Latest</h2>
+        <ShopFilters v-model:filters="filters" :categories="categories" />
       </div>
     </div>
 
+    <SlidePanel v-model="showFilters">
+      <h2 class="filter-mobile__title">Filters</h2>
+      <ShopFilters v-model:filters="filters" :categories="categories" />
+    </SlidePanel>
+
     <div class="product-grid">
       <ProductCard
-        v-for="product in visibleProducts"
+        v-for="product in paginatedItems"
         :key="product.id"
         :product="product"
+        class="product-grid__item"
+      />
+      <Pagination
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        class="product-grid__pagination"
+        @update:page="goToPage"
       />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
-import { useProductsStore } from "@/stores/useProductsStore";
-import { useRoute, useRouter } from "vue-router";
-import ProductCard from "@/components/ui/ProductCard.vue";
-import ShopFilters from "@/components/ui/ShopFilters.vue";
-import SlidePanel from "@/components/ui/SlidePanel.vue";
-import SearchInput from "@/components/ui/SearchInput.vue";
+  import { ref, onMounted } from 'vue'
+  import { useRoute } from 'vue-router'
+  import ProductCard from '@/components/ui/ProductCard.vue'
+  import ShopFilters from '@/components/ui/ShopFilters.vue'
+  import SlidePanel from '@/components/ui/SlidePanel.vue'
+  import SearchInput from '@/components/ui/SearchInput.vue'
+  import useShopFilters from '@/composables/useShopFilters'
+  import type { Filters } from '@/types/Filters'
+  import { usePagination } from '@/composables/usePagination'
 
-const store = useProductsStore();
-const route = useRoute();
-const router = useRouter();
+  const route = useRoute()
+  const query = route.query
 
-//Реактивные фильтры
-const filters = ref({
-  search: "",
-  category: "",
-  sortBy: "",
-  priceRange: [0, 200],
-  onSale: false,
-  inStock: false,
-});
+  const filters = ref<Filters>({
+    search: '',
+    category: '',
+    sortBy: '',
+    priceRange: [0, 200],
+    onSale: false,
+    inStock: false,
+  })
 
-//При монтировании читаем query из URL и загружаем товары
-onMounted(() => {
-  syncFiltersWithRoute();
-});
+  const { filteredProducts, categories } = useShopFilters(filters)
 
-//Функция для синхронизации query → filters
-function syncFiltersWithRoute() {
-  const query = route.query;
+  //Инициализируем фильтры из query-параметров при загрузке страницы
+  const initialFilters: Partial<Filters> = Object.fromEntries(
+    Object.entries(query).map(([key, value]) => {
+      if (!value) return [key, '']
+      switch (key) {
+        case 'priceRange':
+          return [key, (value as string).split(',').map(Number)]
+        case 'onSale':
+        case 'inStock':
+          return [key, value === 'true']
+        default:
+          return [key, value]
+      }
+    }),
+  )
 
   filters.value = {
-    search: (query.search as string) || "",
-    category: (query.category as string) || "",
-    sortBy: (query.sortBy as string) || "",
-    priceRange: query.priceRange
-      ? ((query.priceRange as string).split(",").map(Number) as [
-          number,
-          number,
-        ])
-      : [0, 200],
-    onSale: query.onSale === "true",
-    inStock: query.inStock === "true",
-  };
-
-  loadProducts();
-}
-
-//Загружаем продукты в зависимости от выбранной категории
-async function loadProducts() {
-  if (filters.value.category) {
-    await store.fetchProductsByCategory(filters.value.category);
-  } else {
-    await store.fetchAllProducts();
-  }
-}
-
-//Следим за изменениями фильтров и пушим в URL query
-watch(
-  filters,
-  (newFilters) => {
-    const query: Record<string, any> = {
-      search: newFilters.search || undefined,
-      category: newFilters.category || undefined,
-      sortBy: newFilters.sortBy || undefined,
-      priceRange: newFilters.priceRange.join(","),
-      onSale: newFilters.onSale ? "true" : undefined,
-      inStock: newFilters.inStock ? "true" : undefined,
-    };
-
-    router.replace({ query });
-
-    loadProducts();
-  },
-  { deep: true },
-);
-
-//Фильтрация товаров на клиенте
-const filteredProducts = computed(() => {
-  let products = store.products;
-
-  if (filters.value.search) {
-    products = products.filter((product) =>
-      product.title.toLowerCase().includes(filters.value.search.toLowerCase()),
-    );
+    ...filters.value,
+    ...initialFilters,
   }
 
-  products = products.filter(
-    (product) =>
-      product.price >= filters.value.priceRange[0] &&
-      product.price <= filters.value.priceRange[1],
-  );
+  const { currentPage, totalPages, paginatedItems, goToPage } = usePagination(
+    () => filteredProducts.value,
+    6,
+  )
 
-  if (filters.value.onSale) {
-    products = products.filter((product) => product.onSale === true);
-  }
+  //Адаптация под мобильные
+  const showFilters = ref(false)
 
-  if (filters.value.inStock) {
-    products = products.filter((product) => product.stock > 0);
-  }
-
-  switch (filters.value.sortBy) {
-    case "price-asc":
-      products = products.sort((a, b) => a.price - b.price);
-      break;
-    case "price-desc":
-      products = products.sort((a, b) => b.price - a.price);
-      break;
-    case "name-asc":
-      products = products.sort((a, b) => a.title.localeCompare(b.title));
-      break;
-  }
-
-  return products;
-});
-
-//Показываем только 9 товаров
-const visibleProducts = computed(() => filteredProducts.value.slice(0, 9));
-
-//Адаптация под мобильные
-const isMobile = ref(false);
-const showFilters = ref(false);
-
-function handleResize() {
-  isMobile.value = window.innerWidth < 1441;
-}
-
-onMounted(() => {
-  handleResize();
-  window.addEventListener("resize", handleResize);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", handleResize);
-});
+  const { isBelow: isMobile } = useBreakpoint(1441)
 </script>
 
 <style scoped lang="scss">
-.shop {
-  display: flex;
-  gap: 35px;
-  position: relative;
-
-  @media (max-width: $breakpoints-xxl) {
-    justify-content: space-between;
-  }
-
-  @media (max-width: $breakpoints-xl) {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-}
-
-.mobile__container {
-  inline-size: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-self: start;
-}
-
-.filter {
-  &-toggle {
+  .shop {
     display: flex;
-    background: transparent;
-    border: none;
-    color: $color-accent-light;
-    align-items: center;
-    gap: 8px;
-    align-self: self-start;
+    gap: 34px;
+    position: relative;
+    justify-content: space-between;
+
+    @media (max-width: $breakpoints-xl) {
+      display: block;
+      gap: 20px;
+    }
   }
 
-  &-mobile__title {
-    font-family: $secondary-font;
-    font-size: 25px;
-    line-height: 162%;
+  .mobile__container {
+    inline-size: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-self: start;
   }
 
-  &-desktop {
-    position: sticky;
-    inset-block-start: 3rem;
-  }
-}
+  .filter {
+    &-toggle {
+      display: flex;
+      background: transparent;
+      border: none;
+      color: $color-accent-light;
+      align-items: center;
+      gap: 8px;
+      align-self: self-start;
+      cursor: pointer;
+    }
 
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin: 2rem;
-  margin-block-start: 5rem;
+    &-mobile__title {
+      font-family: $secondary-font;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 130%;
+    }
 
-  @media (max-width: $breakpoints-xxl) {
-    grid-template-columns: repeat(2, 1fr);
+    &-desktop {
+      position: sticky;
+      inset-block-start: 3rem;
+
+      &__title {
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 130%;
+      }
+    }
   }
 
-  @media (max-width: $breakpoints-xl) {
-    margin-block-start: 1.5rem;
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 2rem;
+    margin-block-start: 5rem;
+    justify-content: space-between;
+
+    @media (max-width: $breakpoints-xxl) {
+      grid-template-columns: repeat(2, 1fr);
+      margin-inline: 0;
+    }
+
+    @media (max-width: $breakpoints-xl) {
+      margin-block-start: 1.5rem;
+    }
+
+    &__item {
+      justify-self: center;
+    }
+
+    &__pagination {
+      grid-column: 1 / -1;
+      justify-self: center;
+      margin-block-start: 2rem;
+    }
   }
-}
 </style>

@@ -53,136 +53,134 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import { onMounted, ref } from "vue";
-import { useCartStore } from "~/stores/useCartStore";
-import { useFavoritesStore } from "~/stores/useFavoriteStore";
+  import { useRoute } from 'vue-router'
+  import { onMounted, ref } from 'vue'
+  import { useCartStore } from '~/stores/useCartStore'
+  import { useFavoritesStore } from '~/stores/useFavoriteStore'
 
-const route = useRoute();
-const cartStore = useCartStore();
-const favoritesStore = useFavoritesStore();
+  const route = useRoute()
+  const cartStore = useCartStore()
+  const favoritesStore = useFavoritesStore()
 
-const product = ref<any>(null);
-const quantity = ref(1);
-const activeIndex = ref(0);
-const productImages = ref<string[]>([]);
+  const product = ref<any>(null)
+  const quantity = ref(1)
+  const activeIndex = ref(0)
+  const productImages = ref<string[]>([])
 
-const increase = () => quantity.value++;
-const decrease = () => (quantity.value = Math.max(1, quantity.value - 1));
+  const increase = () => quantity.value++
+  const decrease = () => (quantity.value = Math.max(1, quantity.value - 1))
 
-const addToCart = () => {
-  cartStore.addToCart(product.value);
-};
+  const addToCart = () => {
+    cartStore.addToCart(product.value)
+  }
 
-const toggleFavorite = () => {
-  favoritesStore.toggle(product.value);
-};
+  const toggleFavorite = () => {
+    favoritesStore.toggle(product.value)
+  }
 
-onMounted(async () => {
-  const res = await fetch(
-    `https://fakestoreapi.com/products/${route.params.id}`,
-  );
-  product.value = await res.json();
-  productImages.value = [
-    product.value.image,
-    product.value.image,
-    product.value.image,
-    product.value.image,
-  ];
-});
+  onMounted(async () => {
+    const res = await fetch(`https://fakestoreapi.com/products/${route.params.id}`)
+    product.value = await res.json()
+    productImages.value = [
+      product.value.image,
+      product.value.image,
+      product.value.image,
+      product.value.image,
+    ]
+  })
 </script>
 
 <style scoped lang="scss">
-.product-page {
-  display: flex;
-  gap: 2rem;
-  margin-block-start: 2rem;
-
-  &__gallery {
+  .product-page {
     display: flex;
-    gap: 1rem;
-  }
+    gap: 2rem;
+    margin-block-start: 2rem;
 
-  &__thumbnails {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    img {
-      inline-size: 60px;
-      block-size: 60px;
-      object-fit: cover;
-      border: 2px solid transparent;
-      cursor: pointer;
-
-      &.active {
-        border-color: black;
-      }
-    }
-  }
-
-  &__main-image img {
-    inline-size: 400px;
-    object-fit: cover;
-  }
-
-  &__info {
-    flex: 1;
-
-    .product-title {
-      font-size: 24px;
-      margin-block-end: 10px;
-    }
-
-    .product-price {
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    .product-description {
-      margin-block-start: 1rem;
-      line-height: 1.6;
-    }
-
-    .product-actions {
+    &__gallery {
       display: flex;
       gap: 1rem;
-      margin: 1rem 0;
+    }
 
-      .add-to-cart {
-        padding: 0.5rem 1rem;
-        background-color: black;
-        color: white;
-        border: none;
+    &__thumbnails {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      img {
+        inline-size: 60px;
+        block-size: 60px;
+        object-fit: cover;
+        border: 2px solid transparent;
         cursor: pointer;
+
+        &.active {
+          border-color: black;
+        }
       }
     }
 
-    .quantity-selector {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    &__main-image img {
+      inline-size: 400px;
+      object-fit: cover;
+    }
 
-      button {
-        inline-size: 30px;
-        block-size: 30px;
+    &__info {
+      flex: 1;
+
+      .product-title {
+        font-size: 24px;
+        margin-block-end: 10px;
+      }
+
+      .product-price {
+        font-weight: bold;
         font-size: 18px;
       }
-    }
 
-    .product-meta {
-      margin-block-start: 1rem;
-    }
+      .product-description {
+        margin-block-start: 1rem;
+        line-height: 1.6;
+      }
 
-    .product-socials {
-      display: flex;
-      gap: 1rem;
-      margin-block-start: 1rem;
+      .product-actions {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
 
-      svg {
-        cursor: pointer;
+        .add-to-cart {
+          padding: 0.5rem 1rem;
+          background-color: black;
+          color: white;
+          border: none;
+          cursor: pointer;
+        }
+      }
+
+      .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        button {
+          inline-size: 30px;
+          block-size: 30px;
+          font-size: 18px;
+        }
+      }
+
+      .product-meta {
+        margin-block-start: 1rem;
+      }
+
+      .product-socials {
+        display: flex;
+        gap: 1rem;
+        margin-block-start: 1rem;
+
+        svg {
+          cursor: pointer;
+        }
       }
     }
   }
-}
 </style>

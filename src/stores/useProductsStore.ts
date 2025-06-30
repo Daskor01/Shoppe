@@ -1,48 +1,69 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-export const useProductsStore = defineStore("products", () => {
-  const products = ref<any[]>([]);
-  const isLoading = ref(false);
-  const error = ref<string | null>(null);
+export const useProductsStore = defineStore('products', () => {
+  const products = ref<any[]>([])
+  const isLoading = ref(false)
+  const error = ref<string | null>(null)
+  const activePromises = new Map<string, Promise<void>>()
 
-  //Загрузка по категории
-  async function fetchProductsByCategory(category: string) {
-    isLoading.value = true;
-    try {
-      const response = await fetch(
-        `https://fakestoreapi.com/products/category/${category}`,
-      );
-      const data = await response.json();
-      products.value = data;
-    } catch (err) {
-      console.error(err);
-      error.value = "Failed to load products";
-    } finally {
-      isLoading.value = false;
+  const currentCategory = ref<string>('')
+
+  async function fetchData(url: string, key: string) {
+    if (activePromises.has(key)) {
+      return activePromises.get(key)!
     }
+
+    isLoading.value = true
+    error.value = null
+
+    const promise = (async () => {
+      try {
+        const response = await fetch(url)
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
+        const data = await response.json()
+        products.value = data
+      } catch (err: any) {
+        error.value = err.message
+        console.error('API request failed:', err)
+        throw err
+      } finally {
+        activePromises.delete(key)
+        isLoading.value = false
+      }
+    })()
+
+    activePromises.set(key, promise)
+
+    return promise
   }
 
-  //Загрузка всех товаров
-  async function fetchAllProducts() {
-    isLoading.value = true;
-    try {
-      const response = await fetch(`https://fakestoreapi.com/products`);
-      const data = await response.json();
-      products.value = data;
-    } catch (err) {
-      console.error(err);
-      error.value = "Failed to load products";
-    } finally {
-      isLoading.value = false;
+  async function fetchProductsByCategory(category: string) {
+    if (products.value.length && currentCategory.value === category) {
+      // Уже есть данные для этой категории — не делаем запрос
+      return
     }
+    currentCategory.value = category
+    await fetchData(
+      `https://fakestoreapi.com/products/category/${category}`,
+      `category-${category}`,
+    )
+  }
+
+  async function fetchAllProducts() {
+    if (products.value.length && currentCategory.value === '') {
+      return
+    }
+    currentCategory.value = ''
+    await fetchData('https://fakestoreapi.com/products', 'all-products')
   }
 
   return {
     products,
     isLoading,
     error,
+    currentCategory,
     fetchProductsByCategory,
     fetchAllProducts,
-  };
-});
+  }
+})

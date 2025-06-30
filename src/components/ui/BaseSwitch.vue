@@ -1,27 +1,21 @@
 <template>
-  <label class="ios-switch">
+  <label class="switch">
     <input
+      :checked="checked"
       type="checkbox"
-      class="ios-switch__checkbox"
-      :checked="modelValue"
-      @change="$emit('update:modelValue', modelValue)"
+      class="switch__checkbox"
+      @change="checked = !checked"
     />
-    <span class="slider"></span>
+    <span class="switch__slider"></span>
   </label>
 </template>
 
 <script setup lang="ts">
-  defineProps({
-    modelValue: {
-      type: Boolean,
-      required: true,
-    },
-  })
-  defineEmits(['update:modelValue'])
+  const checked = defineModel<boolean>()
 </script>
 
 <style lang="scss" scoped>
-  .ios-switch {
+  .switch {
     position: relative;
     display: inline-block;
     inline-size: 42px;
@@ -32,7 +26,7 @@
       inline-size: 0;
       block-size: 0;
 
-      &:checked + .slider {
+      &:checked + .switch__slider {
         background-color: #4cd964;
 
         &::before {
@@ -41,7 +35,7 @@
       }
     }
 
-    .slider {
+    &__slider {
       position: absolute;
       cursor: pointer;
       background-color: #ccc;

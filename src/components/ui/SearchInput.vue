@@ -1,36 +1,19 @@
 <template>
-  <input
-    type="text"
-    class="search-input"
-    placeholder="Search"
-    v-model="query"
-  />
+  <input type="text" class="search-input" placeholder="Search" />
 </template>
 
-<script setup lang="ts">
-import { ref, defineEmits } from "vue";
-
-const query = ref("");
-const emit = defineEmits(["search"]);
-
-function handleSearch() {
-  emit("search", query.value);
-}
-</script>
-
 <style lang="scss" scoped>
+  .search-input {
+    inline-size: calc(100% - 20px);
+    border: none;
+    background-color: $color-ligth-gray;
+    block-size: 32px;
+    border-radius: 4px;
+    padding: 0 10px;
 
-.search-input {
-  inline-size: calc(100% - 20px);
-  border: none;
-  background-color: $color-ligth-gray;
-  block-size: 32px;
-  border-radius: 4px;
-  padding: 0 10px;
-
-  &::placeholder {
-    padding-inline-start: 18px;
-    background: url("../../assets/icon/icon-search.svg") no-repeat left;
+    &::placeholder {
+      padding-inline-start: 18px;
+      background: url('@/assets/icon/icon-search.svg') no-repeat left;
+    }
   }
-}
 </style>

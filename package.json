@@ -47,4 +47,3 @@
     "*.{js,ts,vue,scss,md,json}": "prettier --write"
   }
 }
-

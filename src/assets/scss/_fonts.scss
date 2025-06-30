@@ -1,19 +1,19 @@
 @font-face {
-  font-family: "DM Sans";
+  font-family: 'DM Sans';
   font-display: swap;
   src:
-    local("DM Sans"),
-    local("DMSans"),
-    url("../fonts/DMSans-Variable.woff2") format("woff2-variations");
+    local('DM Sans'),
+    local('DMSans'),
+    url('../fonts/DMSans-Variable.woff2') format('woff2-variations');
   font-weight: 400 700;
 }
 
 @font-face {
-  font-family: "Allerta Stencil";
+  font-family: 'Allerta Stencil';
   src:
-    local("Allerta Stencil"),
-    local("AllertaStencil"),
-    url("../fonts/AllertaStencil-Regular.woff2") format("woff2");
+    local('Allerta Stencil'),
+    local('AllertaStencil'),
+    url('../fonts/AllertaStencil-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
