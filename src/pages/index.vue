@@ -3,6 +3,5 @@
 </template>
 
 <script setup>
-import Carousel from '@/components/ui/Carousel.vue';
+  import Carousel from '@/components/ui/Carousel.vue'
 </script>
-

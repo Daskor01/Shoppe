@@ -1,10 +1,6 @@
-@use "./variables" as *;
-@use "./mixins" as *;
-@use "./fonts" as *;
-
 body {
-  background-color: $color-light;
-  font-family: $main-font;
+  background-color: vars.$color-light;
+  font-family: vars.$main-font;
   margin: 0;
   padding: 0;
 }

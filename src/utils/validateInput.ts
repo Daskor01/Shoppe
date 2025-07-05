@@ -1,25 +1,15 @@
 export function validateInput(input: HTMLInputElement): string {
-  input.setCustomValidity(""); // Сбросить старую ошибку
+  const validity = input.validity
+  const dataset = input.dataset
 
-  if (input.validity.valueMissing && input.dataset.requiredMessage) {
-    return input.dataset.requiredMessage;
-  }
+  const error =
+    (validity.tooShort && dataset.minLengthMessage) ||
+    (validity.valueMissing && dataset.requiredMessage) ||
+    (validity.typeMismatch && dataset.typeMismatchMessage) ||
+    (validity.patternMismatch && dataset.patternMessage) ||
+    (validity.tooLong && dataset.maxLengthMessage) ||
+    ''
 
-  if (input.validity.typeMismatch && input.dataset.typeMismatchMessage) {
-    return input.dataset.typeMismatchMessage;
-  }
-
-  if (input.validity.patternMismatch && input.dataset.patternMessage) {
-    return input.dataset.patternMessage;
-  }
-
-  if (input.validity.tooShort && input.dataset.minLengthMessage) {
-    return input.dataset.minLengthMessage;
-  }
-
-  if (input.validity.tooLong && input.dataset.maxLengthMessage) {
-    return input.dataset.maxLengthMessage;
-  }
-
-  return "";
+  input.setCustomValidity(error)
+  return error
 }
