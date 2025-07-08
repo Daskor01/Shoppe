@@ -61,7 +61,6 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-auto-rows: auto;
-      gap: clamp(20px, 4vw, 100px);
 
       &-item {
         justify-self: center;

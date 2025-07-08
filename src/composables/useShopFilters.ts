@@ -1,7 +1,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { type Filters } from '@/types/Filters'
-import { useDebounce } from '@/composables/useDebounce'
 import { useProductsStore } from '@/stores/useProductsStore'
+import { ref, watch, computed, onMounted, type Ref } from 'vue'
 
 export default function useShopFilters(filters: Ref<Filters>) {
   const route = useRoute()
@@ -9,11 +9,7 @@ export default function useShopFilters(filters: Ref<Filters>) {
   const store = useProductsStore()
   const categories = ref<string[]>(['jewelery', 'electronics', 'clothing'])
 
-  const applyFiltersDebounced = useDebounce(() => applyFilters(), 400)
-  let isUpdatingFromQuery = false
-
   function initFromQuery() {
-    isUpdatingFromQuery = true
     const query = route.query
 
     const rawPriceRange = query.priceRange as string
@@ -29,8 +25,6 @@ export default function useShopFilters(filters: Ref<Filters>) {
       onSale: query.onSale === 'true',
       inStock: query.inStock === 'true',
     }
-
-    isUpdatingFromQuery = false
   }
 
   async function fetchProducts() {
@@ -56,11 +50,6 @@ export default function useShopFilters(filters: Ref<Filters>) {
     if (filters.value.inStock) query.inStock = 'true'
 
     router.replace({ query })
-  }
-
-  function applyFilters() {
-    updateQuery()
-    fetchProducts()
   }
 
   const filteredProducts = computed(() => {
@@ -105,15 +94,15 @@ export default function useShopFilters(filters: Ref<Filters>) {
     initFromQuery()
     await fetchProducts()
   })
-
+  
   watch(
     filters,
     () => {
-      if (isUpdatingFromQuery) return
-      applyFiltersDebounced()
+      updateQuery()
+      fetchProducts()
     },
-    { deep: true },
-  )
+    { deep: true }
+  )  
 
   return {
     categories,

@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
+  import { ref } from 'vue'
   import { useRoute } from 'vue-router'
   import ProductCard from '@/components/ui/ProductCard.vue'
   import ShopFilters from '@/components/ui/ShopFilters.vue'

@@ -2,27 +2,42 @@
   <input
     :type="type"
     :placeholder="placeholder"
-    :value="modelValue"
+    :value="model"
     class="base-input"
     @input="onInput"
   />
 </template>
 
 <script setup lang="ts">
-  defineProps<{
-    type?: string
-    placeholder?: string
-    modelValue: string
-  }>()
+import { ref, watch } from 'vue'
+import { useDebouncedValue } from '@/composables/useDebouncedValue';
 
-  const emit = defineEmits<{
-    (e: 'update:modelValue', value: string): void
-  }>()
+const model = defineModel<string>()
 
-  function onInput(event: Event) {
-    emit('update:modelValue', (event.target as HTMLInputElement).value)
-  }
+const props = defineProps<{
+  type?: string
+  placeholder?: string
+  debounce?: number
+}>()
+
+const localValue = ref(model.value ?? '')
+
+watch(model, (val) => {
+  localValue.value = val ?? ''
+})
+
+const debounced = useDebouncedValue(localValue, props.debounce ?? 100)
+
+watch(debounced, (val) => {
+  model.value = val
+})
+
+
+function onInput(event: Event) {
+  localValue.value = (event.target as HTMLInputElement).value
+}
 </script>
+
 
 <style scoped lang="scss">
   .base-input {

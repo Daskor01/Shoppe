@@ -2,10 +2,10 @@
   <aside class="shop-filters">
     <div class="shop-filters__search">
       <BaseInput
-        :modelValue="filters.search"
+        v-model="filters.search"
+        :debounce="200"
         placeholder="Search"
         class="shop-filters__search-input"
-        @update:modelValue="update('search', $event)"
       />
 
       <button class="shop-filters__search-button">
@@ -14,38 +14,20 @@
     </div>
 
     <div class="shop-filters__container">
-      <div class="shop-filters__select-container">
-        <select
-          :value="filters.category"
-          class="shop-filters__select"
-          @change="handleChange('category', $event)"
-        >
-          <option value="" disabled selected hidden>Category</option>
-          <option value="">All categories</option>
-          <option v-for="category in categories" :key="category" :value="category">
-            {{ category }}
-          </option>
-        </select>
-        <IconBaseArrowDown class="shop-filters__select-icon" />
-      </div>
+      <BaseSelect
+        v-model="filters.sortBy"
+        :options="sortOptions"
+        placeholder="Sort By"
+      />
 
-      <div class="shop-filters__select-container">
-        <select
-          class="shop-filters__select"
-          :value="filters.sortBy"
-          @change="handleChange('sortBy', $event)"
-        >
-          <option value="" disabled selected hidden>Sort By</option>
-          <option v-for="option in sortOptions" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
-        </select>
-        <IconBaseArrowDown class="shop-filters__select-icon" />
-      </div>
+      <BaseSelect
+        v-model="filters.category"
+        :options="categoryOptions"
+        placeholder="Category"
+      />
 
       <RangeSlider
-        :modelValue="filters.priceRange"
-        @update:modelValue="update('priceRange', $event)"
+        v-model="localPriceRange"
         :min="0"
         :max="200"
         :step="1"
@@ -53,12 +35,18 @@
 
       <label class="shop-filters__toggle">
         On sale
-        <BaseSwitch :modelValue="filters.inStock" @update:modelValue="update('inStock', $event)" />
+        <BaseSwitch 
+        :modelValue="filters.inStock" 
+        @update:modelValue="update('inStock', $event)" 
+        />
       </label>
 
       <label class="shop-filters__toggle">
         In stock
-        <BaseSwitch :modelValue="filters.inStock" @update:modelValue="update('inStock', $event)" />
+        <BaseSwitch 
+        :modelValue="filters.inStock" 
+        @update:modelValue="update('inStock', $event)" 
+        />
       </label>
     </div>
   </aside>
@@ -70,6 +58,8 @@
   import RangeSlider from '@/components/ui/RangeSlider.vue'
   import BaseSwitch from '@/components/ui/BaseSwitch.vue'
   import type { Filters } from '@/types/Filters'
+  import { ref, watch } from 'vue'
+  import { useDebouncedValue } from '@/composables/useDebouncedValue'
 
   const sortOptions = [
     { value: '', label: 'No sorting' },
@@ -78,6 +68,11 @@
     { value: 'name-asc', label: 'Name: A-Z' },
   ]
 
+  const categoryOptions = computed(() => [
+    { value: '', label: 'All categories' },
+    ...props.categories.map(c => ({ value: c, label: c }))
+  ])
+
   const props = defineProps<{
     filters: Filters
     categories: string[]
@@ -85,12 +80,15 @@
 
   const emit = defineEmits(['update:filters'])
 
-  function handleChange(key: keyof Filters, event: Event) {
-    const target = event.target as HTMLSelectElement | null
-    if (target) {
-      update(key, target.value)
-    }
-  }
+  const localPriceRange = ref<[number, number]>(props.filters.priceRange)
+  const debouncedPriceRange = useDebouncedValue(localPriceRange, 300)
+
+  watch(debouncedPriceRange, (newVal) => {
+    emit('update:filters', {
+      ...props.filters,
+      priceRange: newVal,
+    })
+  })
 
   function update(key: keyof Filters, value: any) {
     emit('update:filters', {
