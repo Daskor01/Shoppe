@@ -16,25 +16,28 @@
 </template>
 
 <script setup lang="ts">
-  import { defineProps, defineEmits, ref, defineExpose, useAttrs } from 'vue'
+  import {
+    defineProps,
+    defineEmits,
+    ref,
+    defineExpose,
+    type InputTypeHTMLAttribute,
+    useAttrs,
+  } from 'vue'
 
   const attrs = useAttrs()
   const inputRef = ref<HTMLInputElement | null>(null)
   defineExpose({ inputRef })
 
-  const props = defineProps({
-    modelValue: String,
-    type: {
-      type: String,
-      default: 'text',
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    placeholder: String,
-    error: String,
-  })
+  interface Props {
+    modelValue: string
+    type?: InputTypeHTMLAttribute
+    name: string
+    placeholder?: string
+    error?: string
+  }
+
+  const props = defineProps<Props>()
 
   const emit = defineEmits(['update:modelValue'])
 

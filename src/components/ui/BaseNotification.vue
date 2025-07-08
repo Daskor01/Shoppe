@@ -32,17 +32,16 @@
 
   const model = defineModel<boolean>()
 
-  const props = defineProps({
-    message: String,
-    type: {
-      type: String,
-      default: 'info',
+  const props = withDefaults(
+    defineProps<{
+      message?: string
+      type?: 'success' | 'error' | 'warning' | 'info'
+      autoCloseDelay?: number
+    }>(),
+    {
+      autoCloseDelay: 3000,
     },
-    autoCloseDelay: {
-      type: Number,
-      default: 4000,
-    },
-  })
+  )
 
   //Отрисовываем иконку в зависимости от типа уведомления
   const iconMap = {

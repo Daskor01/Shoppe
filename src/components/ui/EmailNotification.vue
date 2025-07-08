@@ -1,5 +1,5 @@
 <template>
-  <BaseNotification v-model="model" :message="message" :type="type">
+  <BaseNotification v-model="model" v-bind="attrs">
     <template #close>
       <button class="close-button" @click="model = false">
         <IconClose />
@@ -9,19 +9,12 @@
 </template>
 
 <script setup lang="ts">
+  import { defineModel, useAttrs } from 'vue'
   import BaseNotification from '@/components/ui/BaseNotification.vue'
   import IconClose from '@/components/icons/IconClose.vue'
 
   const model = defineModel<boolean>()
-
-  const props = defineProps({
-    modelValue: Boolean,
-    message: String,
-    type: {
-      type: String,
-      default: 'info',
-    },
-  })
+  const attrs = useAttrs()
 </script>
 
 <style scoped>

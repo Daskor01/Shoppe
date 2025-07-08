@@ -3,6 +3,7 @@
     v-model="showNotification"
     :message="notificationMessage"
     :type="notificationType"
+    :autoCloseDelay="3000"
   />
 
   <footer class="footer">
@@ -78,7 +79,7 @@
   type NotificationType = 'success' | 'error' | 'warning' | 'info'
 
   const form = ref<HTMLFormElement | null>(null)
-  const emailInputRef = ref<any>(null)
+  const emailInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
 
   const email = ref('')
   const consentCheckbox = ref<HTMLInputElement | null>(null)
