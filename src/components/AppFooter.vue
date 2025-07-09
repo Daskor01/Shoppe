@@ -72,7 +72,7 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import BaseInput from '@/components/ui/BaseInput.vue'
-  import EmailNotification from '@/components/ui/EmailNotification.vue'
+  import EmailNotification from '@/components/EmailNotification.vue'
   import { validateInput } from '@/utils/validateInput'
   import { copyrightLinks, footerLinks, socialLinks } from '@/config/navigation'
 

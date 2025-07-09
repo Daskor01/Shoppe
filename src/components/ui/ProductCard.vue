@@ -79,7 +79,7 @@
       &:hover::after {
         position: absolute;
         inset: 0;
-        background-color: $color-light;
+        background-color: vars.$color-light;
         opacity: 0.5;
       }
     }
@@ -128,7 +128,7 @@
 
     &__price {
       font-weight: bold;
-      color: $color-accent-light;
+      color: vars.$color-accent-light;
       margin: 0;
     }
 

@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-  import { watch, defineProps, defineEmits, ref, computed } from 'vue'
+  import { watch, ref, computed } from 'vue'
 
   const props = defineProps<{
     modelValue: [number, number]
@@ -101,7 +101,7 @@
     &__range {
       position: absolute;
       block-size: 100%;
-      background-color: #000000;
+      background-color: vars.$color-dark;
       border-radius: 2px;
     }
 
@@ -115,7 +115,7 @@
       font-weight: 400;
       font-size: 14px;
       line-height: 157%;
-      color: $color-gray;
+      color: vars.$color-gray;
     }
 
     &__thumb--left {
@@ -125,7 +125,7 @@
     &__filter-button {
       background: transparent;
       border: none;
-      color: $color-accent-light;
+      color: vars.$color-accent-light;
       cursor: pointer;
       transition: 0.2s;
 
@@ -149,7 +149,7 @@
     pointer-events: all;
     inline-size: 4px;
     block-size: 10px;
-    background-color: #000000;
+    background-color: vars.$color-dark;
     border: none;
     -webkit-appearance: none;
   }

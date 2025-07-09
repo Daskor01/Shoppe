@@ -43,7 +43,7 @@
     }
 
     &__link {
-      color: $color-accent-light;
+      color: vars.$color-accent-light;
       text-decoration: none;
       transition: 0.4s;
       font-size: 20px;
@@ -52,7 +52,7 @@
         opacity: 0.5;
       }
 
-      @media (max-width: $breakpoints-xl) {
+      @media (max-width: vars.$breakpoints-xl) {
         font-size: 15px;
       }
     }
@@ -66,7 +66,7 @@
         justify-self: center;
       }
 
-      @media (max-width: $breakpoints-xl) {
+      @media (max-width: vars.$breakpoints-xl) {
         grid-template-columns: repeat(2, 1fr);
       }
     }

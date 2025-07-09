@@ -1,32 +1,22 @@
+@use 'fonts';
+
+
 //Цвета
 $color-light: #ffffff;
 $color-gray: #979797;
 $color-dark: #000000;
 $color-ligth-gray: #efefef;
-<<<<<<< HEAD
-$color-accent-main: #a18a68;
-$color-accent-red: #ff0000;
-=======
 $color-accent-light: #a18a68;
->>>>>>> ShopLatest
+$color-accent-red: #ff0000;
 
 //Breakpoints
 $breakpoints-xxl: 1680px;
 $breakpoints-xl: 1440px;
-<<<<<<< HEAD
-$breakpoints-l: 1200px;
-=======
 $breakpoints-l: 1280px;
->>>>>>> ShopLatest
 $breakpoints-m: 992px;
 $breakpoints-s: 767px;
 $breakpoints-xs: 376px;
 
 //Шрифты
-<<<<<<< HEAD
-
-$main-font: 'DM Sans', sans-serif;
-=======
 $main-font: 'DM Sans', sans-serif;
 $secondary-font: 'Allerta Stencil', sans-serif;
->>>>>>> ShopLatest

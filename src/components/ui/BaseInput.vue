@@ -17,33 +17,44 @@
 
 <script setup lang="ts">
   import {
-    defineProps,
-    defineEmits,
     ref,
-    defineExpose,
     type InputTypeHTMLAttribute,
     useAttrs,
+    watch,
+    defineExpose,
+    defineModel,
   } from 'vue'
+  import { useDebouncedValue } from '@/composables/useDebouncedValue'
 
   const attrs = useAttrs()
   const inputRef = ref<HTMLInputElement | null>(null)
   defineExpose({ inputRef })
 
   interface Props {
-    modelValue: string
     type?: InputTypeHTMLAttribute
     name: string
     placeholder?: string
     error?: string
+    debounce?: number
   }
 
   const props = defineProps<Props>()
 
-  const emit = defineEmits(['update:modelValue'])
+  const model = defineModel<string>()
+
+  const localValue = ref(model.value ?? '')
+  watch(model, (val) => {
+    localValue.value = val ?? ''
+  })
+
+  const debounced = useDebouncedValue(localValue, props.debounce ?? 100)
+  watch(debounced, (val) => {
+    model.value = val
+  })
 
   const onInput = (event: Event) => {
     const target = event.target as HTMLInputElement
-    emit('update:modelValue', target.value)
+    localValue.value = target.value
   }
 </script>
 

@@ -81,7 +81,7 @@
       justify-content: center;
       inline-size: 44px;
       block-size: 44px;
-      border: 1px solid $color-ligth-gray;
+      border: 1px solid vars.$color-ligth-gray;
       background: white;
       cursor: pointer;
       border-radius: 4px;
@@ -90,8 +90,8 @@
     }
 
     &__button.active {
-      background: $color-dark;
-      color: white;
+      background: vars.$color-dark;
+      color: vars.$color-light;
       font-weight: bold;
     }
 

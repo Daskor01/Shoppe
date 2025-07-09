@@ -2,11 +2,11 @@
   <button class="base-button"></button>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
   .base-button {
     background-color: transparent;
     border: 2px solid;
-    color: white;
+    color: vars.$color-light;
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;

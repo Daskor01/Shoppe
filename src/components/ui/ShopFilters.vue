@@ -4,6 +4,7 @@
       <BaseInput
         v-model="filters.search"
         :debounce="200"
+        :name="'shop-search'"
         placeholder="Search"
         class="shop-filters__search-input"
       />
@@ -104,13 +105,13 @@
     flex-direction: column;
     gap: 40px;
     inline-size: 288px;
-    background-color: $color-light;
+    background-color: vars.$color-light;
 
     &__search {
       position: relative;
       display: flex;
       gap: 0.5rem;
-      border-block-end: 1px solid $color-ligth-gray;
+      border-block-end: 1px solid vars.$color-ligth-gray;
 
       &-input {
         width: 100%;
@@ -142,7 +143,7 @@
     &__select {
       inline-size: 100%;
       padding: 12px 16px;
-      border: 1px solid $color-ligth-gray;
+      border: 1px solid vars.$color-ligth-gray;
       border-radius: 4px;
       font-size: 14px;
       cursor: pointer;

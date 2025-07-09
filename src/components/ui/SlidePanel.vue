@@ -2,7 +2,11 @@
   <div :class="{ open: modelValue }" class="slide-panel">
     <div class="slide-panel__backdrop" @click="close" />
     <div class="slide-panel__container">
-      <button class="slide-panel__close" @click="close">
+      <button 
+      v-if="props.showCloseButton !== false"
+      class="slide-panel__close" 
+      @click="close"
+      >
         <IconClose />
       </button>
       <div class="slide-panel__content">
@@ -18,7 +22,11 @@
   import { DESKTOP_BREAKPOINT } from '@/constants/breakpoints'
   import { useBreakpoint } from '@/composables/useBreakpoint'
 
-  const props = defineProps<{ modelValue: boolean }>()
+  const props = defineProps<{
+    modelValue: boolean;
+    topOffset?: string;
+    showCloseButton?: boolean;
+  }>();
   const emit = defineEmits(['update:modelValue'])
 
   function close() {
@@ -60,8 +68,9 @@
   .slide-panel {
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    z-index: 3000;
     pointer-events: none;
+    top: v-bind('props.topOffset || 0');
 
     &__backdrop {
       position: absolute;
@@ -78,7 +87,7 @@
       width: 100%;
       max-inline-size: 320px;
       block-size: 100%;
-      background: #fff;
+      background: vars.$color-light;
       transform: translateX(-100%);
       transition: transform 0.3s ease;
       display: flex;

@@ -102,7 +102,7 @@
     position: relative;
     justify-content: space-between;
 
-    @media (max-width: $breakpoints-xl) {
+    @media (max-width: vars.$breakpoints-xl) {
       display: block;
       gap: 20px;
     }
@@ -121,7 +121,7 @@
       display: flex;
       background: transparent;
       border: none;
-      color: $color-accent-light;
+      color: vars.$color-accent-light;
       align-items: center;
       gap: 8px;
       align-self: self-start;
@@ -129,7 +129,7 @@
     }
 
     &-mobile__title {
-      font-family: $secondary-font;
+      font-family: vars.$secondary-font;
       font-weight: 400;
       font-size: 20px;
       line-height: 130%;
@@ -155,12 +155,12 @@
     margin-block-start: 5rem;
     justify-content: space-between;
 
-    @media (max-width: $breakpoints-xxl) {
+    @media (max-width: vars.$breakpoints-xxl) {
       grid-template-columns: repeat(2, 1fr);
       margin-inline: 0;
     }
 
-    @media (max-width: $breakpoints-xl) {
+    @media (max-width: vars.$breakpoints-xl) {
       margin-block-start: 1.5rem;
     }
 

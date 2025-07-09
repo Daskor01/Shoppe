@@ -9,7 +9,6 @@
 </template>
 
 <script setup lang="ts">
-  import { defineModel, defineProps } from 'vue'
   import BaseNotification from '@/components/ui/BaseNotification.vue'
   import IconClose from '@/components/icons/IconClose.vue'
 

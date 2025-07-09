@@ -50,7 +50,7 @@
         inline-size: 18px;
         inset-inline-start: 3px;
         inset-block-end: 3px;
-        background-color: white;
+        background-color: vars.$color-light;
         border-radius: 50%;
         transition: transform 0.4s;
       }

@@ -28,7 +28,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineModel } from 'vue'
 import IconBaseArrowDown from '@/components/icons/IconBaseArrowDown.vue'
 
 const model = defineModel<string>()
@@ -46,7 +45,7 @@ defineProps<{
   &__native {
     inline-size: 100%;
     padding: 12px 16px;
-    border: 1px solid $color-ligth-gray; 
+    border: 1px solid vars.$color-ligth-gray; 
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
