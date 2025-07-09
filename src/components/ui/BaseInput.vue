@@ -14,7 +14,7 @@ import { useDebouncedValue } from '@/composables/useDebouncedValue';
 
 const model = defineModel<string>()
 
-const props = defineProps<{
+const debounceTimeout = defineProps<{
   type?: string
   placeholder?: string
   debounce?: number
@@ -26,7 +26,7 @@ watch(model, (val) => {
   localValue.value = val ?? ''
 })
 
-const debounced = useDebouncedValue(localValue, props.debounce ?? 100)
+const debounced = useDebouncedValue(localValue, debounceTimeout .debounce ?? 100)
 
 watch(debounced, (val) => {
   model.value = val

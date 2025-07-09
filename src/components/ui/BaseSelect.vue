@@ -3,7 +3,7 @@
     <select
       :value="modelValue"
       class="base-select__native"
-      @change="$emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
+      @change="model = ($event.target as HTMLSelectElement).value"
     >
       <option
         v-if="placeholder"
@@ -28,16 +28,14 @@
 </template>
 
 <script setup lang="ts">
+import { defineModel } from 'vue'
 import IconBaseArrowDown from '@/components/icons/IconBaseArrowDown.vue'
 
+const model = defineModel<string>()
+
 defineProps<{
-  modelValue: string
   options: { value: string; label: string }[]
   placeholder?: string
-}>()
-
-defineEmits<{
-  (e: 'update:modelValue', value: string): void
 }>()
 </script>
 
