@@ -1,0 +1,11 @@
+body {
+  background-color: vars.$color-light;
+  font-family: vars.$main-font;
+  margin: 0;
+  padding: 0;
+}
+
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}

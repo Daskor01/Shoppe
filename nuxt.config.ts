@@ -1,4 +1,6 @@
 export default defineNuxtConfig({
+  srcDir: 'src',
+
   css: ['~/assets/scss/main.scss'],
 
   modules: ['@pinia/nuxt'],
@@ -8,29 +10,29 @@ export default defineNuxtConfig({
       preprocessorOptions: {
         scss: {
           additionalData: `
-            @use "./assets/scss/variables" as *;
-            @use "./assets/scss/mixins" as *;
-          `
-        }
-      }
-    }
+          @use "@/assets/scss/variables" as vars;
+          @use "@/assets/scss/mixins" as mixins;
+        `,
+        },
+      },
+    },
   },
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://example.com/api'
-    }
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://example.com/api',
+    },
   },
 
   components: [
     { path: '~/components/ui', prefix: 'App' },
     { path: '~/components/icons', prefix: 'Icon' },
-    '~/components'
+    '~/components',
   ],
 
   imports: {
-    dirs: ['stores', 'composables/**']
+    dirs: ['stores', 'composables/**'],
   },
 
-  compatibilityDate: '2025-05-31'
+  compatibilityDate: '2025-05-31',
 })
