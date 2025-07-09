@@ -1,6 +1,16 @@
+<<<<<<< HEAD
 body {
   background-color: vars.$color-light;
   font-family: vars.$main-font;
+=======
+@use './variables' as *;
+@use './mixins' as *;
+@use './fonts' as *;
+
+body {
+  background-color: $color-light;
+  font-family: $main-font;
+>>>>>>> ShopLatest
   margin: 0;
   padding: 0;
 }

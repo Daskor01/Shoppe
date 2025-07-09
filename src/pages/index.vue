@@ -1,7 +1,8 @@
 <template>
   <Carousel />
+  <ProductList />
 </template>
 
-<script setup>
-  import Carousel from '@/components/ui/Carousel.vue'
+<script lang="ts">
+  import ProductList from '@/components/ui/ProductList.vue'
 </script>

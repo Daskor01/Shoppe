@@ -1,8 +1,8 @@
 <template>
-  <div class="slide-panel" :class="{ open: modelValue }">
+  <div :class="{ open: modelValue }" class="slide-panel">
     <div class="slide-panel__backdrop" @click="close" />
     <div class="slide-panel__container">
-      <button v-if="props.showCloseButton !== false" class="slide-panel__close" @click="close">
+      <button class="slide-panel__close" @click="close">
         <IconClose />
       </button>
       <div class="slide-panel__content">
@@ -13,27 +13,27 @@
 </template>
 
 <script setup lang="ts">
-  import { watch, onUnmounted, onMounted } from 'vue'
+  import { watch, onUnmounted } from 'vue'
   import IconClose from '@/components/icons/IconClose.vue'
-  import { DESKTOP_WIDTH } from '@/constants/breakpoint'
+  import { DESKTOP_BREAKPOINT } from '@/constants/breakpoints'
+  import { useBreakpoint } from '@/composables/useBreakpoint'
 
-  const props = defineProps<{
-    modelValue: boolean
-    topOffset?: string
-    showCloseButton?: boolean
-  }>()
-
+  const props = defineProps<{ modelValue: boolean }>()
   const emit = defineEmits(['update:modelValue'])
 
   function close() {
     emit('update:modelValue', false)
   }
+
+  // Блокировка прокрутки
   function disableBodyScroll() {
     document.body.style.overflow = 'hidden'
   }
+
   function enableBodyScroll() {
     document.body.style.overflow = ''
   }
+
   watch(
     () => props.modelValue,
     (newVal) => {
@@ -41,29 +41,27 @@
       else enableBodyScroll()
     },
   )
-  onUnmounted(() => {
-    enableBodyScroll()
-    window.removeEventListener('resize', handleResize)
-  })
 
-  //resize обработчик
-  function handleResize() {
-    if (window.innerWidth >= DESKTOP_WIDTH && props.modelValue) {
+  // Мобилка
+  const { isBelow } = useBreakpoint(DESKTOP_BREAKPOINT)
+
+  watch([isBelow, () => props.modelValue], ([below, opened]) => {
+    if (!below && opened) {
       close()
     }
-  }
-  onMounted(() => {
-    window.addEventListener('resize', handleResize)
+  })
+
+  onUnmounted(() => {
+    enableBodyScroll()
   })
 </script>
 
 <style scoped lang="scss">
   .slide-panel {
     position: fixed;
-    z-index: 2000;
     inset: 0;
+    z-index: 1000;
     pointer-events: none;
-    top: v-bind('props.topOffset || 0');
 
     &__backdrop {
       position: absolute;
@@ -78,9 +76,9 @@
       inset-block-start: 0;
       inset-inline-start: 0;
       width: 100%;
-      max-inline-size: 400px;
+      max-inline-size: 320px;
       block-size: 100%;
-      background: vars.$color-light;
+      background: #fff;
       transform: translateX(-100%);
       transition: transform 0.3s ease;
       display: flex;
@@ -102,11 +100,14 @@
       overflow-y: auto;
       flex: 1;
     }
+
     &.open {
       pointer-events: auto;
+
       .slide-panel__backdrop {
         opacity: 1;
       }
+
       .slide-panel__container {
         transform: translateX(0);
       }

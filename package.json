@@ -20,7 +20,7 @@
     "eslint": "^9.29.0",
     "nuxt": "^3.17.4",
     "prettier": "^3.5.3",
-    "swiper": "^11.2.8",
+    "swiper": "^11.2.10",
     "vue": "^3.5.15",
     "vue-router": "^4.5.1"
   },
@@ -47,4 +47,3 @@
     "*.{js,ts,vue,scss,md,json}": "prettier --write"
   }
 }
-
