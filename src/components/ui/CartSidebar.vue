@@ -15,7 +15,7 @@
     <div v-else>
       <h3 class="cart-content__counter">{{ cartStore.cartItems.length }} item{{ itemSuffix }}</h3>
 
-      <div class="cart-content__list">
+      <TransitionGroup name="cart-list" tag="div" class="cart-content__list">
         <CartItem
           v-for="item in cartStore.cartItems"
           :key="item.product.id"
@@ -24,7 +24,7 @@
           :onDecrease="() => decrease(item.product.id)"
           :onRemove="() => remove(item.product.id)"
         />
-      </div>
+      </TransitionGroup>
     </div>
 
     <div class="cart-content__footer" v-if="cartStore.cartItems.length">
@@ -83,6 +83,15 @@
       padding: 0;
     }
 
+    &__loading,
+    &__empty {
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-start: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      font-size: 1rem;
+    }
     &__close {
       position: absolute;
       background: transparent;
@@ -167,5 +176,31 @@
         background-color: vars.$color-dark;
       }
     }
+  }
+
+  //Анимация для списка товаров в корзине
+  .cart-list-enter-active,
+  .cart-list-leave-active {
+    transition: all 0.3s ease;
+  }
+
+  .cart-list-enter-from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .cart-list-enter-to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .cart-list-leave-from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .cart-list-leave-to {
+    opacity: 0;
+    transform: translateY(10px);
   }
 </style>
