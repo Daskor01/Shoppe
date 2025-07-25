@@ -27,11 +27,11 @@ export default defineNuxtConfig({
   components: [
     { path: '~/components/ui' },
     { path: '~/components/icons', prefix: 'Icon' },
-    '~/components'
+    '~/components',
   ],
 
   imports: {
     dirs: ['stores', 'composables/**'],
   },
-  compatibilityDate: '2025-05-31'
+  compatibilityDate: '2025-05-31',
 })

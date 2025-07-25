@@ -94,15 +94,15 @@ export default function useShopFilters(filters: Ref<Filters>) {
     initFromQuery()
     await fetchProducts()
   })
-  
+
   watch(
     filters,
     () => {
       updateQuery()
       fetchProducts()
     },
-    { deep: true }
-  )  
+    { deep: true },
+  )
 
   return {
     categories,

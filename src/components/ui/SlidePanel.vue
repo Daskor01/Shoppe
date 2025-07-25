@@ -1,12 +1,8 @@
 <template>
   <div :class="{ open: modelValue }" class="slide-panel">
     <div class="slide-panel__backdrop" @click="close" />
-    <div class="slide-panel__container">
-      <button 
-      v-if="props.showCloseButton !== false"
-      class="slide-panel__close" 
-      @click="close"
-      >
+    <div :class="['slide-panel__container', containerSideClass]" :style="containerStyle">
+      <button v-if="props.showCloseButton !== false" class="slide-panel__close" @click="close">
         <IconClose />
       </button>
       <div class="slide-panel__content">
@@ -23,15 +19,36 @@
   import { useBreakpoint } from '@/composables/useBreakpoint'
 
   const props = defineProps<{
-    modelValue: boolean;
-    topOffset?: string;
-    showCloseButton?: boolean;
-  }>();
+    modelValue: boolean
+    side?: 'left' | 'right'
+    topOffset?: string
+    showCloseButton?: boolean
+    mobileOnly?: boolean
+    width?: string
+  }>()
+
   const emit = defineEmits(['update:modelValue'])
 
   function close() {
     emit('update:modelValue', false)
   }
+
+  //Выбираем класс для контейнера в зависимости от стороны
+  //Если side не указан, по умолчанию будет 'left'!
+  const containerSideClass = computed(() =>
+    props.side === 'right' ? 'slide-panel__container--right' : 'slide-panel__container--left',
+  )
+
+  //Вычисляем ширину контейнера
+  const containerStyle = computed(() => {
+    let width = props.width ?? 320
+    if (typeof width === 'number') {
+      width = width + 'px'
+    }
+    return {
+      maxInlineSize: width,
+    }
+  })
 
   // Блокировка прокрутки
   function disableBodyScroll() {
@@ -54,7 +71,7 @@
   const { isBelow } = useBreakpoint(DESKTOP_BREAKPOINT)
 
   watch([isBelow, () => props.modelValue], ([below, opened]) => {
-    if (!below && opened) {
+    if (props.mobileOnly && !below && opened) {
       close()
     }
   })
@@ -83,8 +100,7 @@
     &__container {
       position: absolute;
       inset-block-start: 0;
-      inset-inline-start: 0;
-      width: 100%;
+      inline-size: 100%;
       max-inline-size: 320px;
       block-size: 100%;
       background: vars.$color-light;
@@ -92,6 +108,18 @@
       transition: transform 0.3s ease;
       display: flex;
       flex-direction: column;
+
+      &--left {
+        inset-inline-start: 0;
+        transform: translateX(-100%);
+        border-inline-end: 1px solid vars.$color-gray;
+      }
+
+      &--right {
+        inset-inline-end: 0;
+        transform: translateX(100%);
+        border-inline-start: 1px solid vars.$color-gray;
+      }
     }
 
     &__close {
@@ -108,6 +136,12 @@
       padding: 1rem;
       overflow-y: auto;
       flex: 1;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
 
     &.open {
