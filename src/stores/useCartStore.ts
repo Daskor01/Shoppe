@@ -1,25 +1,78 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { Product } from '@/types/Product'
 
-interface CartItem {
+export interface CartItem {
   product: Product
   quantity: number
 }
 
 export const useCartStore = defineStore('cart', () => {
   const cartItems = ref<CartItem[]>([])
+  const isOpen = ref(false)
+  const isLoaded = ref(false)
 
+  //Загружаем корзину из localStorage
+  function loadCartFromStorage() {
+    if (import.meta.client) {
+      try {
+        const data = localStorage.getItem('cart')
+        if (data) {
+          cartItems.value = JSON.parse(data)
+        } else {
+          cartItems.value = []
+        }
+      } catch {
+        cartItems.value = []
+      }
+      isLoaded.value = true
+    }
+  }
+
+  //Сохраняем корзину в localStorage
+  function saveCartToStorage() {
+    if (typeof window === 'undefined') return
+    localStorage.setItem('cart', JSON.stringify(cartItems.value))
+  }
+
+  //Отправка корзины на фейковый бэкенд
+  async function syncCartWithBackend() {
+    try {
+      await fetch('https://fakestoreapi.com/carts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: 1,
+          date: new Date().toISOString(),
+          products: cartItems.value.map((item) => ({
+            productId: item.product.id,
+            quantity: item.quantity,
+          })),
+        }),
+      })
+    } catch (error) {
+      console.error('Ошибка при синхронизации с API', error)
+    }
+  }
+
+  //Следим за изменениями и сохраняем
+  watch(
+    cartItems,
+    () => {
+      saveCartToStorage()
+      syncCartWithBackend()
+    },
+    { deep: true },
+  )
+
+  //Добавление в корзину
   function addToCart(product: Product, quantity = 1) {
     const existingItem = cartItems.value.find((item) => item.product.id === product.id)
 
     if (existingItem) {
       existingItem.quantity += quantity
     } else {
-      cartItems.value.push({
-        product,
-        quantity,
-      })
+      cartItems.value.push({ product, quantity })
     }
   }
 
@@ -41,21 +94,35 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
-  const totalItems = computed(() => {
-    return cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
-  })
+  //Управление состоянием корзины
+  function openCart() {
+    isOpen.value = true
+  }
 
-  const totalPrice = computed(() => {
-    return cartItems.value.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
-  })
+  function closeCart() {
+    isOpen.value = false
+  }
+
+  function toggleCart() {
+    isOpen.value = !isOpen.value
+  }
+
+  const totalPrice = computed(() =>
+    cartItems.value.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+  )
 
   return {
     cartItems,
+    isOpen,
+    totalPrice,
     addToCart,
     removeFromCart,
     clearCart,
     updateQuantity,
-    totalItems,
-    totalPrice,
+    openCart,
+    closeCart,
+    toggleCart,
+    loadCartFromStorage,
+    isLoaded,
   }
 })

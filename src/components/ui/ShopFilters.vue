@@ -15,39 +15,20 @@
     </div>
 
     <div class="shop-filters__container">
-      <BaseSelect
-        v-model="filters.sortBy"
-        :options="sortOptions"
-        placeholder="Sort By"
-      />
+      <BaseSelect v-model="filters.sortBy" :options="sortOptions" placeholder="Sort By" />
 
-      <BaseSelect
-        v-model="filters.category"
-        :options="categoryOptions"
-        placeholder="Category"
-      />
+      <BaseSelect v-model="filters.category" :options="categoryOptions" placeholder="Category" />
 
-      <RangeSlider
-        v-model="localPriceRange"
-        :min="0"
-        :max="200"
-        :step="1"
-      />
+      <RangeSlider v-model="localPriceRange" :min="0" :max="200" :step="1" />
 
       <label class="shop-filters__toggle">
         On sale
-        <BaseSwitch 
-        :modelValue="filters.inStock" 
-        @update:modelValue="update('inStock', $event)" 
-        />
+        <BaseSwitch :modelValue="filters.inStock" @update:modelValue="update('inStock', $event)" />
       </label>
 
       <label class="shop-filters__toggle">
         In stock
-        <BaseSwitch 
-        :modelValue="filters.inStock" 
-        @update:modelValue="update('inStock', $event)" 
-        />
+        <BaseSwitch :modelValue="filters.inStock" @update:modelValue="update('inStock', $event)" />
       </label>
     </div>
   </aside>
@@ -71,7 +52,7 @@
 
   const categoryOptions = computed(() => [
     { value: '', label: 'All categories' },
-    ...props.categories.map(c => ({ value: c, label: c }))
+    ...props.categories.map((c) => ({ value: c, label: c })),
   ])
 
   const props = defineProps<{
