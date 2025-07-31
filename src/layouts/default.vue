@@ -3,8 +3,45 @@
     <AppHeader />
     <slot />
     <AppFooter />
+    <BaseNotification
+      :visible="visible"
+      :message="message"
+      :type="type"
+      :buttonText="buttonText"
+      :buttonHandler="buttonHandler"
+    />
+    <SlidePanel
+      v-model="cartStore.isOpen"
+      :mobile-only="false"
+      side="right"
+      class="header__sidebar"
+      :width="widthSidebar"
+    >
+      <ClientOnly>
+        <CartSidebar />
+      </ClientOnly>
+    </SlidePanel>
   </div>
 </template>
+
+<script setup lang="ts">
+  import { storeToRefs } from 'pinia'
+  import { useNotificationStore } from '@/stores/useNotificationStore'
+  import { useCartStore } from '@/stores/useCartStore'
+  import { computed } from 'vue'
+  import { useBreakpoint } from '@/composables/useBreakpoint'
+  import { DESKTOP_BREAKPOINT } from '@/constants/breakpoints'
+
+  const cartStore = useCartStore()
+  const store = useNotificationStore()
+
+  const { visible, message, type, buttonText, buttonHandler } = storeToRefs(store)
+
+  //Управляем шириной сайдбара в зависимости от ширины экрана
+  const { isBelow: isMobile } = useBreakpoint(DESKTOP_BREAKPOINT)
+
+  const widthSidebar = computed(() => (isMobile.value ? '320px' : '540px'))
+</script>
 
 <style lang="scss">
   .container {

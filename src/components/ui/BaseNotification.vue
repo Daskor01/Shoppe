@@ -1,7 +1,7 @@
 <template>
   <transition name="slide-fade">
     <div
-      v-if="modelValue"
+      v-if="visible"
       :class="['base-notification', `base-notification--${type}`]"
       :style="styleObject"
     >
@@ -13,35 +13,31 @@
         <slot>{{ message }}</slot>
       </div>
 
-      <slot name="close">
-        <button class="base-notification__close" @click="model = false">
-          <IconClose />
-        </button>
-      </slot>
+      <button
+        v-if="buttonText && buttonHandler"
+        @click="buttonHandler"
+        class="base-notification__button"
+      >
+        {{ buttonText }}
+      </button>
     </div>
   </transition>
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted, computed, watch, onBeforeUnmount } from 'vue'
-  import IconClose from '@/components/icons/IconClose.vue'
+  import { computed, onMounted, ref } from 'vue'
   import IconSuccess from '@/components/icons/IconSuccess.vue'
   import IconError from '@/components/icons/IconError.vue'
   import IconInfo from '@/components/icons/IconInfo.vue'
   import IconWarning from '@/components/icons/IconWarning.vue'
 
-  const model = defineModel<boolean>()
-
-  const props = withDefaults(
-    defineProps<{
-      message?: string
-      type?: 'success' | 'error' | 'warning' | 'info'
-      autoCloseDelay?: number
-    }>(),
-    {
-      autoCloseDelay: 3000,
-    },
-  )
+  const props = defineProps<{
+    visible: boolean
+    message: string
+    type?: 'success' | 'error' | 'warning' | 'info'
+    buttonText?: string
+    buttonHandler?: () => void
+  }>()
 
   //Отрисовываем иконку в зависимости от типа уведомления
   const iconMap = {
@@ -52,7 +48,7 @@
   }
 
   const iconComponent = computed(() => {
-    return iconMap[props.type as keyof typeof iconMap] || IconInfo
+    return iconMap[props.type || 'info']
   })
 
   //Вычисляем отступы для контейнера
@@ -76,24 +72,6 @@
 
     updatePadding()
     window.addEventListener('resize', updatePadding)
-  })
-
-  //Таймер для автоматического закрытия уведомления
-  let timeoutId: ReturnType<typeof setTimeout> | null = null
-
-  watch(model, (visible) => {
-    if (visible) {
-      clearTimeout(timeoutId!)
-      timeoutId = setTimeout(() => {
-        model.value = false
-      }, props.autoCloseDelay)
-    } else {
-      clearTimeout(timeoutId!)
-    }
-  })
-
-  onBeforeUnmount(() => {
-    clearTimeout(timeoutId!)
   })
 </script>
 
@@ -120,9 +98,18 @@
     &__message {
       flex-grow: 1;
     }
+
+    &__button {
+      border: none;
+      background: none;
+      color: vars.$color-accent-light;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+      text-transform: uppercase;
+    }
   }
 
-  //Анимация
   .slide-fade-enter-active,
   .slide-fade-leave-active {
     transition: all 0.3s ease;

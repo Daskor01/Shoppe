@@ -2,7 +2,7 @@
   <div class="carousel">
     <transition name="fade" mode="out-in">
       <div v-if="pending" key="loading">Загрузка...</div>
-      <div v-else-if="error" key="error">Ошибка: {{ error.message }}</div>
+      <div v-else-if="error" key="error">Ошибка: {{ error }}</div>
       <Swiper
         v-else
         key="content"
@@ -36,6 +36,7 @@
   import 'swiper/css'
   import 'swiper/css/pagination'
   import { useApi } from '@/composables/useApi'
+  import { ref, onMounted } from 'vue'
 
   interface ImageItem {
     id: string
@@ -43,16 +44,28 @@
     download_url: string
   }
 
-  const {
-    data: images,
-    pending,
-    error,
-  } = await useApi<ImageItem[]>('/v2/list', {
-    query: {
-      page: 1,
-      limit: 10,
-    },
-  })
+  const images = ref<ImageItem[]>([])
+  const pending = ref(false)
+  const error = ref<string | null>(null)
+
+  const config = useRuntimeConfig()
+  const baseImageUrl = config.public.imageApi
+  const { fetchApi } = useApi(baseImageUrl)
+
+  async function loadImages() {
+    pending.value = true
+    try {
+      images.value = (await fetchApi('/v2/list', {
+        query: { page: 1, limit: 10 },
+      })) as ImageItem[]
+    } catch (e: any) {
+      error.value = e.message || 'Ошибка загрузки'
+    } finally {
+      pending.value = false
+    }
+  }
+
+  onMounted(loadImages)
 </script>
 
 <style lang="scss">

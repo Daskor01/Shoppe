@@ -1,11 +1,4 @@
 <template>
-  <EmailNotification
-    v-model="showNotification"
-    :message="notificationMessage"
-    :type="notificationType"
-    :autoCloseDelay="3000"
-  />
-
   <footer class="footer">
     <div class="footer__container">
       <nav class="footer__nav">
@@ -72,11 +65,9 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import BaseInput from '@/components/ui/BaseInput.vue'
-  import EmailNotification from '@/components/EmailNotification.vue'
   import { validateInput } from '@/utils/validateInput'
   import { copyrightLinks, footerLinks, socialLinks } from '@/config/navigation'
-
-  type NotificationType = 'success' | 'error' | 'warning' | 'info'
+  import { useNotification } from '@/composables/useNotification'
 
   const form = ref<HTMLFormElement | null>(null)
   const emailInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
@@ -86,9 +77,7 @@
   const showErrors = ref(false)
   const errors = ref<Record<string, string>>({})
 
-  const showNotification = ref(false)
-  const notificationMessage = ref('')
-  const notificationType = ref<NotificationType>('info')
+  const { notify } = useNotification()
 
   //Валидируем форму перед отправкой
   const validateForm = (): boolean => {
@@ -101,7 +90,10 @@
     }
 
     if (!consentCheckbox.value?.checked) {
-      showAlert('You must agree to the terms of use.', 'warning')
+      notify({
+        message: 'You must agree to the terms of use.',
+        type: 'warning',
+      })
       return false
     }
 
@@ -128,12 +120,6 @@
     localStorage.setItem('subscribedEmails', JSON.stringify(emails))
   }
 
-  const showAlert = (message: string, type: NotificationType = 'info') => {
-    notificationMessage.value = message
-    notificationType.value = type
-    showNotification.value = true
-  }
-
   const resetForm = () => {
     showErrors.value = false
     email.value = ''
@@ -151,9 +137,15 @@
 
     if (isEmailNew(emailValue, emails)) {
       saveEmail(emailValue, emails)
-      showAlert('Email sent!', 'success')
+      notify({
+        message: 'Email sent!',
+        type: 'success',
+      })
     } else {
-      showAlert('This email has already been sent.', 'info')
+      notify({
+        message: 'This email has already been sent.',
+        type: 'info',
+      })
     }
 
     resetForm()

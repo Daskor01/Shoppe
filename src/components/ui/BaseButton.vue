@@ -1,18 +1,17 @@
 <template>
-  <button class="base-button"></button>
+  <button class="base-button">
+    <slot />
+  </button>
 </template>
 
 <style scoped lang="scss">
   .base-button {
+    @include mixins.flexCenter;
     background-color: transparent;
-    border: 2px solid;
-    color: vars.$color-light;
-    padding: 15px 32px;
-    text-align: center;
+    border: 1px solid;
+    padding: 16px 32px;
     text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    font-size: 1rem;
     cursor: pointer;
   }
 </style>

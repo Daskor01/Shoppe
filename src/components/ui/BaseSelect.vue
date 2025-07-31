@@ -5,7 +5,7 @@
       class="base-select__native"
       @change="model = ($event.target as HTMLSelectElement).value"
     >
-      <option v-if="placeholder" :selected="modelValue === ''" value="" disabled hidden>
+      <option v-if="placeholder" value="" disabled hidden>
         {{ placeholder }}
       </option>
 

@@ -69,18 +69,6 @@
         </NuxtLink>
       </div>
     </SlidePanel>
-
-    <SlidePanel
-      v-model="cartStore.isOpen"
-      :mobile-only="false"
-      side="right"
-      class="header__sidebar"
-      :width="widthSidebar"
-    >
-      <ClientOnly>
-        <CartSidebar />
-      </ClientOnly>
-    </SlidePanel>
   </header>
 </template>
 
@@ -88,13 +76,10 @@
   import SearchInput from '@/components/ui/SearchInput.vue'
   import { navigationLinks, headerLinks, headerActions, mobileLinks } from '@/config/navigation'
   import SlidePanel from '@/components/ui/SlidePanel.vue'
-  import CartSidebar from '@/components/ui/CartSidebar.vue'
   import IconCart from '@/components/icons/IconCart.vue'
   import IconMenu from '@/components/icons/IconMenu.vue'
   import IconClose from '@/components/icons/IconClose.vue'
   import { useCartStore } from '@/stores/useCartStore'
-  import { useBreakpoint } from '@/composables/useBreakpoint'
-  import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
 
   const cartStore = useCartStore()
 
@@ -135,11 +120,6 @@
         break
     }
   }
-
-  //Управляем шириной сайдбара в зависимости от ширины экрана
-  const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
-
-  const widthSidebar = computed(() => (isMobile.value ? '320px' : '360px'))
 
   //Определяем высоту header
   const headerRef = ref<HTMLElement | null>(null)
@@ -259,10 +239,6 @@
       block-size: 1px;
       background-color: vars.$color-dark;
       margin-block: 30px 16px;
-    }
-
-    &__sidebar {
-      border-inline-start: 1px solid vars.$color-gray;
     }
 
     @media (min-width: vars.$breakpoints-s) {

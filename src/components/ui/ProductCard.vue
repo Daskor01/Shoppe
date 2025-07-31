@@ -1,10 +1,5 @@
 <template>
   <div class="product-card" @click="handleClick">
-    <CartNotification
-      v-model="showCartNotification"
-      message="The item was added to your Shopping bag."
-    />
-
     <div class="product-card__image-wrapper" @mouseenter="hover = true" @mouseleave="hover = false">
       <img :src="product.image" :alt="product.title" class="product-card__image" />
 
@@ -31,7 +26,7 @@
   import { useCartStore } from '@/stores/useCartStore'
   import { useFavoritesStore } from '@/stores/useFavoriteStore'
   import { useBreakpoint } from '@/composables/useBreakpoint'
-  import CartNotification from '@/components/CartNotification.vue'
+  import { useNotification } from '@/composables/useNotification'
 
   const props = defineProps<{
     product: {
@@ -42,18 +37,27 @@
     }
   }>()
 
+  const { notify } = useNotification()
+
   const hover = ref(false)
   const router = useRouter()
 
   const cartStore = useCartStore()
   const favoritesStore = useFavoritesStore()
-  const showCartNotification = ref(false)
 
   const isFavorite = computed(() => favoritesStore.favorites.some((p) => p.id === props.product.id))
 
   const addToCart = () => {
     cartStore.addToCart(props.product)
-    showCartNotification.value = true
+
+    notify({
+      message: 'The item added to your Shopping bag.',
+      type: 'success',
+      buttonText: 'View Cart',
+      buttonHandler: () => {
+        router.push('/cart')
+      },
+    })
   }
   const toggleFavorite = () => favoritesStore.toggle(props.product)
 

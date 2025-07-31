@@ -20,7 +20,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://example.com/api',
+      productApi: process.env.NUXT_PUBLIC_PRODUCTS_API,
+      imageApi: process.env.NUXT_PUBLIC_IMAGE_API,
     },
   },
 

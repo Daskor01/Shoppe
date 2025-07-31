@@ -9,12 +9,12 @@
         <p class="cart-item__price">{{ item.product.price.toFixed(2) }} ₽</p>
       </div>
       <div class="cart-item__controls">
-        <button class="cart-item__controls-button" @click="decrease">−</button>
+        <button class="cart-item__controls-button" @click="$emit('decrease')">−</button>
         <span>{{ item.quantity }}</span>
-        <button class="cart-item__controls-button" @click="increase">+</button>
+        <button class="cart-item__controls-button" @click="$emit('increase')">+</button>
       </div>
     </div>
-    <button class="cart-item__remove" @click="remove">
+    <button class="cart-item__remove" @click="$emit('remove')">
       <IconClose class="cart-item__remove-icon" />
     </button>
   </div>
@@ -26,22 +26,9 @@
 
   const props = defineProps<{
     item: CartItem
-    onIncrease: () => void
-    onDecrease: () => void
-    onRemove: () => void
   }>()
 
-  function increase() {
-    props.onIncrease()
-  }
-
-  function decrease() {
-    props.onDecrease()
-  }
-
-  function remove() {
-    props.onRemove()
-  }
+  const emit = defineEmits(['increase', 'decrease', 'remove'])
 </script>
 
 <style scoped lang="scss">
@@ -55,6 +42,17 @@
     &__image-container {
       inline-size: 136px;
       block-size: 126px;
+
+      @media (min-width: vars.$breakpoints-l) {
+        inline-size: 160px;
+        block-size: 150px;
+        margin-inline-end: 20px;
+      }
+
+      @media (min-width: vars.$breakpoints-l) {
+        inline-size: 200px;
+        block-size: 190px;
+      }
     }
 
     &__image {
@@ -69,11 +67,6 @@
       inline-size: 100%;
     }
 
-    &__text-container {
-      justify-self: start;
-      align-self: start;
-    }
-
     &__name {
       font-weight: 400;
       font-size: 0.9rem;
@@ -84,12 +77,20 @@
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
+
+      @media (min-width: vars.$breakpoints-l) {
+        font-size: 1.2rem;
+      }
     }
 
     &__price {
       margin-block: 6px;
       font-size: 0.8rem;
       color: #666;
+
+      @media (min-width: vars.$breakpoints-l) {
+        font-size: 1rem;
+      }
     }
 
     &__remove {
@@ -103,6 +104,11 @@
       &-icon {
         block-size: 10px;
         inline-size: 10px;
+
+        @media (min-width: vars.$breakpoints-l) {
+          block-size: 20px;
+          inline-size: 20px;
+        }
       }
     }
 
@@ -110,6 +116,7 @@
       display: flex;
       align-items: center;
       justify-self: end;
+      align-self: end;
       justify-content: space-between;
       color: vars.$color-gray;
       background-color: vars.$color-ligth-gray;
@@ -117,10 +124,20 @@
       inline-size: 100px;
       border-radius: 4px;
 
+      @media (min-width: vars.$breakpoints-l) {
+        block-size: 45px;
+        inline-size: 130px;
+        font-size: 1.2rem;
+      }
+
       &-button {
         color: vars.$color-gray;
         border: none;
         cursor: pointer;
+
+        @media (min-width: vars.$breakpoints-l) {
+          font-size: 1.2rem;
+        }
       }
     }
   }

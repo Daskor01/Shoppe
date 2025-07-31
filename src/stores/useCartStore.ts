@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import type { Product } from '@/types/Product'
+import { useApi } from '@/composables/useApi'
+import { useDebouncedFn } from '@/composables/useDebouncedFn'
 
 export interface CartItem {
   product: Product
@@ -38,29 +40,38 @@ export const useCartStore = defineStore('cart', () => {
   //Отправка корзины на фейковый бэкенд
   async function syncCartWithBackend() {
     try {
-      await fetch('https://fakestoreapi.com/carts', {
+      const config = useRuntimeConfig()
+      const baseUrl = config.public.productApi
+      const { fetchApi } = useApi(baseUrl)
+
+      const response = await fetchApi('/carts', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        body: {
           userId: 1,
           date: new Date().toISOString(),
           products: cartItems.value.map((item) => ({
             productId: item.product.id,
             quantity: item.quantity,
           })),
-        }),
+        },
+        headers: { 'Content-Type': 'application/json' },
       })
     } catch (error) {
       console.error('Ошибка при синхронизации с API', error)
     }
   }
 
+  //Используем дебаунс
+  const debouncedSync = useDebouncedFn(() => {
+    saveCartToStorage()
+    syncCartWithBackend()
+  }, 500)
+
   //Следим за изменениями и сохраняем
   watch(
     cartItems,
     () => {
-      saveCartToStorage()
-      syncCartWithBackend()
+      debouncedSync()
     },
     { deep: true },
   )
@@ -107,6 +118,11 @@ export const useCartStore = defineStore('cart', () => {
     isOpen.value = !isOpen.value
   }
 
+  //Computed свойства
+  const itemsCounter = computed(() => cartItems.value.length)
+  const itemSuffix = computed(() => (cartItems.value.length > 1 ? 's' : ''))
+  const formattedTotalPrice = computed(() => totalPrice.value.toFixed(2))
+
   const totalPrice = computed(() =>
     cartItems.value.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
   )
@@ -124,5 +140,8 @@ export const useCartStore = defineStore('cart', () => {
     toggleCart,
     loadCartFromStorage,
     isLoaded,
+    itemsCounter,
+    itemSuffix,
+    formattedTotalPrice,
   }
 })

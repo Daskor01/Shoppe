@@ -1,6 +1,6 @@
 <template>
   <div class="cart-content">
-    <button v-if="isMobile" class="cart-content__close" @click="cartStore.closeCart">
+    <button class="cart-content__close" @click="cartStore.closeCart">
       <IconBaseArrowLeft />
     </button>
 
@@ -20,9 +20,9 @@
           v-for="item in cartStore.cartItems"
           :key="item.product.id"
           :item="item"
-          :onIncrease="() => increase(item.product.id)"
-          :onDecrease="() => decrease(item.product.id)"
-          :onRemove="() => remove(item.product.id)"
+          @increase="increase(item.product.id)"
+          @decrease="decrease(item.product.id)"
+          @remove="remove(item.product.id)"
         />
       </TransitionGroup>
     </div>
@@ -31,24 +31,24 @@
       <div class="cart-content__line" />
       <div class="cart-content__total">
         <span> Subtotal ({{ itemsCounter }} item{{ itemSuffix }}) </span>
-        <span> $ {{ totalPrice }} </span>
+        <span> $ {{ formattedTotalPrice }} </span>
       </div>
-      <NuxtLink class="cart-content__checkout" to="/Checkout"> View Cart </NuxtLink>
+
+      <BaseButton class="cart-content__checkout" @click="goToCheckout"> View Cart </BaseButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import CartItem from '@/components/ui/CartItem.vue'
+  import BaseButton from '@/components/ui/BaseButton.vue'
   import { useCartStore } from '@/stores/useCartStore'
-  import { useBreakpoint } from '@/composables/useBreakpoint'
-  import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
+  import { useRouter } from 'vue-router'
 
+  const router = useRouter()
   const cartStore = useCartStore()
 
-  const itemsCounter = computed(() => cartStore.cartItems.length)
-  const itemSuffix = computed(() => (cartStore.cartItems.length > 1 ? 's' : ''))
-  const totalPrice = computed(() => cartStore.totalPrice.toFixed(2))
+  const { itemsCounter, itemSuffix, formattedTotalPrice } = storeToRefs(cartStore)
 
   function remove(id: number) {
     cartStore.removeFromCart(id)
@@ -68,7 +68,10 @@
     }
   }
 
-  const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
+  function goToCheckout() {
+    cartStore.closeCart()
+    router.push('/Checkout')
+  }
 </script>
 
 <style scoped lang="scss">
@@ -79,7 +82,7 @@
     flex-direction: column;
     block-size: 100%;
 
-    @media (max-width: vars.$breakpoints-m) {
+    @media (max-width: vars.$breakpoints-l) {
       padding: 0;
     }
 
@@ -92,6 +95,7 @@
       white-space: nowrap;
       font-size: 1rem;
     }
+
     &__close {
       position: absolute;
       background: transparent;
@@ -101,15 +105,29 @@
       cursor: pointer;
       inset-block-start: 0;
       inset-inline-start: 0;
+
+      @media (min-width: vars.$breakpoints-l) {
+        inset-block-start: 26px;
+        border: none;
+        inline-size: 24px;
+        block-size: 24px;
+      }
+
+      svg {
+        block-size: 100%;
+        inline-size: 100%;
+      }
     }
 
     &__title {
       font-size: 1rem;
       font-weight: 400;
       margin: 0;
+      text-align: center;
+      display: inline-block;
 
-      @media (max-width: vars.$breakpoints-m) {
-        text-align: center;
+      @media (min-width: vars.$breakpoints-l) {
+        font-size: 1.6rem;
       }
     }
 
@@ -118,6 +136,10 @@
       font-weight: 400;
       color: vars.$color-gray;
       margin: 18px 0 8px 0;
+
+      @media (min-width: vars.$breakpoints-l) {
+        font-size: 1.4rem;
+      }
     }
 
     &__list {
@@ -146,30 +168,32 @@
       z-index: 1000;
       overflow: hidden;
 
-      @media (min-width: vars.$breakpoints-m) {
+      @media (min-width: vars.$breakpoints-l) {
         margin-inline-start: -42px;
       }
     }
 
     &__total {
       display: flex;
-      margin-inline: -20px;
       justify-content: space-between;
+
+      @media (min-width: vars.$breakpoints-l) {
+        font-size: 1.4rem;
+      }
     }
 
     &__checkout {
-      @include mixins.flexCenter;
-      margin-inline: -16px;
-      border: 1px solid vars.$color-dark;
-      font-size: 1rem;
-      padding: 1rem;
+      border-color: vars.$color-dark;
       border-radius: 4px;
       color: vars.$color-dark;
-      text-decoration: none;
       text-transform: uppercase;
       font-weight: 700;
       inline-size: 100%;
       transition: 0.4s;
+
+      @media (min-width: vars.$breakpoints-l) {
+        font-size: 1.4rem;
+      }
 
       &:hover {
         color: vars.$color-light;
