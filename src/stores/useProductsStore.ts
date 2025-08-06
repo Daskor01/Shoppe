@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { type Product } from '@/types/Product'
 
 export const useProductsStore = defineStore('products', () => {
-  const products = ref<any[]>([])
+  const products = ref<Product[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const activePromises = new Map<string, Promise<void>>()

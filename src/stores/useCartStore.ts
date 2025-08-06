@@ -61,13 +61,11 @@ export const useCartStore = defineStore('cart', () => {
     }
   }
 
-  //Используем дебаунс
   const debouncedSync = useDebouncedFn(() => {
     saveCartToStorage()
     syncCartWithBackend()
   }, 500)
 
-  //Следим за изменениями и сохраняем
   watch(
     cartItems,
     () => {
@@ -118,7 +116,6 @@ export const useCartStore = defineStore('cart', () => {
     isOpen.value = !isOpen.value
   }
 
-  //Computed свойства
   const itemsCounter = computed(() => cartItems.value.length)
   const itemSuffix = computed(() => (cartItems.value.length > 1 ? 's' : ''))
   const formattedTotalPrice = computed(() => totalPrice.value.toFixed(2))

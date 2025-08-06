@@ -44,6 +44,12 @@
     download_url: string
   }
 
+  interface QueryParams {
+    [key: string]: string | number | boolean | undefined
+    page: number
+    limit: number
+  }
+
   const images = ref<ImageItem[]>([])
   const pending = ref(false)
   const error = ref<string | null>(null)
@@ -55,9 +61,9 @@
   async function loadImages() {
     pending.value = true
     try {
-      images.value = (await fetchApi('/v2/list', {
+      images.value = await fetchApi<ImageItem[], undefined, QueryParams>('/v2/list', {
         query: { page: 1, limit: 10 },
-      })) as ImageItem[]
+      })
     } catch (e: any) {
       error.value = e.message || 'Ошибка загрузки'
     } finally {
@@ -65,7 +71,9 @@
     }
   }
 
-  onMounted(loadImages)
+  onMounted(() => {
+    loadImages()
+  })
 </script>
 
 <style lang="scss">

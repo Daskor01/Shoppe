@@ -53,9 +53,11 @@
     notify({
       message: 'The item added to your Shopping bag.',
       type: 'success',
-      buttonText: 'View Cart',
-      buttonHandler: () => {
-        router.push('/cart')
+      button: {
+        text: 'View Cart',
+        handler: () => {
+          router.push('/cart')
+        },
       },
     })
   }

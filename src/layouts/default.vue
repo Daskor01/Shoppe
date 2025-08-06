@@ -7,14 +7,14 @@
       :visible="visible"
       :message="message"
       :type="type"
-      :buttonText="buttonText"
-      :buttonHandler="buttonHandler"
+      :buttonText="button?.text"
+      :buttonHandler="button?.handler"
     />
     <SlidePanel
       v-model="cartStore.isOpen"
       :mobile-only="false"
       side="right"
-      class="header__sidebar"
+      class="cart-sidebar"
       :width="widthSidebar"
     >
       <ClientOnly>
@@ -35,9 +35,8 @@
   const cartStore = useCartStore()
   const store = useNotificationStore()
 
-  const { visible, message, type, buttonText, buttonHandler } = storeToRefs(store)
+  const { visible, message, type, button } = storeToRefs(store)
 
-  //Управляем шириной сайдбара в зависимости от ширины экрана
   const { isBelow: isMobile } = useBreakpoint(DESKTOP_BREAKPOINT)
 
   const widthSidebar = computed(() => (isMobile.value ? '320px' : '540px'))

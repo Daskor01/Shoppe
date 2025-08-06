@@ -1,39 +1,52 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import type { ButtonProps, NotificationType } from '@/types/Notification'
 
 export const useNotificationStore = defineStore('notification', () => {
   const visible = ref(false)
   const message = ref('')
-  const type = ref<'success' | 'error' | 'warning' | 'info'>('info')
-  const buttonText = ref('')
-  const buttonHandler = ref<() => void>()
+  const type = ref<NotificationType>('info')
+  const button = ref<ButtonProps | null>(null)
+
+  interface NotificationState {
+    message: string
+    type: 'success' | 'error' | 'warning' | 'info'
+    button?: ButtonProps | null
+    visible: boolean
+  }
+
+  const notification = ref<NotificationState>({
+    message: '',
+    type: 'info',
+    button: null,
+    visible: false,
+  })
 
   function showNotification(
-    msg: string,
-    notifType: typeof type.value = 'info',
-    btnText = '',
-    btnHandler?: () => void,
+    message: string,
+    notificationType: NotificationType = 'info',
+    buttonObj?: ButtonProps,
   ) {
-    message.value = msg
-    type.value = notifType
-    buttonText.value = btnText
-    buttonHandler.value = btnHandler
-    visible.value = true
+    notification.value = {
+      message: message,
+      type: notificationType,
+      button: buttonObj || null,
+      visible: true,
+    }
   }
 
   function hideNotification() {
     visible.value = false
     message.value = ''
-    buttonText.value = ''
-    buttonHandler.value = undefined
+    button.value = null
+    type.value = 'info'
   }
 
   return {
     visible,
     message,
     type,
-    buttonText,
-    buttonHandler,
+    button,
     showNotification,
     hideNotification,
   }

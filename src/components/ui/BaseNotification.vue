@@ -13,12 +13,8 @@
         <slot>{{ message }}</slot>
       </div>
 
-      <button
-        v-if="buttonText && buttonHandler"
-        @click="buttonHandler"
-        class="base-notification__button"
-      >
-        {{ buttonText }}
+      <button v-if="button?.text" @click="button?.handler" class="base-notification__button">
+        {{ button?.text }}
       </button>
     </div>
   </transition>
@@ -30,14 +26,9 @@
   import IconError from '@/components/icons/IconError.vue'
   import IconInfo from '@/components/icons/IconInfo.vue'
   import IconWarning from '@/components/icons/IconWarning.vue'
+  import type { NotificationProps } from '@/types/Notification'
 
-  const props = defineProps<{
-    visible: boolean
-    message: string
-    type?: 'success' | 'error' | 'warning' | 'info'
-    buttonText?: string
-    buttonHandler?: () => void
-  }>()
+  const props = defineProps<NotificationProps>()
 
   //Отрисовываем иконку в зависимости от типа уведомления
   const iconMap = {

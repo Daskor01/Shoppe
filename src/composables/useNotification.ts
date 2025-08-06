@@ -1,22 +1,11 @@
 import { useNotificationStore } from '@/stores/useNotificationStore'
+import type { NotificationParams } from '@/types/Notification'
 
 export function useNotification() {
   const store = useNotificationStore()
 
-  function notify({
-    message,
-    type = 'info',
-    duration = 3000,
-    buttonText = '',
-    buttonHandler,
-  }: {
-    message: string
-    type?: 'success' | 'error' | 'warning' | 'info'
-    duration?: number
-    buttonText?: string
-    buttonHandler?: () => void
-  }) {
-    store.showNotification(message, type, buttonText, buttonHandler)
+  function notify({ message, type = 'info', duration = 3000, button }: NotificationParams) {
+    store.showNotification(message, type, button)
 
     if (duration > 0) {
       setTimeout(() => {
