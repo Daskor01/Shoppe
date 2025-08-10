@@ -10,7 +10,7 @@ export const useNotificationStore = defineStore('notification', () => {
 
   interface NotificationState {
     message: string
-    type: 'success' | 'error' | 'warning' | 'info'
+    type: NotificationType
     button?: ButtonProps | null
     visible: boolean
   }

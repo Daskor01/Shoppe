@@ -37,18 +37,7 @@
   import 'swiper/css/pagination'
   import { useApi } from '@/composables/useApi'
   import { ref, onMounted } from 'vue'
-
-  interface ImageItem {
-    id: string
-    author: string
-    download_url: string
-  }
-
-  interface QueryParams {
-    [key: string]: string | number | boolean | undefined
-    page: number
-    limit: number
-  }
+  import type { ImageItem, QueryParams } from '@/types/Carousel'
 
   const images = ref<ImageItem[]>([])
   const pending = ref(false)
