@@ -67,14 +67,6 @@ export default function useShopFilters(filters: Ref<Filters>) {
         product.price <= filters.value.priceRange[1],
     )
 
-    if (filters.value.onSale) {
-      products = products.filter((product) => product.onSale === true)
-    }
-
-    if (filters.value.inStock) {
-      products = products.filter((product) => product.stock > 0)
-    }
-
     switch (filters.value.sortBy) {
       case 'price-asc':
         products = products.sort((a, b) => a.price - b.price)
