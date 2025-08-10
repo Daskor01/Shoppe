@@ -40,7 +40,7 @@ export default function useShopFilters(filters: Ref<Filters>) {
   }
 
   function updateQuery() {
-    const query: Record<string, any> = {}
+    const query: Record<string, string | number> = {}
 
     if (filters.value.search) query.search = filters.value.search
     if (filters.value.category) query.category = filters.value.category
