@@ -6,8 +6,8 @@
       :name="name"
       :placeholder="placeholder"
       :value="modelValue"
-      :class="{ 'is-error': error }"
       ref="inputRef"
+      :class="{ 'is-error': error }"
       class="base-input__input"
       @input="onInput"
     />
