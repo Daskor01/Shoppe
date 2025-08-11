@@ -33,9 +33,9 @@
 
 <style scoped lang="scss">
   .cart-item {
+    position: relative;
     display: flex;
     gap: 1rem;
-    position: relative;
     min-inline-size: 288px;
     min-block-size: 140px;
 
@@ -58,8 +58,8 @@
     &__image {
       inline-size: 100%;
       block-size: 100%;
-      border-radius: 4px;
       object-fit: contain;
+      border-radius: 4px;
     }
 
     &__details {
@@ -68,14 +68,14 @@
     }
 
     &__name {
-      font-weight: 400;
-      font-size: 0.9rem;
+      display: -webkit-box;
       max-inline-size: 100px;
       margin: 0 0 0.25rem;
       overflow: hidden;
       text-overflow: ellipsis;
-      display: -webkit-box;
       -webkit-line-clamp: 3;
+      font-size: 0.9rem;
+      font-weight: 400;
       -webkit-box-orient: vertical;
 
       @media (min-width: vars.$breakpoints-l) {
@@ -94,20 +94,20 @@
     }
 
     &__remove {
-      background: transparent;
-      border: none;
       position: absolute;
       inset-block-start: 0;
       inset-inline-end: 0;
       cursor: pointer;
+      background: transparent;
+      border: none;
 
       &-icon {
-        block-size: 10px;
         inline-size: 10px;
+        block-size: 10px;
 
         @media (min-width: vars.$breakpoints-l) {
-          block-size: 20px;
           inline-size: 20px;
+          block-size: 20px;
         }
       }
     }
@@ -115,25 +115,24 @@
     &__controls {
       display: flex;
       align-items: center;
-      justify-self: end;
-      align-self: end;
+      place-self: end end;
       justify-content: space-between;
+      inline-size: 100px;
+      block-size: 34px;
       color: vars.$color-gray;
       background-color: vars.$color-ligth-gray;
-      block-size: 34px;
-      inline-size: 100px;
       border-radius: 4px;
 
       @media (min-width: vars.$breakpoints-l) {
-        block-size: 45px;
         inline-size: 130px;
+        block-size: 45px;
         font-size: 1.2rem;
       }
 
       &-button {
         color: vars.$color-gray;
-        border: none;
         cursor: pointer;
+        border: none;
 
         @media (min-width: vars.$breakpoints-l) {
           font-size: 1.2rem;

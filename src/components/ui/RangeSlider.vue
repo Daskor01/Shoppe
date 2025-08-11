@@ -80,10 +80,10 @@
 <style scoped lang="scss">
   .range-slider {
     position: relative;
-    padding-block: 1rem;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding-block: 1rem;
 
     &__header {
       display: flex;
@@ -107,13 +107,13 @@
 
     &__text-container {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
 
     &__text {
-      font-weight: 400;
       font-size: 14px;
+      font-weight: 400;
       line-height: 157%;
       color: vars.$color-gray;
     }
@@ -123,10 +123,10 @@
     }
 
     &__filter-button {
-      background: transparent;
-      border: none;
       color: vars.$color-accent-light;
       cursor: pointer;
+      background: transparent;
+      border: none;
       transition: 0.2s;
 
       &:hover {
@@ -137,20 +137,20 @@
 
   input[type='range'] {
     position: absolute;
+    z-index: 2;
     inline-size: 100%;
     block-size: 0;
+    appearance: none;
     pointer-events: none;
-    -webkit-appearance: none;
     background: none;
-    z-index: 2;
   }
 
   input[type='range']::-webkit-slider-thumb {
-    pointer-events: all;
     inline-size: 4px;
     block-size: 10px;
+    appearance: none;
+    pointer-events: all;
     background-color: vars.$color-dark;
     border: none;
-    -webkit-appearance: none;
   }
 </style>

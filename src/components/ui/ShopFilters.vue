@@ -100,10 +100,10 @@
       }
 
       &-button {
+        cursor: pointer;
         background: transparent;
         border: none;
         transition: 0.3s;
-        cursor: pointer;
 
         &:hover {
           opacity: 0.5;
@@ -124,11 +124,11 @@
     &__select {
       inline-size: 100%;
       padding: 12px 16px;
+      font-size: 14px;
+      appearance: none;
+      cursor: pointer;
       border: 1px solid vars.$color-ligth-gray;
       border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-      appearance: none;
 
       &-icon {
         position: absolute;
@@ -139,8 +139,8 @@
 
     &__toggle {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
     }
   }
 </style>

@@ -18,11 +18,11 @@
 
     &__input {
       inline-size: calc(100% - 20px);
-      border: none;
-      background-color: vars.$color-ligth-gray;
       block-size: 32px;
-      border-radius: 4px;
       padding: 0 10px;
+      background-color: vars.$color-ligth-gray;
+      border: none;
+      border-radius: 4px;
 
       &::placeholder {
         padding-inline-start: 20px;

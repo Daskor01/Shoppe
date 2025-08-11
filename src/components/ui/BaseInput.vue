@@ -56,14 +56,14 @@
     position: relative;
 
     &__input {
+      display: inline-block;
+      inline-size: 100%;
+      block-size: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      outline: none;
       background-color: transparent;
       border: none;
-      outline: none;
-      display: inline-block;
-      font-size: 16px;
-      block-size: 30px;
-      cursor: pointer;
-      inline-size: 100%;
     }
 
     &__error {

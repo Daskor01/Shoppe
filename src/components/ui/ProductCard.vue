@@ -76,12 +76,12 @@
 
 <style scoped lang="scss">
   .product-card {
-    inline-size: clamp(8.5rem, 4.1964rem + 21.5179vw, 23.5625rem);
-    block-size: clamp(11.75rem, 6.6786rem + 25.3571vw, 29.5rem);
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: relative;
+    inline-size: clamp(8.5rem, 4.1964rem + 21.5179vw, 23.5625rem);
+    block-size: clamp(11.75rem, 6.6786rem + 25.3571vw, 29.5rem);
     cursor: pointer;
 
     &__image-wrapper {
@@ -112,18 +112,18 @@
       position: absolute;
       inset-block-start: 50%;
       inset-inline-start: 50%;
-      transform: translate(-50%, -50%);
+      z-index: 2;
       display: flex;
       gap: 1rem;
       align-items: center;
-      z-index: 2;
+      transform: translate(-50%, -50%);
     }
 
     &__icon-button {
+      padding: 0.5rem;
+      cursor: pointer;
       background: transparent;
       border: none;
-      cursor: pointer;
-      padding: 0.5rem;
       transition: 0.2s;
 
       &:hover {
@@ -133,19 +133,19 @@
 
     &__title {
       inline-size: 100%;
+      margin-block: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
       font-size: clamp(0.875rem, 0.7679rem + 0.5357vw, 1.25rem);
       font-weight: 400;
       line-height: 130%;
       white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      margin-block: 5px;
     }
 
     &__price {
+      margin: 0;
       font-weight: bold;
       color: vars.$color-accent-light;
-      margin: 0;
     }
 
     &__image {

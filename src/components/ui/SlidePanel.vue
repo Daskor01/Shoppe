@@ -85,14 +85,14 @@
   .slide-panel {
     position: fixed;
     inset: 0;
+    top: v-bind('props.topOffset || 0');
     z-index: 3000;
     pointer-events: none;
-    top: v-bind('props.topOffset || 0');
 
     &__backdrop {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgb(0 0 0 / 40%);
       opacity: 0;
       transition: opacity 0.3s ease;
     }
@@ -100,25 +100,25 @@
     &__container {
       position: absolute;
       inset-block-start: 0;
+      display: flex;
+      flex-direction: column;
       inline-size: 100%;
       max-inline-size: 320px;
       block-size: 100%;
       background: vars.$color-light;
       transform: translateX(-100%);
       transition: transform 0.3s ease;
-      display: flex;
-      flex-direction: column;
 
       &--left {
         inset-inline-start: 0;
-        transform: translateX(-100%);
         border-inline-end: 1px solid vars.$color-gray;
+        transform: translateX(-100%);
       }
 
       &--right {
         inset-inline-end: 0;
-        transform: translateX(100%);
         border-inline-start: 1px solid vars.$color-gray;
+        transform: translateX(100%);
       }
     }
 
@@ -126,16 +126,16 @@
       position: absolute;
       inset-block-start: 1rem;
       inset-inline-end: 1rem;
-      background: none;
-      border: none;
       font-size: 2rem;
       cursor: pointer;
+      background: none;
+      border: none;
     }
 
     &__content {
+      flex: 1;
       padding: 1rem;
       overflow-y: auto;
-      flex: 1;
       scrollbar-width: none;
       -ms-overflow-style: none;
 

@@ -33,8 +33,8 @@
   .latest-products {
     &__header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       margin-block-start: 2rem;
     }
 
@@ -43,10 +43,10 @@
     }
 
     &__link {
+      font-size: 20px;
       color: vars.$color-accent-light;
       text-decoration: none;
       transition: 0.4s;
-      font-size: 20px;
 
       &:hover {
         opacity: 0.5;

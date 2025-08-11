@@ -81,18 +81,18 @@
       justify-content: center;
       inline-size: 44px;
       block-size: 44px;
-      border: 1px solid vars.$color-ligth-gray;
-      background: white;
-      cursor: pointer;
-      border-radius: 4px;
       font-size: 1rem;
+      cursor: pointer;
+      background: white;
+      border: 1px solid vars.$color-ligth-gray;
+      border-radius: 4px;
       transition: 0.2s ease;
     }
 
     &__button.active {
-      background: vars.$color-dark;
-      color: vars.$color-light;
       font-weight: bold;
+      color: vars.$color-light;
+      background: vars.$color-dark;
     }
 
     &__button:disabled {

@@ -97,9 +97,9 @@
 
 <style scoped lang="scss">
   .shop {
+    position: relative;
     display: flex;
     gap: 34px;
-    position: relative;
     justify-content: space-between;
 
     @media (max-width: vars.$breakpoints-xl) {
@@ -109,29 +109,29 @@
   }
 
   .mobile__container {
-    inline-size: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;
     align-self: start;
+    inline-size: 100%;
   }
 
   .filter {
     &-toggle {
       display: flex;
+      gap: 8px;
+      align-items: center;
+      align-self: self-start;
+      color: vars.$color-accent-light;
+      cursor: pointer;
       background: transparent;
       border: none;
-      color: vars.$color-accent-light;
-      align-items: center;
-      gap: 8px;
-      align-self: self-start;
-      cursor: pointer;
     }
 
     &-mobile__title {
       font-family: vars.$secondary-font;
-      font-weight: 400;
       font-size: 20px;
+      font-weight: 400;
       line-height: 130%;
     }
 
@@ -140,8 +140,8 @@
       inset-block-start: 3rem;
 
       &__title {
-        font-weight: 500;
         font-size: 32px;
+        font-weight: 500;
         line-height: 130%;
       }
     }
@@ -151,9 +151,9 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
+    justify-content: space-between;
     margin: 2rem;
     margin-block-start: 5rem;
-    justify-content: space-between;
 
     @media (max-width: vars.$breakpoints-xxl) {
       grid-template-columns: repeat(2, 1fr);

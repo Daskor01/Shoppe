@@ -96,8 +96,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 16px;
     overflow: hidden;
+    border-radius: 16px;
 
     img {
       inline-size: 100%;
@@ -113,40 +113,41 @@
       position: absolute;
       inset-block-start: 40%;
       inset-inline-start: 40px;
-      color: vars.$color-light;
       z-index: 2;
       display: grid;
       gap: 3rem;
+      color: vars.$color-light;
 
       &__title {
-        font-size: 33px;
         margin-block-end: 8px;
+        font-size: 33px;
       }
 
       &__subtitle {
-        font-size: 26px;
         margin-block-end: 16px;
+        font-size: 26px;
       }
 
       &__link {
+        padding: 14px 30px;
         color: vars.$color-light;
         text-decoration: none;
-        padding: 14px 30px;
         border: 1px solid vars.$color-light;
         border-radius: 6px;
         transition: 0.2s;
+
         @include mixins.flexCenter;
 
         &:hover {
-          background-color: vars.$color-light;
           color: vars.$color-dark;
+          background-color: vars.$color-light;
         }
       }
 
       @media (max-width: vars.$breakpoints-s) {
-        gap: 10px;
-        inset-inline-start: 8px;
         inset-block-start: 180px;
+        inset-inline-start: 8px;
+        gap: 10px;
 
         &__title {
           font-size: 20px;
@@ -164,11 +165,12 @@
     }
   }
 
-  //Анимация
+  // Анимация
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity 0.3s ease;
   }
+
   .fade-enter-from,
   .fade-leave-to {
     opacity: 0;

@@ -76,11 +76,11 @@
 
 <style scoped lang="scss">
   .cart-content {
-    padding: 26px;
     position: relative;
     display: flex;
     flex-direction: column;
     block-size: 100%;
+    padding: 26px;
 
     @media (max-width: vars.$breakpoints-l) {
       padding: 0;
@@ -91,40 +91,40 @@
       position: absolute;
       inset-block-start: 50%;
       inset-inline-start: 50%;
-      transform: translate(-50%, -50%);
-      white-space: nowrap;
       font-size: 1rem;
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
     }
 
     &__close {
       position: absolute;
-      background: transparent;
-      border: none;
+      inset-block-start: 0;
+      inset-inline-start: 0;
       inline-size: 20px;
       block-size: 20px;
       cursor: pointer;
-      inset-block-start: 0;
-      inset-inline-start: 0;
+      background: transparent;
+      border: none;
 
       @media (min-width: vars.$breakpoints-l) {
         inset-block-start: 26px;
-        border: none;
         inline-size: 24px;
         block-size: 24px;
+        border: none;
       }
 
       svg {
-        block-size: 100%;
         inline-size: 100%;
+        block-size: 100%;
       }
     }
 
     &__title {
+      display: inline-block;
+      margin: 0;
       font-size: 1rem;
       font-weight: 400;
-      margin: 0;
       text-align: center;
-      display: inline-block;
 
       @media (min-width: vars.$breakpoints-l) {
         font-size: 1.6rem;
@@ -132,10 +132,10 @@
     }
 
     &__counter {
+      margin: 18px 0 8px;
       font-size: 0.8rem;
       font-weight: 400;
       color: vars.$color-gray;
-      margin: 18px 0 8px 0;
 
       @media (min-width: vars.$breakpoints-l) {
         font-size: 1.4rem;
@@ -144,29 +144,29 @@
 
     &__list {
       display: grid;
+      flex: 1 1 auto;
       gap: 1.6rem;
       padding-bottom: 160px;
-      flex: 1 1 auto;
     }
 
     &__line {
       inline-size: calc(100% + 120px);
-      margin: 0 -60px 0;
       block-size: 1px;
+      margin: 0 -60px;
       background-color: vars.$color-gray;
     }
 
     &__footer {
       position: fixed;
-      background-color: vars.$color-light;
+      inset-block-end: -16px;
+      z-index: 1000;
       display: grid;
       gap: 20px;
-      inset-block-end: -16px;
-      margin-inline-start: -16px;
       inline-size: calc(100% - 70px);
       padding: 0 36px 40px;
-      z-index: 1000;
+      margin-inline-start: -16px;
       overflow: hidden;
+      background-color: vars.$color-light;
 
       @media (min-width: vars.$breakpoints-l) {
         margin-inline-start: -42px;
@@ -183,12 +183,12 @@
     }
 
     &__checkout {
-      border-color: vars.$color-dark;
-      border-radius: 4px;
+      inline-size: 100%;
+      font-weight: 700;
       color: vars.$color-dark;
       text-transform: uppercase;
-      font-weight: 700;
-      inline-size: 100%;
+      border-color: vars.$color-dark;
+      border-radius: 4px;
       transition: 0.4s;
 
       @media (min-width: vars.$breakpoints-l) {
@@ -202,7 +202,7 @@
     }
   }
 
-  //Анимация для списка товаров в корзине
+  // Анимация для списка товаров в корзине
   .cart-list-enter-active,
   .cart-list-leave-active {
     transition: all 0.3s ease;

@@ -109,9 +109,9 @@
       img {
         inline-size: 60px;
         block-size: 60px;
+        cursor: pointer;
         object-fit: cover;
         border: 2px solid transparent;
-        cursor: pointer;
 
         &.active {
           border-color: black;
@@ -128,13 +128,13 @@
       flex: 1;
 
       .product-title {
-        font-size: 24px;
         margin-block-end: 10px;
+        font-size: 24px;
       }
 
       .product-price {
-        font-weight: bold;
         font-size: 18px;
+        font-weight: bold;
       }
 
       .product-description {
@@ -149,17 +149,17 @@
 
         .add-to-cart {
           padding: 0.5rem 1rem;
-          background-color: black;
           color: white;
-          border: none;
           cursor: pointer;
+          background-color: black;
+          border: none;
         }
       }
 
       .quantity-selector {
         display: flex;
-        align-items: center;
         gap: 0.5rem;
+        align-items: center;
 
         button {
           inline-size: 30px;

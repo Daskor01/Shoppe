@@ -7,11 +7,12 @@
 <style scoped lang="scss">
   .base-button {
     @include mixins.flexCenter;
+
+    padding: 16px 32px;
+    font-size: 1rem;
+    text-decoration: none;
+    cursor: pointer;
     background-color: transparent;
     border: 1px solid;
-    padding: 16px 32px;
-    text-decoration: none;
-    font-size: 1rem;
-    cursor: pointer;
   }
 </style>

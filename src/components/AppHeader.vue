@@ -155,8 +155,8 @@
 
     &__container {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       padding: 10px 0;
     }
 
@@ -167,8 +167,8 @@
     &__divider {
       inline-size: 1px;
       block-size: 24px;
-      background-color: vars.$color-dark;
       margin: 0 2rem;
+      background-color: vars.$color-dark;
     }
 
     &__nav {
@@ -177,8 +177,8 @@
     }
 
     &__link {
-      text-decoration: none;
       color: vars.$color-dark;
+      text-decoration: none;
       transition: 0.3s;
 
       &:hover {
@@ -187,9 +187,9 @@
     }
 
     &__icons-button {
+      cursor: pointer;
       background-color: transparent;
       border: none;
-      cursor: pointer;
       transition: 0.3s;
 
       &:hover {
@@ -204,9 +204,9 @@
 
     &__button {
       display: block;
+      cursor: pointer;
       background-color: transparent;
       border: none;
-      cursor: pointer;
       transition: 0.3s;
 
       &:hover {
@@ -217,16 +217,16 @@
     &__mobile-nav {
       display: flex;
       flex-direction: column;
-      align-items: start;
       row-gap: 24px;
+      align-items: start;
       padding-block: 40px;
     }
 
     &__mobile-link {
       font-size: 20px;
       line-height: 130%;
-      text-decoration: none;
       color: vars.$color-dark;
+      text-decoration: none;
       transition: 0.3s;
 
       &:hover {
@@ -237,8 +237,8 @@
     &__separator {
       inline-size: 100%;
       block-size: 1px;
-      background-color: vars.$color-dark;
       margin-block: 30px 16px;
+      background-color: vars.$color-dark;
     }
 
     @media (min-width: vars.$breakpoints-s) {

@@ -45,9 +45,9 @@
 <style lang="scss">
   .container {
     inline-size: 100%;
-    margin: 0 auto;
     max-inline-size: 1680px;
     padding: 0 120px;
+    margin: 0 auto;
 
     @media (max-width: vars.$breakpoints-xxl) {
       max-inline-size: 1248px;

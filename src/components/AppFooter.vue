@@ -159,23 +159,23 @@
 
     &__container {
       display: grid;
-      grid-template-columns: 1fr 1fr;
       grid-template-areas:
         'nav form'
         'copyright socials';
+      grid-template-columns: 1fr 1fr;
       row-gap: 50px;
     }
 
     &__nav {
-      grid-area: nav;
-      text-transform: uppercase;
       display: flex;
+      grid-area: nav;
       column-gap: 40px;
+      text-transform: uppercase;
     }
 
     &__link {
-      color: vars.$color-gray;
       line-height: 169%;
+      color: vars.$color-gray;
       text-decoration: none;
       transition: 0.5s;
 
@@ -189,35 +189,35 @@
     }
 
     &__form {
-      grid-area: form;
-      display: flex;
-      align-items: center;
-      max-block-size: 40px;
-      max-inline-size: 396px;
-      border-block-end: 2px solid vars.$color-gray;
-      padding: 0;
-      transition: 0.2s;
       position: relative;
+      display: flex;
+      grid-area: form;
+      align-items: center;
       justify-self: end;
       min-inline-size: 288px;
+      max-inline-size: 396px;
+      max-block-size: 40px;
+      padding: 0;
+      border-block-end: 2px solid vars.$color-gray;
+      transition: 0.2s;
 
       &:has(input:focus) {
         border-block-end-color: vars.$color-dark;
       }
 
       &-input {
-        inline-size: 100%;
         grid-area: input;
+        inline-size: 100%;
         padding-block-start: 10px;
       }
 
       &-button {
-        background-color: transparent;
-        border: none;
+        grid-area: button;
         color: vars.$color-gray;
         cursor: pointer;
+        background-color: transparent;
+        border: none;
         transition: 0.3s;
-        grid-area: button;
 
         &:hover {
           opacity: 0.5;
@@ -229,18 +229,18 @@
       }
 
       &-consent-checkbox {
-        border-color: vars.$color-gray;
         accent-color: vars.$color-gray;
+        border-color: vars.$color-gray;
       }
     }
 
     &__socials {
-      grid-area: socials;
       display: flex;
+      grid-area: socials;
       column-gap: 30px;
-      list-style: none;
       align-items: center;
       justify-self: end;
+      list-style: none;
 
       &-text {
         display: none;
@@ -252,6 +252,7 @@
 
       &-link {
         transition: 0.3s;
+
         &:hover {
           opacity: 0.5;
         }
@@ -261,13 +262,13 @@
     @media (max-width: vars.$breakpoints-l) {
       &__container {
         display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
         grid-template-areas:
           'form'
           'nav'
           'socials'
           'copyright';
+        grid-template-rows: auto;
+        grid-template-columns: 1fr;
         row-gap: 50px;
       }
 
@@ -290,10 +291,10 @@
 
       &__form {
         display: grid;
-        grid-template-columns: 2fr;
         grid-template-areas:
           'input button'
           'consent .';
+        grid-template-columns: 2fr;
 
         &-input {
           font-size: 14px;
@@ -320,8 +321,8 @@
 
         &-separator {
           display: block;
-          block-size: 1px;
           inline-size: 47px;
+          block-size: 1px;
           background-color: vars.$color-dark;
         }
       }

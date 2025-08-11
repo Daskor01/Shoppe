@@ -1,11 +1,11 @@
 body {
-  background-color: vars.$color-light;
-  font-family: vars.$main-font;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  font-family: vars.$main-font;
+  background-color: vars.$color-light;
 }
 
 .no-scroll {
-  overflow: hidden;
   height: 100vh;
+  overflow: hidden;
 }

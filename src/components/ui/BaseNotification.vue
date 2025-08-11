@@ -68,17 +68,17 @@
 
 <style scoped lang="scss">
   .base-notification {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 20px;
-    border-radius: 8px;
     position: fixed;
     top: 20px;
     z-index: 9999;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 14px 20px;
     font-weight: 500;
     color: vars.$color-dark;
     background-color: vars.$color-ligth-gray;
+    border-radius: 8px;
 
     &__icon {
       flex-shrink: 0;
@@ -91,13 +91,13 @@
     }
 
     &__button {
-      border: none;
-      background: none;
-      color: vars.$color-accent-light;
-      font-weight: bold;
-      cursor: pointer;
       padding: 0;
+      font-weight: bold;
+      color: vars.$color-accent-light;
       text-transform: uppercase;
+      cursor: pointer;
+      background: none;
+      border: none;
     }
   }
 

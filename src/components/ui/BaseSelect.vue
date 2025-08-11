@@ -35,19 +35,19 @@
     &__native {
       inline-size: 100%;
       padding: 12px 16px;
+      font-size: 14px;
+      appearance: none;
+      cursor: pointer;
       border: 1px solid vars.$color-ligth-gray;
       border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-      appearance: none;
     }
 
     &__icon {
       position: absolute;
       top: 50%;
       right: 20px;
-      transform: translateY(-50%);
       pointer-events: none;
+      transform: translateY(-50%);
     }
   }
 </style>
