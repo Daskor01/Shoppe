@@ -17,6 +17,7 @@
   import IconClose from '@/components/icons/IconClose.vue'
   import { DESKTOP_BREAKPOINT } from '@/constants/breakpoints'
   import { useBreakpoint } from '@/composables/useBreakpoint'
+  import { computed } from 'vue'
 
   const props = defineProps<{
     modelValue: boolean

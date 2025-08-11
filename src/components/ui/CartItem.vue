@@ -21,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+  import { defineProps, defineEmits } from 'vue'
   import type { CartItem } from '@/stores/useCartStore'
   import IconClose from '@/components/icons/IconClose.vue'
 

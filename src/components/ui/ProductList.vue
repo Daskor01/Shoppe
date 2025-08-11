@@ -18,6 +18,7 @@
 <script setup lang="ts">
   import { useProductsStore } from '@/stores/useProductsStore'
   import ProductCard from '@/components/ui/ProductCard.vue'
+  import { computed, onMounted } from 'vue'
 
   const productStore = useProductsStore()
 

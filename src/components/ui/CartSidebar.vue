@@ -27,7 +27,7 @@
       </TransitionGroup>
     </div>
 
-    <div class="cart-content__footer" v-if="cartStore.cartItems.length">
+    <div v-if="cartStore.cartItems.length" class="cart-content__footer">
       <div class="cart-content__line" />
       <div class="cart-content__total">
         <span> Subtotal ({{ itemsCounter }} item{{ itemSuffix }}) </span>
@@ -44,6 +44,8 @@
   import BaseButton from '@/components/ui/BaseButton.vue'
   import { useCartStore } from '@/stores/useCartStore'
   import { useRouter } from 'vue-router'
+  import { storeToRefs } from 'pinia'
+
 
   const router = useRouter()
   const cartStore = useCartStore()

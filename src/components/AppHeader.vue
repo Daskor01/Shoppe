@@ -1,5 +1,5 @@
 <template>
-  <header class="header" ref="headerRef">
+  <header ref="headerRef" class="header">
     <div class="header__container">
       <NuxtLink to="/" class="header__logo">
         <img src="@/assets/Logo.png" alt="Logo" class="header__logo-image" />
@@ -48,10 +48,10 @@
       <SearchInput />
       <nav class="header__mobile-nav">
         <NuxtLink
-          :to="link.path"
-          class="header__mobile-link"
           v-for="link in navigationLinks"
           :key="link.name"
+          :to="link.path"
+          class="header__mobile-link"
         >
           {{ link.name }}
         </NuxtLink>
@@ -73,6 +73,7 @@
 </template>
 
 <script setup lang="ts">
+  import { ref, onMounted, onBeforeUnmount } from 'vue'
   import SearchInput from '@/components/ui/SearchInput.vue'
   import { navigationLinks, headerLinks, headerActions, mobileLinks } from '@/config/navigation'
   import SlidePanel from '@/components/ui/SlidePanel.vue'

@@ -40,7 +40,7 @@
   import RangeSlider from '@/components/ui/RangeSlider.vue'
   import BaseSwitch from '@/components/ui/BaseSwitch.vue'
   import type { Filters } from '@/types/Filters'
-  import { ref, watch } from 'vue'
+  import { ref, watch, computed } from 'vue'
   import { useDebouncedValue } from '@/composables/useDebouncedValue'
 
   const sortOptions = [

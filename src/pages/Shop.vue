@@ -1,6 +1,6 @@
 <template>
   <section class="shop">
-    <div class="mobile__container" v-if="isMobile">
+    <div v-if="isMobile" class="mobile__container">
       <SearchInput />
       <h1 class="mobile__title">Shop</h1>
       <button class="filter-toggle" @click="showFilters = !showFilters">
@@ -9,7 +9,7 @@
       </button>
     </div>
 
-    <div class="filter-container" v-else>
+    <div v-else class="filter-container">
       <div class="filter-desktop">
         <h2 class="filter-desktop__title">Shop The Latest</h2>
         <ShopFilters v-model:filters="filters" :categories="categories" />
@@ -48,6 +48,7 @@
   import useShopFilters from '@/composables/useShopFilters'
   import type { Filters } from '@/types/Filters'
   import { usePagination } from '@/composables/usePagination'
+  import { useBreakpoint } from '@/composables/useBreakpoint'
 
   const route = useRoute()
   const query = route.query

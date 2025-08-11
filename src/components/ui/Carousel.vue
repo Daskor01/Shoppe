@@ -31,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+  import { useRuntimeConfig } from 'nuxt/app'
   import { Swiper, SwiperSlide } from 'swiper/vue'
   import { Autoplay, Pagination } from 'swiper/modules'
   import 'swiper/css'
@@ -53,8 +54,12 @@
       images.value = await fetchApi<ImageItem[], undefined, QueryParams>('/v2/list', {
         query: { page: 1, limit: 10 },
       })
-    } catch (e: any) {
-      error.value = e.message || 'Ошибка загрузки'
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        error.value = e.message || 'Ошибка загрузки'
+      } else {
+        error.value = String(e)
+      }
     } finally {
       pending.value = false
     }

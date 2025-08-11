@@ -1,23 +1,23 @@
 <template>
   <div class="range-slider">
     <div class="range-slider__track">
-      <div class="range-slider__range" :style="rangeStyle" />
+      <div :style="rangeStyle" class="range-slider__range" />
 
       <input
-        type="range"
+        v-model.number="localMin"
         :min="min"
         :max="max"
-        v-model.number="localMin"
-        @input="onMinChange"
+        type="range"
         class="range-slider__thumb range-slider__thumb--left"
+        @input="onMinChange"
       />
       <input
-        type="range"
+        v-model.number="localMax"
         :min="min"
         :max="max"
-        v-model.number="localMax"
-        @input="onMaxChange"
+        type="range"
         class="range-slider__thumb range-slider__thumb--right"
+        @input="onMaxChange"
       />
     </div>
     <div class="range-slider__text-container">

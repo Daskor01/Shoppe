@@ -17,9 +17,9 @@
 
       <form ref="form" class="footer__form" novalidate @submit.prevent="handleSubmit">
         <BaseInput
+          ref="emailInputRef"
           v-model="email"
           :error="showErrors ? errors.email : ''"
-          ref="emailInputRef"
           type="email"
           name="email"
           placeholder="Give an email, get the newsletter."
