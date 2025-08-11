@@ -262,12 +262,12 @@
     @media (max-width: vars.$breakpoints-l) {
       &__container {
         display: grid;
+        grid-template: auto / 1fr;
         grid-template-areas:
           'form'
           'nav'
           'socials'
           'copyright';
-        grid-template: auto / 1fr;
         row-gap: 50px;
       }
 
