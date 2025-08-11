@@ -267,8 +267,7 @@
           'nav'
           'socials'
           'copyright';
-        grid-template-rows: auto;
-        grid-template-columns: 1fr;
+        grid-template: auto / 1fr;
         row-gap: 50px;
       }
 

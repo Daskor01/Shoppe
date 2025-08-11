@@ -126,8 +126,8 @@
 
     &__controls {
       display: flex;
-      align-items: center;
       place-self: end end;
+      align-items: center;
       justify-content: space-between;
       inline-size: 100px;
       block-size: 34px;

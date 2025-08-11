@@ -20,21 +20,7 @@
     display: inline-block;
     inline-size: 42px;
     block-size: 24px;
-
-    &__checkbox {
-      inline-size: 0;
-      block-size: 0;
-      opacity: 0;
-
-      &:checked + .switch__slider {
-        background-color: #4cd964;
-
-        &::before {
-          transform: translateX(18px);
-        }
-      }
-    }
-
+    
     &__slider {
       position: absolute;
       inset: 0;
@@ -55,5 +41,20 @@
         transition: transform 0.4s;
       }
     }
+    
+    &__checkbox {
+      inline-size: 0;
+      block-size: 0;
+      opacity: 0;
+
+      &:checked + .switch__slider {
+        background-color: #4cd964;
+
+        &::before {
+          transform: translateX(18px);
+        }
+      }
+    }
+
   }
 </style>
