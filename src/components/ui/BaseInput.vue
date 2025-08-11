@@ -1,12 +1,12 @@
 <template>
   <div class="base-input">
     <input
+      ref="inputRef"
       v-bind="attrs"
       :type="type"
       :name="name"
       :placeholder="placeholder"
       :value="modelValue"
-      ref="inputRef"
       :class="{ 'is-error': error }"
       class="base-input__input"
       @input="onInput"
