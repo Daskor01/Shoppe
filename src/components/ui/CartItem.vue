@@ -9,12 +9,12 @@
         <p class="cart-item__price">{{ item.product.price.toFixed(2) }} ₽</p>
       </div>
       <div class="cart-item__controls">
-        <button class="cart-item__controls-button" @click="$emit('decrease')">−</button>
+        <button class="cart-item__controls-button" @click="decrease">−</button>
         <span>{{ item.quantity }}</span>
-        <button class="cart-item__controls-button" @click="$emit('increase')">+</button>
+        <button class="cart-item__controls-button" @click="increase">+</button>
       </div>
     </div>
-    <button class="cart-item__remove" @click="$emit('remove')">
+    <button class="cart-item__remove" @click="remove">
       <IconClose class="cart-item__remove-icon" />
     </button>
   </div>
@@ -24,11 +24,23 @@
   import type { CartItem } from '@/stores/useCartStore'
   import IconClose from '@/components/icons/IconClose.vue'
 
-  const _props = defineProps<{
+  const props = defineProps<{
     item: CartItem
   }>()
 
-  const _emit = defineEmits(['increase', 'decrease', 'remove'])
+  const { item } = props
+
+  const emit = defineEmits(['increase', 'decrease', 'remove'])
+
+  function increase() {
+    emit('increase')
+  }
+  function decrease() {
+    emit('decrease')
+  }
+  function remove() {
+    emit('remove')
+  }
 </script>
 
 <style scoped lang="scss">
