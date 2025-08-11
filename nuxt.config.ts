@@ -1,3 +1,5 @@
+import path from 'path';
+
 export default defineNuxtConfig({
   srcDir: 'src',
 
@@ -14,6 +16,11 @@ export default defineNuxtConfig({
             @use "@/assets/scss/mixins" as mixins;
           `,
         },
+      },
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
       },
     },
   },
