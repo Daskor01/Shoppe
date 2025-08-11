@@ -24,11 +24,15 @@ export const useProductsStore = defineStore('products', () => {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
         const data = await response.json()
         products.value = data
-      } catch (err: any) {
-        error.value = err.message
-        console.error('API request failed:', err)
-        throw err
-      } finally {
+      } catch (err: unknown) {
+          if (err instanceof Error) {
+            error.value = err.message
+          } else {
+            error.value = String(err) // или просто "Неизвестная ошибка"
+          }
+          console.error('API request failed:', err)
+          throw err
+        } finally {
         activePromises.delete(key)
         isLoading.value = false
       }

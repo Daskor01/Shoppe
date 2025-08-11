@@ -55,14 +55,15 @@
 <script setup lang="ts">
   import { useRoute } from 'vue-router'
   import { onMounted, ref } from 'vue'
-  import { useCartStore } from '~/stores/useCartStore'
-  import { useFavoritesStore } from '~/stores/useFavoriteStore'
+  import { useCartStore } from '@/stores/useCartStore'
+  import { useFavoritesStore } from '@/stores/useFavoriteStore'
+  import { type Product } from '@/types/Product'
 
   const route = useRoute()
   const cartStore = useCartStore()
   const favoritesStore = useFavoritesStore()
 
-  const product = ref<any>(null)
+  const product = ref<Product>()
   const quantity = ref(1)
   const activeIndex = ref(0)
   const productImages = ref<string[]>([])
@@ -71,22 +72,26 @@
   const decrease = () => (quantity.value = Math.max(1, quantity.value - 1))
 
   const addToCart = () => {
+    if(!product.value) return
     cartStore.addToCart(product.value)
   }
-
+  
   const toggleFavorite = () => {
+    if(!product.value) return
     favoritesStore.toggle(product.value)
   }
-
+  
   onMounted(async () => {
     const res = await fetch(`https://fakestoreapi.com/products/${route.params.id}`)
     product.value = await res.json()
-    productImages.value = [
-      product.value.image,
-      product.value.image,
-      product.value.image,
-      product.value.image,
-    ]
+    if(product.value) {
+      productImages.value = [
+        product.value.image,
+        product.value.image,
+        product.value.image,
+        product.value.image,
+      ]
+    }
   })
 </script>
 

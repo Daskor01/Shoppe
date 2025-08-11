@@ -72,7 +72,7 @@
     })
   })
 
-  function update(key: keyof Filters, value: any) {
+  function update(key: keyof Filters, value: unknown) {
     emit('update:filters', {
       ...props.filters,
       [key]: value,

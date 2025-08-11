@@ -21,15 +21,14 @@
 </template>
 
 <script setup lang="ts">
-  import { defineProps, defineEmits } from 'vue'
   import type { CartItem } from '@/stores/useCartStore'
   import IconClose from '@/components/icons/IconClose.vue'
 
-  const props = defineProps<{
+  const _props = defineProps<{
     item: CartItem
   }>()
 
-  const emit = defineEmits(['increase', 'decrease', 'remove'])
+  const _emit = defineEmits(['increase', 'decrease', 'remove'])
 </script>
 
 <style scoped lang="scss">
