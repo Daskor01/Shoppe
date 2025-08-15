@@ -17,6 +17,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NUXT_PUBLIC_PRODUCTS_API: ${{ secrets.NUXT_PUBLIC_PRODUCTS_API }}
+      NUXT_PUBLIC_IMAGE_API: ${{ secrets.NUXT_PUBLIC_IMAGE_API }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,9 +38,6 @@ jobs:
             echo "Unable to determine package manager"
             exit 1
           fi
-          env: 
-            NUXT_PUBLIC_PRODUCTS_API: ${{secret.NUXT_PUBLIC_PRODUCTS_API}}
-            NUXT_PUBLIC_IMAGE_API: ${{secret.NUXT_PUBLIC_IMAGE_API}}
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
