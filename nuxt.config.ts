@@ -1,4 +1,6 @@
 import path from 'path'
+import { createWebHistory } from 'vue-router'
+
 
 export default defineNuxtConfig({
   srcDir: 'src',
@@ -41,5 +43,10 @@ export default defineNuxtConfig({
   imports: {
     dirs: ['stores', 'composables/**'],
   },
+
+  app: {
+    baseURL: '/Shoppe/'
+  },
+
   compatibilityDate: '2025-05-31',
 })
