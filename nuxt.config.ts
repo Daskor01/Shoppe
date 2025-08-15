@@ -1,6 +1,4 @@
 import path from 'path'
-import { createWebHistory } from 'vue-router'
-
 
 export default defineNuxtConfig({
   srcDir: 'src',
