@@ -99,7 +99,7 @@
         inline-size: 500px;
       }
 
-      @media (max-width: 530px) {
+      @media (width <= 530px) {
         inline-size: 300px;
       }
     }
@@ -135,10 +135,10 @@
     &__thumbnail-image {
       inline-size: 120px;
       aspect-ratio: 1;
-      object-fit: contain;
-      border-radius: 0.5rem;
       cursor: pointer;
+      object-fit: contain;
       border: 2px solid transparent;
+      border-radius: 0.5rem;
 
       &.active {
         border-color: vars.$color-dark;
@@ -159,8 +159,8 @@
 
     &__main-image {
       inline-size: 540px;
-      object-fit: contain;
       aspect-ratio: 540 / 600;
+      object-fit: contain;
 
       @media (max-width: vars.$breakpoints-xxl) {
         inline-size: 400px;
@@ -176,12 +176,12 @@
     }
 
     &__steps {
+      display: flex;
+      justify-content: center;
       inline-size: 100%;
       max-inline-size: 320px;
-      display: flex;
-      margin-inline: auto;
-      justify-content: center;
       margin-block-start: 12px;
+      margin-inline: auto;
       background: vars.$color-ligth-gray;
 
       @media (min-width: vars.$breakpoints-m) {
@@ -190,25 +190,24 @@
     }
 
     &__step {
+      position: relative;
       flex: 1 1 0;
       block-size: 2px;
-      border-radius: 2px;
       cursor: pointer;
+      border-radius: 2px;
       transition: background-color 0.3s ease;
-      position: relative;
 
       &.active {
         background: vars.$color-gray;
       }
 
       &::before {
-        content: '';
-        display: block;
         position: absolute;
         inset-block: -8px;
-
-        block-size: 20px;
+        display: block;
         inline-size: 100%;
+        block-size: 20px;
+        content: '';
       }
     }
   }
@@ -219,8 +218,8 @@
 
     &__slide {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       block-size: auto;
     }
   }

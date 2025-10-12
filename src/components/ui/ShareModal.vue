@@ -93,23 +93,20 @@
 <style scoped lang="scss">
   .share-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    inset: 0;
     z-index: 999;
+    background-color: rgb(0 0 0 / 50%);
   }
 
   .share-modal {
     position: fixed;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
+    z-index: 1000;
+    padding: 16px;
     background-color: #fff;
     border-radius: 16px 16px 0 0;
-    padding: 16px;
-    z-index: 1000;
     transform: translateY(100%);
     transition: transform 0.3s ease-out;
 
@@ -120,17 +117,17 @@
     &__handle {
       width: 40px;
       height: 4px;
+      margin: 0 auto 16px;
       background-color: #ddd;
       border-radius: 2px;
-      margin: 0 auto 16px;
     }
 
     &__title {
-      text-align: center;
+      margin-bottom: 20px;
       font-size: 18px;
       font-weight: 600;
-      margin-bottom: 20px;
       color: #333;
+      text-align: center;
     }
 
     &__grid {
@@ -152,10 +149,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 0;
+      cursor: pointer;
       background: none;
       border: none;
-      cursor: pointer;
-      padding: 0;
 
       &:hover {
         opacity: 0.8;
@@ -163,15 +160,15 @@
     }
 
     &__icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background-color: #f5f5f5;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      width: 48px;
+      height: 48px;
       margin-bottom: 8px;
+      font-size: 20px;
+      background-color: #f5f5f5;
+      border-radius: 50%;
     }
 
     &__label {

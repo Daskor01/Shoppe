@@ -91,23 +91,23 @@
 <style scoped lang="scss">
   .product {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     grid-template-areas:
       'gallery info'
       'tabs tabs';
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
 
     @media (max-width: vars.$breakpoints-l) {
-      gap: 1rem;
       grid-template-columns: 1fr 320px;
+      gap: 1rem;
     }
 
     @media (max-width: vars.$breakpoints-m) {
-      grid-template-columns: 1fr;
       grid-template-areas:
         'gallery'
         'info'
         'tabs';
+      grid-template-columns: 1fr;
     }
 
     &__tabs {
@@ -144,23 +144,26 @@
       }
 
       &-link {
-        margin-top: 2rem;
         display: flex;
         justify-content: space-between;
-        text-decoration: none;
+        margin-top: 2rem;
         color: vars.$color-accent-light;
+        text-decoration: none;
       }
     }
   }
+
   .product__info {
     flex: 1;
     grid-area: info;
   }
+
   .product-rating .filled {
     color: gold;
   }
+
   .loading {
-    text-align: center;
     padding: 2rem;
+    text-align: center;
   }
 </style>

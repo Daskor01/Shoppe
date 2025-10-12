@@ -66,37 +66,37 @@
   .tabs-accordion {
     &__tabs {
       display: flex;
-      width: 50%;
       justify-content: space-between;
+      width: 50%;
     }
 
     &__tab {
-      padding: 0;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      color: vars.$color-gray;
       position: relative;
+      padding: 0;
+      color: vars.$color-gray;
+      cursor: pointer;
+      background: transparent;
+      border: none;
 
       &-active {
         color: vars.$color-dark;
 
         &::after {
-          content: '';
-          display: block;
           position: absolute;
           inset-block-end: -18px;
-          height: 2px;
-          background-color: vars.$color-dark;
+          display: block;
           width: 100%;
+          height: 2px;
+          content: '';
+          background-color: vars.$color-dark;
         }
       }
     }
 
     &__divider {
       height: 1px;
-      background-color: vars.$color-ligth-gray;
       margin: 1rem 0;
+      background-color: vars.$color-ligth-gray;
     }
 
     &__tab-content {
@@ -105,16 +105,16 @@
 
     &__accordion {
       &-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         width: 100%;
-        text-align: left;
         padding: 0.75rem 1rem;
+        text-align: left;
+        cursor: pointer;
+        outline: none;
         background: transparent;
         border: none;
-        outline: none;
-        cursor: pointer;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
       }
 
       &-content {

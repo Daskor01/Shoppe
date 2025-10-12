@@ -210,53 +210,53 @@
 
 <style scoped lang="scss">
   .reviews {
-    margin-top: 2rem;
     display: flex;
     justify-content: space-between;
+    margin-top: 2rem;
 
     @media (max-width: vars.$breakpoints-l) {
       flex-direction: column;
     }
 
     &__item {
-      border-bottom: 1px solid vars.$color-gray-light;
       padding: 0.5rem 0;
+      border-bottom: 1px solid vars.$color-gray-light;
     }
 
     &__form {
-      margin-top: 1rem;
       display: flex;
       flex-direction: column;
       gap: 46px;
+      margin-top: 1rem;
     }
   }
 
   .form {
     &-group {
+      position: relative;
       display: flex;
       flex-direction: column;
       margin-block-start: 10px;
-      position: relative;
     }
 
     &__error-message {
-      color: vars.$color-accent-red;
-      font-size: 10px;
       position: absolute;
-      inset-inline-start: 0;
       inset-block-end: -30px;
+      inset-inline-start: 0;
+      font-size: 10px;
+      color: vars.$color-accent-red;
     }
 
     &__label {
       position: absolute;
-      left: 0;
       top: 0;
-      color: vars.$color-ligth-gray;
-      font-size: 16px;
-      pointer-events: none;
-      transition: all 0.2s ease;
-      background: vars.$color-light;
+      left: 0;
       padding: 0 4px;
+      font-size: 16px;
+      color: vars.$color-ligth-gray;
+      pointer-events: none;
+      background: vars.$color-light;
+      transition: all 0.2s ease;
 
       &.active {
         top: -8px;
@@ -268,14 +268,16 @@
 
     &__message {
       @include mixins.reset-appearance;
-      min-block-size: 80px;
+
       min-inline-size: 100%;
-      resize: none;
+      min-block-size: 80px;
       padding: 10px;
+      resize: none;
     }
 
     &__input {
       @include mixins.reset-appearance;
+
       width: 100%;
       padding: 12px 8px;
       font-size: 16px;
@@ -283,20 +285,20 @@
     }
 
     &__button {
-      background-color: vars.$color-dark;
-      color: vars.$color-light;
-      padding: 16px 33px;
       inline-size: 125px;
       block-size: 50px;
-      border-radius: 4px;
+      padding: 16px 33px;
+      color: vars.$color-light;
       text-align: center;
+      background-color: vars.$color-dark;
       border: none;
+      border-radius: 4px;
     }
 
     &__underliner {
+      width: 100%;
       height: 1px;
       background: vars.$color-gray;
-      width: 100%;
     }
   }
 

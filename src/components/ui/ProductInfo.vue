@@ -192,11 +192,11 @@
     }
 
     &__price {
-      font-weight: 500;
+      margin-block-start: 24px;
       font-size: 20px;
+      font-weight: 500;
       line-height: 130%;
       color: vars.$color-accent-light;
-      margin-block-start: 24px;
     }
 
     &__rating {
@@ -211,8 +211,8 @@
 
     &__description {
       margin-block-start: 20px;
-      color: vars.$color-gray;
       line-height: 169%;
+      color: vars.$color-gray;
     }
 
     &__actions {
@@ -223,15 +223,17 @@
 
     &__quantity {
       @include mixins.flexCenter;
-      background-color: vars.$color-ligth-gray;
-      border-radius: 4px;
+
       gap: 5px;
-      color: vars.$color-gray;
       width: 100px;
       height: 54px;
+      color: vars.$color-gray;
+      background-color: vars.$color-ligth-gray;
+      border-radius: 4px;
 
       &-button {
         @include mixins.reset-appearance;
+
         padding: 12px;
         margin: 5px;
 
@@ -243,10 +245,10 @@
     }
 
     &__cart-button {
-      text-transform: uppercase;
-      font-weight: 700;
-      border-radius: 4px;
       width: 360px;
+      font-weight: 700;
+      text-transform: uppercase;
+      border-radius: 4px;
 
       @media (max-width: vars.$breakpoints-l) {
         width: 100%;
@@ -254,9 +256,9 @@
     }
 
     &__interaction {
-      margin-block-start: 70px;
       display: flex;
       gap: 30px;
+      margin-block-start: 70px;
       cursor: pointer;
     }
 
@@ -278,31 +280,24 @@
 
     &__expandable {
       margin-block-start: 20px;
-
-      &[open] .product-info__summary {
-        display: block;
-        -webkit-line-clamp: unset;
-        -webkit-box-orient: initial;
-        overflow: visible;
-        text-overflow: initial;
-      }
     }
 
     &__summary {
-      cursor: pointer;
+      position: relative;
       display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: normal;
-      line-height: 1.4;
+      -webkit-line-clamp: 2;
       font-size: 0.95rem;
-      position: relative;
+      line-height: 1.4;
+      white-space: normal;
+      cursor: pointer;
+      -webkit-box-orient: vertical;
     }
 
     &__toggle-button {
       @include mixins.reset-appearance;
+
       color: vars.$color-accent-light;
     }
 
@@ -318,5 +313,13 @@
         }
       }
     }
+  }
+
+  .product-info__expandable[open] .product-info__summary {
+    display: block;
+    overflow: visible;
+    text-overflow: initial;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: initial;
   }
 </style>

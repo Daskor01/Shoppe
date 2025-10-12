@@ -1,7 +1,7 @@
 @use 'fonts';
 
 //Цвета
-$color-light: #ffffff;
+$color-light: #ffffff;$color-light
 $color-gray: #979797;
 $color-dark: #000000;
 $color-ligth-gray: #efefef;
@@ -9,7 +9,7 @@ $color-accent-light: #a18a68;
 $color-accent-red: #ff0000;
 
 //Breakpoints
-$breakpoints-xxl: 1680px;
+$breakpoints-xxl: 1680px;$breakpoints-xxl
 $breakpoints-xl: 1440px;
 $breakpoints-l: 1280px;
 $breakpoints-m: 992px;
@@ -17,5 +17,5 @@ $breakpoints-s: 767px;
 $breakpoints-xs: 376px;
 
 //Шрифты
-$main-font: 'DM Sans', sans-serif;
+$main-font: 'DM Sans', sans-serif;$main-font
 $secondary-font: 'Allerta Stencil', sans-serif;
