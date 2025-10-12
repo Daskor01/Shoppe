@@ -1,5 +1,5 @@
 <template>
-  <section class="product" v-if="product">
+  <section v-if="product" class="product">
     <ProductGallery :ProductImages="productImages" class="product__gallery" />
 
     <ProductInfo :product="product" />

@@ -20,8 +20,8 @@
       <form ref="formRef" novalidate class="reviews__form form" @submit.prevent="submitReview">
         <div class="form-group">
           <textarea
-            v-model="form.message"
             id="message"
+            v-model="form.message"
             name="message"
             minlength="10"
             required

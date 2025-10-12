@@ -25,7 +25,7 @@
 <script setup>
   import { socialNetworks } from '@/config/navigation'
 
-  const props = defineProps({
+  defineProps({
     isOpen: Boolean,
   })
 

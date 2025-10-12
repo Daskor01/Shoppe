@@ -18,7 +18,7 @@
     filled?: boolean
   }
 
-  const props = withDefaults(defineProps<Props>(), {
+  withDefaults(defineProps<Props>(), {
     filled: false,
   })
 </script>
