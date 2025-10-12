@@ -7,6 +7,7 @@ import IconUser from '@/components/icons/IconUser.vue'
 import IconAccount from '@/components/icons/IconAccount.vue'
 import IconLogout from '@/components/icons/IconLogout.vue'
 import IconMail from '@/components/icons/IconMail.vue'
+import type { Component } from 'vue'
 
 export interface LinkItem {
   name: string

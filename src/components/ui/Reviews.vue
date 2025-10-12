@@ -44,8 +44,8 @@
 
         <div class="form-group">
           <input
-            v-model="form.name"
             id="name"
+            v-model="form.name"
             type="text"
             name="name"
             placeholder=""
@@ -61,8 +61,8 @@
 
         <div class="form-group">
           <input
-            v-model="form.email"
             id="email"
+            v-model="form.email"
             type="email"
             name="email"
             placeholder=""
@@ -97,7 +97,7 @@
   import { ref, reactive, onMounted } from 'vue'
   import { useNotification } from '@/composables/useNotification'
   import { useFormValidation } from '@/composables/useFormValidation'
-  import type { Review, formData } from '@/types/Reviews'
+  import type { Review, FormData } from '@/types/Reviews'
 
   const props = defineProps<{
     productId: number | string
@@ -106,7 +106,7 @@
 
   const formRef = ref<HTMLFormElement | null>(null)
 
-  const form: formData = reactive({
+  const form: FormData = reactive({
     name: '',
     message: '',
     email: '',

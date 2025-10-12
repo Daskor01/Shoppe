@@ -38,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+  import { useBreakpoint } from '@/composables/useBreakpoint'
   import IconBaseArrowDown from '@/components/icons/IconBaseArrowDown.vue'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
   import { ref } from 'vue'
@@ -47,7 +48,7 @@
     name: string
   }
 
-  const props = defineProps<{
+  defineProps<{
     tabs: Tab[]
   }>()
 

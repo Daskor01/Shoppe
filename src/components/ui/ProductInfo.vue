@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, watchEffect } from 'vue'
+  import { ref, watchEffect, computed } from 'vue'
   import { useRouter } from 'vue-router'
   import { useCartStore } from '@/stores/useCartStore'
   import { useBreakpoint } from '@/composables/useBreakpoint'

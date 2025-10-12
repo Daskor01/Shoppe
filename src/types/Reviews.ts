@@ -6,7 +6,7 @@ export interface Review {
   rating?: number
 }
 
-export interface formData {
+export interface FormData {
   name: string
   message: string
   email: string

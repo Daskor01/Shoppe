@@ -1,6 +1,6 @@
 <template>
   <div class="share">
-    <div v-if="isOpen" class="share-overlay" @click="close"></div>
+    <div v-if="isOpen" class="share-overlay" @click="close" />
 
     <div class="share-modal" :class="{ 'share-modal--active': isOpen }">
       <div class="share-modal__handle"></div>
@@ -11,8 +11,8 @@
         <button
           v-for="(social, index) in socialNetworks"
           :key="index"
-          @click="share(social)"
           class="share-modal__button"
+          @click="share(social)"
         >
           <component :is="social.icon" />
           <span class="share-modal__label">{{ social.name }}</span>

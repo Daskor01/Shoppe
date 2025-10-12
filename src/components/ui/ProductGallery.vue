@@ -55,7 +55,7 @@
   import type { Swiper as SwiperType } from 'swiper'
   import 'swiper/css'
   import 'swiper/css/navigation'
-  import { ref } from 'vue'
+  import { ref, computed } from 'vue'
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
 

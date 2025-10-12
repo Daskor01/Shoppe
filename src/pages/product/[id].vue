@@ -51,6 +51,8 @@
 
 <script setup lang="ts">
   import { useRoute } from 'vue-router'
+  import { useProductsStore } from '@/stores/useProductsStore'
+  import { computed } from 'vue'
   import { onMounted, ref } from 'vue'
   import { type Product } from '@/types/Product'
   import ProductGallery from '@/components/ui/ProductGallery.vue'
