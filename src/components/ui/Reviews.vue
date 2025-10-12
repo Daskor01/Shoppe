@@ -220,7 +220,7 @@
 
     &__item {
       padding: 0.5rem 0;
-      border-bottom: 1px solid vars.$color-gray-ligth;
+      border-bottom: 1px solid vars.$color-ligth-gray;
     }
 
     &__form {
