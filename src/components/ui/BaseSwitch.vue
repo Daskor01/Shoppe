@@ -20,7 +20,7 @@
     display: inline-block;
     inline-size: 42px;
     block-size: 24px;
-    
+
     &__slider {
       position: absolute;
       inset: 0;
@@ -41,7 +41,7 @@
         transition: transform 0.4s;
       }
     }
-    
+
     &__checkbox {
       inline-size: 0;
       block-size: 0;
@@ -55,6 +55,5 @@
         }
       }
     }
-
   }
 </style>

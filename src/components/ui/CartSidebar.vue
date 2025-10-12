@@ -46,7 +46,6 @@
   import { useRouter } from 'vue-router'
   import { storeToRefs } from 'pinia'
 
-
   const router = useRouter()
   const cartStore = useCartStore()
 

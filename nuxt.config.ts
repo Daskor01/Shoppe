@@ -43,7 +43,7 @@ export default defineNuxtConfig({
   },
 
   app: {
-    baseURL: '/Shoppe/'
+    baseURL: '/Shoppe/',
   },
 
   compatibilityDate: '2025-05-31',

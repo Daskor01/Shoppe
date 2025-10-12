@@ -3,11 +3,6 @@ import { ref } from 'vue'
 import type { ButtonProps, NotificationType } from '@/types/Notification'
 
 export const useNotificationStore = defineStore('notification', () => {
-  const visible = ref(false)
-  const message = ref('')
-  const type = ref<NotificationType>('info')
-  const button = ref<ButtonProps | null>(null)
-
   interface NotificationState {
     message: string
     type: NotificationType
@@ -23,12 +18,12 @@ export const useNotificationStore = defineStore('notification', () => {
   })
 
   function showNotification(
-    message: string,
+    msg: string,
     notificationType: NotificationType = 'info',
     buttonObj?: ButtonProps,
   ) {
     notification.value = {
-      message: message,
+      message: msg,
       type: notificationType,
       button: buttonObj || null,
       visible: true,
@@ -36,17 +31,16 @@ export const useNotificationStore = defineStore('notification', () => {
   }
 
   function hideNotification() {
-    visible.value = false
-    message.value = ''
-    button.value = null
-    type.value = 'info'
+    notification.value = {
+      message: '',
+      type: 'info',
+      button: null,
+      visible: false,
+    }
   }
 
   return {
-    visible,
-    message,
-    type,
-    button,
+    notification,
     showNotification,
     hideNotification,
   }

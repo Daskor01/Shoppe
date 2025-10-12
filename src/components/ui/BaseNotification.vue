@@ -13,8 +13,8 @@
         <slot>{{ message }}</slot>
       </div>
 
-      <button v-if="button?.text" class="base-notification__button" @click="button?.handler">
-        {{ button?.text }}
+      <button v-if="button?.text" class="base-notification__button" @click="button.handler">
+        {{ button.text }}
       </button>
     </div>
   </transition>

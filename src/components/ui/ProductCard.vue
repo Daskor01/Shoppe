@@ -10,8 +10,8 @@
         <NuxtLink :to="`/product/${product.id}`" class="product-card__icon-link" @click.stop
           ><IconEye
         /></NuxtLink>
-        <button class="product-card__icon-button" @click.stop="toggleFavorite">
-          <IconLike :class="{ active: isFavorite }" />
+        <button class="product-card__icon-button">
+          <IconLike />
         </button>
       </div>
     </div>
@@ -21,10 +21,9 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed } from 'vue'
+  import { ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useCartStore } from '@/stores/useCartStore'
-  import { useFavoritesStore } from '@/stores/useFavoriteStore'
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { useNotification } from '@/composables/useNotification'
 
@@ -43,9 +42,6 @@
   const router = useRouter()
 
   const cartStore = useCartStore()
-  const favoritesStore = useFavoritesStore()
-
-  const isFavorite = computed(() => favoritesStore.favorites.some((p) => p.id === props.product.id))
 
   const addToCart = () => {
     cartStore.addToCart(props.product)
@@ -61,7 +57,6 @@
       },
     })
   }
-  const toggleFavorite = () => favoritesStore.toggle(props.product)
 
   //Мобилка
   const { isBelow: isMobile } = useBreakpoint(1180)

@@ -4,11 +4,10 @@
     <slot />
     <AppFooter />
     <BaseNotification
-      :visible="visible"
-      :message="message"
-      :type="type"
-      :buttonText="button?.text"
-      :buttonHandler="button?.handler"
+      :visible="notification.visible"
+      :message="notification.message"
+      :type="notification.type"
+      :button="notification.button"
     />
     <SlidePanel
       v-model="cartStore.isOpen"
@@ -35,7 +34,7 @@
   const cartStore = useCartStore()
   const store = useNotificationStore()
 
-  const { visible, message, type, button } = storeToRefs(store)
+  const { notification } = storeToRefs(store)
 
   const { isBelow: isMobile } = useBreakpoint(DESKTOP_BREAKPOINT)
 

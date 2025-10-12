@@ -25,14 +25,14 @@ export const useProductsStore = defineStore('products', () => {
         const data = await response.json()
         products.value = data
       } catch (err: unknown) {
-          if (err instanceof Error) {
-            error.value = err.message
-          } else {
-            error.value = String(err) // или просто "Неизвестная ошибка"
-          }
-          console.error('API request failed:', err)
-          throw err
-        } finally {
+        if (err instanceof Error) {
+          error.value = err.message
+        } else {
+          error.value = String(err) // или просто "Неизвестная ошибка"
+        }
+        console.error('API request failed:', err)
+        throw err
+      } finally {
         activePromises.delete(key)
         isLoading.value = false
       }

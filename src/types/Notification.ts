@@ -9,7 +9,7 @@ export interface NotificationProps {
   visible: boolean
   message: string
   type?: NotificationType
-  button?: ButtonProps
+  button?: ButtonProps | null
 }
 
 export interface NotificationParams {

@@ -15,14 +15,14 @@
     </button>
 
     <button :disabled="currentPage === totalPages" class="pagination__button" @click="nextPage">
-      <IconBaseArrowRigth />
+      <IconBaseArrowRight />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
   import { computed } from 'vue'
-  import IconBaseArrowRigth from '@/components/icons/IconBaseArrowRigth.vue'
+  import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
   import IconBaseArrowLeft from '@/components/icons/IconBaseArrowLeft.vue'
 
   const props = defineProps<{

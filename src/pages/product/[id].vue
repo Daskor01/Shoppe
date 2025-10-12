@@ -1,191 +1,164 @@
 <template>
-  <section v-if="product" class="product-page">
-    <div class="product-page__gallery">
-      <div class="product-page__thumbnails">
-        <img
-          v-for="(img, index) in productImages"
-          :key="index"
-          :src="img"
-          :class="{ active: index === activeIndex }"
-          @click="activeIndex = index"
-        />
-      </div>
+  <section class="product" v-if="product">
+    <ProductGallery :ProductImages="productImages" class="product__gallery" />
 
-      <div class="product-page__main-image">
-        <img :src="productImages[activeIndex]" alt="Main product" />
-      </div>
-    </div>
+    <ProductInfo :product="product" />
 
-    <div class="product-page__info">
-      <h1 class="product-title">{{ product.title }}</h1>
-      <p class="product-price">${{ product.price }}</p>
+    <BaseTabsAccordion
+      :tabs="[
+        { label: 'Description', name: 'description' },
+        { label: 'Additional Information', name: 'additional' },
+        { label: 'Reviews', name: 'reviews' },
+      ]"
+      class="product__tabs"
+    >
+      <template #description>
+        <p>{{ product.description }}</p>
+      </template>
 
-      <div class="product-rating">★★★★★</div>
+      <template #additional>
+        <p><b>Weight:</b> 0.3 kg</p>
+        <p><b>Dimentions:</b> 15 x 10 x 1 cm</p>
+        <p><b>Colours:</b> Black, Browns, White</p>
+        <p><b>Materials:</b> Metal</p>
+      </template>
 
-      <p class="product-description">{{ product.description }}</p>
-
-      <div class="product-actions">
-        <div class="quantity-selector">
-          <button @click="decrease">-</button>
-          <span>{{ quantity }}</span>
-          <button @click="increase">+</button>
-        </div>
-        <button class="add-to-cart" @click="addToCart">Add to Cart</button>
-      </div>
-
-      <div class="product-meta">
-        <p><strong>SKU:</strong> 12</p>
-        <p><strong>Category:</strong> {{ product.category }}</p>
-      </div>
-
-      <button class="product-like" @click="toggleFavorite">
-        <IconLike />
-      </button>
-
-      <div class="product-socials">
-        <IconMail />
-        <IconFacebook />
-        <IconInstagram />
-        <IconTwitter />
-      </div>
-    </div>
+      <template #reviews>
+        <Reviews :productId="product.id" :productTitle="product.title" />
+      </template>
+    </BaseTabsAccordion>
   </section>
+  <div v-else class="loading">Loading...</div>
+
+  <div class="product__simular">
+    <h2 class="product__simular">Simular Products</h2>
+    <div class="product__simular-grid">
+      <ProductCard
+        v-for="item in visibleProducts"
+        :key="item.id"
+        :product="item"
+        class="product__simular-grid-item"
+      />
+    </div>
+    <div class="product__simular-сontinue">
+      <NuxtLink to="/Shop" class="product__simular-link">
+        <span>Continue shopping</span>
+        <IconBaseArrowRight />
+      </NuxtLink>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
   import { useRoute } from 'vue-router'
   import { onMounted, ref } from 'vue'
-  import { useCartStore } from '@/stores/useCartStore'
-  import { useFavoritesStore } from '@/stores/useFavoriteStore'
   import { type Product } from '@/types/Product'
+  import ProductGallery from '@/components/ui/ProductGallery.vue'
+  import ProductInfo from '@/components/ui/ProductInfo.vue'
+  import BaseTabsAccordion from '@/components/ui/BaseTabsAccordion.vue'
+  import Reviews from '@/components/ui/Reviews.vue'
+  import ProductCard from '@/components/ui/ProductCard.vue'
+  import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
 
+  const productStore = useProductsStore()
   const route = useRoute()
-  const cartStore = useCartStore()
-  const favoritesStore = useFavoritesStore()
 
-  const product = ref<Product>()
-  const quantity = ref(1)
-  const activeIndex = ref(0)
+  const product = ref<Product | null>(null)
   const productImages = ref<string[]>([])
 
-  const increase = () => quantity.value++
-  const decrease = () => (quantity.value = Math.max(1, quantity.value - 1))
+  const visibleProducts = computed(() => productStore.products.slice(0, 6))
 
-  const addToCart = () => {
-    if(!product.value) return
-    cartStore.addToCart(product.value)
-  }
-  
-  const toggleFavorite = () => {
-    if(!product.value) return
-    favoritesStore.toggle(product.value)
-  }
-  
   onMounted(async () => {
-    const res = await fetch(`https://fakestoreapi.com/products/${route.params.id}`)
-    product.value = await res.json()
-    if(product.value) {
-      productImages.value = [
-        product.value.image,
-        product.value.image,
-        product.value.image,
-        product.value.image,
-      ]
+    try {
+      const res = await fetch(`https://fakestoreapi.com/products/${route.params.id}`)
+      const data: Product = await res.json()
+      product.value = data
+
+      //хард картинки
+      productImages.value = [data.image, data.image, data.image, data.image]
+    } catch (err) {
+      console.error('Product loading error', err)
     }
+  })
+
+  onMounted(() => {
+    productStore.fetchAllProducts()
   })
 </script>
 
 <style scoped lang="scss">
-  .product-page {
-    display: flex;
+  .product {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'gallery info'
+      'tabs tabs';
     gap: 2rem;
-    margin-block-start: 2rem;
+
+    @media (max-width: vars.$breakpoints-l) {
+      gap: 1rem;
+      grid-template-columns: 1fr 320px;
+    }
+
+    @media (max-width: vars.$breakpoints-m) {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'gallery'
+        'info'
+        'tabs';
+    }
+
+    &__tabs {
+      grid-area: tabs;
+      margin-top: 2rem;
+    }
 
     &__gallery {
-      display: flex;
-      gap: 1rem;
+      grid-area: gallery;
+      margin-top: 24px;
     }
 
-    &__thumbnails {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+    &__simular {
+      &-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: auto;
 
-      img {
-        inline-size: 60px;
-        block-size: 60px;
-        cursor: pointer;
-        object-fit: cover;
-        border: 2px solid transparent;
+        &-item {
+          justify-self: center;
+        }
 
-        &.active {
-          border-color: black;
+        @media (max-width: vars.$breakpoints-xl) {
+          grid-template-columns: repeat(2, 1fr);
         }
       }
-    }
 
-    &__main-image img {
-      inline-size: 400px;
-      object-fit: cover;
-    }
+      &-сontinue {
+        margin-top: 2rem;
 
-    &__info {
-      flex: 1;
-
-      .product-title {
-        margin-block-end: 10px;
-        font-size: 24px;
+        @media (min-width: vars.$breakpoints-xl) {
+          display: none;
+        }
       }
 
-      .product-price {
-        font-size: 18px;
-        font-weight: bold;
-      }
-
-      .product-description {
-        margin-block-start: 1rem;
-        line-height: 1.6;
-      }
-
-      .product-actions {
+      &-link {
+        margin-top: 2rem;
         display: flex;
-        gap: 1rem;
-        margin: 1rem 0;
-
-        .add-to-cart {
-          padding: 0.5rem 1rem;
-          color: white;
-          cursor: pointer;
-          background-color: black;
-          border: none;
-        }
-      }
-
-      .quantity-selector {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-
-        button {
-          inline-size: 30px;
-          block-size: 30px;
-          font-size: 18px;
-        }
-      }
-
-      .product-meta {
-        margin-block-start: 1rem;
-      }
-
-      .product-socials {
-        display: flex;
-        gap: 1rem;
-        margin-block-start: 1rem;
-
-        svg {
-          cursor: pointer;
-        }
+        justify-content: space-between;
+        text-decoration: none;
+        color: vars.$color-accent-light;
       }
     }
+  }
+  .product__info {
+    flex: 1;
+    grid-area: info;
+  }
+  .product-rating .filled {
+    color: gold;
+  }
+  .loading {
+    text-align: center;
+    padding: 2rem;
   }
 </style>
