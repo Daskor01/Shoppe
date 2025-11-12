@@ -1,58 +1,58 @@
 <template>
-  <div class="star-rating">
-    <span
+  <div class="star-rating" :class="{ readonly }">
+    <IconStar
       v-for="i in 5"
       :key="i"
-      :class="['star', { filled: i <= currentRating }]"
+      :class="['star', { filled: i <= rating }]"
       @click="selectStar(i)"
-    >
-      ★
-    </span>
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, watch, defineProps, defineEmits } from 'vue'
+  import IconStar from '@/components/icons/IconStar.vue'
+
+  const rating = defineModel<number>({
+    default: 0,
+    required: false,
+  })
 
   const props = defineProps<{
-    modelValue?: number
     readonly?: boolean
   }>()
 
-  const emit = defineEmits<{
-    (e: 'update:modelValue', value: number): void
-  }>()
-
-  const currentRating = ref(props.modelValue ?? 0)
-
-  watch(
-    () => props.modelValue,
-    (newVal) => {
-      currentRating.value = newVal ?? 0
-    },
-  )
-
   const selectStar = (value: number) => {
     if (props.readonly) return
-    currentRating.value = value
-    emit('update:modelValue', value)
+    rating.value = value
   }
 </script>
 
 <style scoped lang="scss">
-  .star {
-    font-size: 1.5rem;
-    color: #ccc;
-    cursor: pointer;
-    transition: color 0.2s;
+  .star-rating {
+    display: flex;
+    gap: 0.25rem;
 
-    &.filled {
-      color: gold;
+    &.readonly .star {
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+
+  .star {
+    cursor: pointer;
+    transition: fill 0.2s ease;
+
+    @media (max-width: vars.$breakpoints-m) {
+      inline-size: 12px;
+      block-size: 12px;
     }
 
-    &-rating {
-      display: flex;
-      gap: 0.25rem;
+    &.filled {
+      fill: vars.$color-dark;
+    }
+
+    &:hover:not(.readonly *) {
+      transform: scale(1.1);
     }
   }
 </style>

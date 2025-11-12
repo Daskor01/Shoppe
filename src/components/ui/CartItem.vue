@@ -6,7 +6,7 @@
     <div class="cart-item__details">
       <div class="card-item__text-container">
         <h3 class="cart-item__name">{{ item.product.title }}</h3>
-        <p class="cart-item__price">{{ item.product.price.toFixed(2) }} ₽</p>
+        <p class="cart-item__price">{{ item.product.price.toFixed(2) }} $</p>
       </div>
       <div class="cart-item__controls">
         <button class="cart-item__controls-button" @click="decrease">−</button>

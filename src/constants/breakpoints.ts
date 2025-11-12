@@ -1,3 +1,4 @@
 export const DESKTOP_BREAKPOINT = 1280
-export const TABLET_BREAKPOINT = 995
+export const TABLET_BREAKPOINT = 992
+export const TABLET_SMALL_BREAKPOINT = 767
 export const MOBILE_BREAKPOINT = 376

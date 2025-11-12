@@ -3,12 +3,7 @@
     <AppHeader />
     <slot />
     <AppFooter />
-    <BaseNotification
-      :visible="notification.visible"
-      :message="notification.message"
-      :type="notification.type"
-      :button="notification.button"
-    />
+    <BaseNotification :notification="notification" />
     <SlidePanel
       v-model="cartStore.isOpen"
       :mobile-only="false"
@@ -43,6 +38,7 @@
 
 <style lang="scss">
   .container {
+    box-sizing: border-box;
     inline-size: 100%;
     max-inline-size: 1680px;
     padding: 0 120px;
@@ -50,21 +46,18 @@
 
     @media (max-width: vars.$breakpoints-xxl) {
       max-inline-size: 1248px;
-      padding: 0 96px;
+      padding: 0 40px;
     }
 
     @media (max-width: vars.$breakpoints-xl) {
-      max-inline-size: 936px;
-      padding: 0 36px;
+      max-inline-size: 1160px;
     }
 
     @media (max-width: vars.$breakpoints-l) {
-      max-inline-size: 696px;
-      padding: 0 36px;
+      max-inline-size: 900px;
     }
 
     @media (max-width: vars.$breakpoints-m) {
-      inline-size: calc(100% - 32px);
       padding: 0 16px;
     }
   }

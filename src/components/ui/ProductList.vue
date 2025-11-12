@@ -62,6 +62,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-auto-rows: auto;
+      row-gap: 86px;
 
       &-item {
         justify-self: center;
@@ -69,6 +70,10 @@
 
       @media (max-width: vars.$breakpoints-xl) {
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media (max-width: vars.$breakpoints-m) {
+        row-gap: 46px;
       }
     }
   }

@@ -6,9 +6,4 @@ export interface Review {
   rating?: number
 }
 
-export interface FormData {
-  name: string
-  message: string
-  email: string
-  rating: number
-}
+export interface FormData extends Omit<Review, 'date'> {}

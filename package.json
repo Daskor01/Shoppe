@@ -48,8 +48,5 @@
     "*.{js,ts,vue}": "eslint --fix",
     "*.{vue,scss}": "stylelint --fix",
     "*.{js,ts,vue,scss,md,json}": "prettier --write"
-  },
-  "optionalDependencies": {
-    "@rollup/rollup-win32-x64-msvc": "^4.52.3"
   }
 }

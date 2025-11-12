@@ -1,8 +1,8 @@
 <template>
   <transition name="slide-fade">
     <div
-      v-if="visible"
-      :class="['base-notification', `base-notification--${type}`]"
+      v-if="notification.visible"
+      :class="['base-notification', `base-notification--${notification.type}`]"
       :style="styleObject"
     >
       <slot name="icon">
@@ -10,11 +10,15 @@
       </slot>
 
       <div class="base-notification__message">
-        <slot>{{ message }}</slot>
+        <slot>{{ notification.message }}</slot>
       </div>
 
-      <button v-if="button?.text" class="base-notification__button" @click="button.handler">
-        {{ button.text }}
+      <button
+        v-if="notification.button?.text"
+        class="base-notification__button"
+        @click="notification.button.handler"
+      >
+        {{ notification.button.text }}
       </button>
     </div>
   </transition>
@@ -28,7 +32,11 @@
   import IconWarning from '@/components/icons/IconWarning.vue'
   import type { NotificationProps } from '@/types/Notification'
 
-  const props = defineProps<NotificationProps>()
+  const props = defineProps<Props>()
+
+  interface Props {
+    notification: NotificationProps
+  }
 
   //Отрисовываем иконку в зависимости от типа уведомления
   const iconMap = {
@@ -39,7 +47,7 @@
   }
 
   const iconComponent = computed(() => {
-    return iconMap[props.type || 'info']
+    return iconMap[props.notification.type || 'info']
   })
 
   //Вычисляем отступы для контейнера

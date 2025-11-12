@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { type Product } from '@/types/Product'
+import { useApi } from '@/composables/useApi'
 
 export const useProductsStore = defineStore('products', () => {
   const products = ref<Product[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const activePromises = new Map<string, Promise<void>>()
-
   const currentCategory = ref<string>('')
+
+  const api = useApi('https://fakestoreapi.com')
 
   async function fetchData(url: string, key: string) {
     if (activePromises.has(key)) {
@@ -20,10 +22,10 @@ export const useProductsStore = defineStore('products', () => {
 
     const promise = (async () => {
       try {
-        const response = await fetch(url)
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
-        const data = await response.json()
-        products.value = data
+        const data = await api.fetchApi<Product[]>(url)
+        if (data) {
+          products.value = data
+        }
       } catch (err: unknown) {
         if (err instanceof Error) {
           error.value = err.message
@@ -49,10 +51,7 @@ export const useProductsStore = defineStore('products', () => {
       return
     }
     currentCategory.value = category
-    await fetchData(
-      `https://fakestoreapi.com/products/category/${category}`,
-      `category-${category}`,
-    )
+    await fetchData(`/products/category/${category}`, `category-${category}`)
   }
 
   async function fetchAllProducts() {
@@ -60,7 +59,7 @@ export const useProductsStore = defineStore('products', () => {
       return
     }
     currentCategory.value = ''
-    await fetchData('https://fakestoreapi.com/products', 'all-products')
+    await fetchData('/products', 'all-products')
   }
 
   return {

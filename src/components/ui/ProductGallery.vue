@@ -14,6 +14,16 @@
           <img :src="img" alt="Product image" class="product-gallery__mobile-image" />
         </SwiperSlide>
       </Swiper>
+
+      <div class="product-gallery__steps">
+        <div
+          v-for="(img, idx) in ProductImages"
+          :key="`step-${idx}`"
+          class="product-gallery__step"
+          :class="{ active: idx === currentIndex }"
+          @click="setActive(idx)"
+        />
+      </div>
     </div>
 
     <div v-else class="product-gallery__desktop">
@@ -28,23 +38,24 @@
         />
       </div>
 
-      <div class="product-gallery__main-image">
-        <img
-          :src="ProductImages[activeIndex]"
-          alt="Main product image"
-          class="product-gallery__main-image"
-        />
+      <div class="product-gallery__main-content">
+        <div class="product-gallery__main-image">
+          <img
+            :src="ProductImages[activeIndex]"
+            alt="Main product image"
+            class="product-gallery__main-image"
+          />
+        </div>
+        <div class="product-gallery__steps">
+          <div
+            v-for="(img, idx) in ProductImages"
+            :key="`step-${idx}`"
+            class="product-gallery__step"
+            :class="{ active: idx === currentIndex }"
+            @click="setActive(idx)"
+          />
+        </div>
       </div>
-    </div>
-
-    <div class="product-gallery__steps">
-      <div
-        v-for="(img, idx) in ProductImages"
-        :key="`step-${idx}`"
-        class="product-gallery__step"
-        :class="{ active: idx === currentIndex }"
-        @click="setActive(idx)"
-      />
     </div>
   </div>
 </template>
@@ -92,20 +103,24 @@
 <style lang="scss" scoped>
   .product-gallery {
     &__mobile-slider {
-      inline-size: 800px;
       margin-inline: auto;
 
       @media (max-width: vars.$breakpoints-m) {
-        inline-size: 500px;
+        max-inline-size: 700px;
       }
 
-      @media (width <= 530px) {
-        inline-size: 300px;
+      @media (max-width: vars.$breakpoints-s) {
+        max-inline-size: 300px;
       }
     }
 
     &__mobile-image {
-      inline-size: 100%;
+      box-sizing: border-box;
+      width: 400px;
+      aspect-ratio: 288 / 374;
+      padding: 30px;
+      object-fit: contain;
+      background-color: vars.$color-ligth-gray;
       border-radius: 0.5rem;
 
       @media (max-width: vars.$breakpoints-s) {
@@ -116,10 +131,12 @@
     &__desktop {
       display: flex;
       gap: 38px;
+    }
 
-      @media (max-width: vars.$breakpoints-xl) {
-        gap: 15px;
-      }
+    &__main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     &__thumbnails {
@@ -127,16 +144,19 @@
       flex-direction: column;
       gap: 40px;
 
-      @media (max-width: vars.$breakpoints-xxl) {
+      @media (max-width: vars.$breakpoints-xl) {
         gap: 16px;
       }
     }
 
     &__thumbnail-image {
+      box-sizing: border-box;
       inline-size: 120px;
       aspect-ratio: 1;
+      padding: 8px;
       cursor: pointer;
       object-fit: contain;
+      background-color: vars.$color-ligth-gray;
       border: 2px solid transparent;
       border-radius: 0.5rem;
 
@@ -158,12 +178,15 @@
     }
 
     &__main-image {
+      box-sizing: border-box;
       inline-size: 540px;
       aspect-ratio: 540 / 600;
-      object-fit: contain;
+      padding: 12px;
+      background-color: vars.$color-ligth-gray;
+      border-radius: 0.5rem;
 
       @media (max-width: vars.$breakpoints-xxl) {
-        inline-size: 400px;
+        inline-size: 500px;
       }
 
       @media (max-width: vars.$breakpoints-xl) {
@@ -172,6 +195,12 @@
 
       @media (max-width: vars.$breakpoints-l) {
         inline-size: 240px;
+      }
+
+      img {
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: contain;
       }
     }
 
@@ -185,7 +214,7 @@
       background: vars.$color-ligth-gray;
 
       @media (min-width: vars.$breakpoints-m) {
-        inline-size: 100%;
+        max-inline-size: 100%;
       }
     }
 
@@ -215,6 +244,7 @@
   .swiper {
     inline-size: 100%;
     block-size: 100%;
+    border-radius: 10px;
 
     &__slide {
       display: flex;

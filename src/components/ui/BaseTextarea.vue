@@ -1,21 +1,21 @@
 <template>
-  <div class="base-input" :class="{ 'has-value': modelValue || isFocused }">
-    <div class="base-input__wrapper">
-      <input
-        ref="inputRef"
-        v-bind="inputAttrs"
+  <div class="base-textarea" :class="{ 'has-value': modelValue || isFocused }">
+    <div class="base-textarea__wrapper">
+      <textarea
+        ref="textareaRef"
+        v-bind="textareaAttrs"
         :value="modelValue"
-        :class="{ 'base-input--error': error }"
-        class="base-input__field"
+        :class="{ 'base-textarea--error': error }"
+        class="base-textarea__field"
         @input="handleInput"
         @focus="isFocused = true"
         @blur="isFocused = false"
       />
-      <label class="base-input__label">
+      <label class="base-textarea__label">
         {{ placeholder }}
       </label>
     </div>
-    <span v-if="error" class="base-input__error">{{ error }}</span>
+    <span v-if="error" class="base-textarea__error">{{ error }}</span>
   </div>
 </template>
 
@@ -23,7 +23,7 @@
   import { ref, useAttrs, computed } from 'vue'
 
   const attrs = useAttrs()
-  const inputRef = ref<HTMLInputElement>()
+  const textareaRef = ref<HTMLTextAreaElement>()
   const isFocused = ref(false)
 
   const modelValue = defineModel<string>({ default: '' })
@@ -31,25 +31,24 @@
 
   // get placeholder separately
   const placeholder = computed(() => attrs.placeholder as string)
-  const inputAttrs = computed(() => {
+  const textareaAttrs = computed(() => {
     const { placeholder, ...rest } = attrs
     return rest
   })
 
   const handleInput = (event: Event) => {
-    const target = event.target as HTMLInputElement
+    const target = event.target as HTMLTextAreaElement
     modelValue.value = target.value
   }
 
-  defineExpose({ inputRef })
+  defineExpose({ textareaRef })
 </script>
 
 <style scoped lang="scss">
-  .base-input {
+  .base-textarea {
     position: relative;
     display: flex;
     flex-direction: column;
-    font-size: 16px;
 
     &__wrapper {
       position: relative;
@@ -58,16 +57,19 @@
     }
 
     &__field {
+      @include mixins.reset-appearance;
+
       width: 100%;
-      height: 24px;
+      min-height: 100px;
       padding: 12px;
-      font-size: 1rem;
+      font-family: inherit;
+      resize: none;
       background: transparent;
-      border: none;
       border-radius: 4px;
       transition: border 0.2s ease;
 
-      @media (max-width: vars.$breakpoints-s) {
+      @media (max-width: vars.$breakpoints-m) {
+        min-width: 60px;
         padding: 5px;
       }
 
@@ -75,7 +77,7 @@
         outline: none;
       }
 
-      &.base-input--error {
+      &.base-textarea--error {
         border: 1px solid vars.$color-accent-red;
       }
     }
@@ -88,7 +90,7 @@
       font-size: 1rem;
       color: #999;
       pointer-events: none;
-      background-color: vars.$color-light;
+      background-color: white;
       opacity: 0.8;
       transition: all 0.25s ease;
 

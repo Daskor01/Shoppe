@@ -1,5 +1,5 @@
 <template>
-  <div v-if="product" class="product-info">
+  <div class="product-info">
     <h1 class="product-info__title">{{ product.title }}</h1>
 
     <div class="product-info__price-wrapper">
@@ -18,9 +18,11 @@
 
     <div v-if="!mobile">
       <div class="product-info__rating">
-        <span v-for="i in 5" :key="i" class="product-info__rating-star">
-          <IconStar :filled="i <= Math.round(product.rating?.rate || 0)" />
-        </span>
+        <StarRating
+          :modelValue="Math.round(product.rating?.rate || 0)"
+          class="product-info__rating-star"
+          readonly
+        />
         <span class="product-info__rating-text">{{ counterReviews }} customer review</span>
       </div>
 
@@ -39,7 +41,14 @@
     </div>
 
     <div v-if="!mobile" class="product-info__interaction">
-      <IconLikeProduct />
+      <button
+        :class="{ liked: isLiked }"
+        class="product-info__interaction-like"
+        @click="toggleLike"
+      >
+        <IconLikeProduct />
+      </button>
+      <div class="product-info__divider"></div>
       <div class="product-info__share">
         <IconMail />
         <IconFacebook />
@@ -54,10 +63,10 @@
 
         <div class="product-info__meta">
           <p class="product-info__meta-item">
-            <strong class="product-info__meta-item--accent">SKU:</strong> {{ product.id }}
+            <span class="product-info__meta-item--accent">SKU:</span> {{ product.id }}
           </p>
           <p class="product-info__meta-item">
-            <strong class="product-info__meta-item--accent">Category:</strong>
+            <span class="product-info__meta-item--accent">Category:</span>
             {{ product.category }}
           </p>
         </div>
@@ -77,18 +86,17 @@
 
     <div v-if="!mobile" class="product-info__meta">
       <p class="product-info__meta-item">
-        <strong class="product-info__meta-item--accent">SKU:</strong> {{ product.id }}
+        <span class="product-info__meta-item--accent">SKU:</span> {{ product.id }}
       </p>
       <p class="product-info__meta-item">
-        <strong class="product-info__meta-item--accent">Category:</strong> {{ product.category }}
+        <span class="product-info__meta-item--accent">Category:</span> {{ product.category }}
       </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, watchEffect, computed } from 'vue'
-  import { useRouter } from 'vue-router'
+  import { ref, computed } from 'vue'
   import { useCartStore } from '@/stores/useCartStore'
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { useNotification } from '@/composables/useNotification'
@@ -103,14 +111,13 @@
   import IconShare from '@/components/icons/IconShare.vue'
   import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
   import IconBaseArrowTop from '@/components/icons/IconBaseArrowTop.vue'
-  import IconStar from '@/components/icons/IconStar.vue'
+  import StarRating from '@/components/ui/StarRating.vue'
   import BaseButton from '@/components/ui/BaseButton.vue'
 
   const props = defineProps<{
     product: Product
   }>()
 
-  const router = useRouter()
   const cartStore = useCartStore()
   const { notify } = useNotification()
 
@@ -136,7 +143,7 @@
       button: {
         text: 'View Cart',
         handler: () => {
-          router.push('/cart')
+          cartStore.toggleCart()
         },
       },
     })
@@ -162,17 +169,25 @@
   // Counter Reviews
   const counterReviews = ref(0)
 
-  watchEffect(() => {
+  onMounted(() => {
     const stored = localStorage.getItem(`reviews_${props.product.id}`)
     const reviews = stored ? (JSON.parse(stored) as Review[]) : []
     counterReviews.value = reviews.length
   })
+
+  // Like Product
+  const isLiked = ref(false)
+  const toggleLike = () => {
+    isLiked.value = !isLiked.value
+  }
 </script>
 
 <style scoped lang="scss">
   .product-info {
     &__title {
+      margin: 14px 0 22px;
       font-size: 26px;
+      font-weight: 400;
       line-height: 135%;
 
       @media (max-width: vars.$breakpoints-l) {
@@ -184,7 +199,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-block-start: 24px;
+      margin-bottom: 64px;
 
       @media (min-width: vars.$breakpoints-xl) {
         justify-content: flex-start;
@@ -192,16 +207,20 @@
     }
 
     &__price {
-      margin-block-start: 24px;
+      margin: 0;
       font-size: 20px;
       font-weight: 500;
       line-height: 130%;
       color: vars.$color-accent-light;
+
+      @media (max-width: vars.$breakpoints-m) {
+        font-size: 16px;
+      }
     }
 
     &__rating {
       display: flex;
-      gap: 5px;
+      gap: 24px;
 
       &-text {
         margin-inline-start: 20px;
@@ -246,20 +265,42 @@
 
     &__cart-button {
       width: 360px;
-      font-weight: 700;
       text-transform: uppercase;
       border-radius: 4px;
+      transition: 0.2s ease;
+
+      &:hover {
+        color: vars.$color-light;
+        background-color: vars.$color-dark;
+      }
 
       @media (max-width: vars.$breakpoints-l) {
         width: 100%;
       }
+
+      @media (max-width: vars.$breakpoints-m) {
+        height: 32px;
+        font-size: 12px;
+      }
     }
 
     &__interaction {
+      position: relative;
       display: flex;
-      gap: 30px;
+      gap: 40px;
       margin-block-start: 70px;
       cursor: pointer;
+
+      &-like {
+        @include mixins.reset-appearance;
+
+        color: #707070;
+        transition: color 0.1s ease;
+
+        &.liked {
+          color: vars.$color-accent-red;
+        }
+      }
     }
 
     &__divider {
@@ -289,7 +330,9 @@
       text-overflow: ellipsis;
       -webkit-line-clamp: 2;
       font-size: 0.95rem;
+      font-size: 14px;
       line-height: 1.4;
+      color: vars.$color-gray;
       white-space: normal;
       cursor: pointer;
       -webkit-box-orient: vertical;
@@ -298,17 +341,25 @@
     &__toggle-button {
       @include mixins.reset-appearance;
 
+      margin-block-start: 12px;
+      font-size: 14px;
       color: vars.$color-accent-light;
     }
 
     &__meta {
       margin-block-start: 38px;
-      line-height: 168%;
 
       &-item {
+        margin: 0;
+        font-weight: 400;
         color: vars.$color-gray;
 
+        @media (max-width: vars.$breakpoints-m) {
+          font-size: 14px;
+        }
+
         &--accent {
+          font-weight: 700;
           color: vars.$color-dark;
         }
       }

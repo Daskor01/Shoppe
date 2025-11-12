@@ -52,16 +52,14 @@
       button: {
         text: 'View Cart',
         handler: () => {
-          router.push('/cart')
+          cartStore.toggleCart()
         },
       },
     })
   }
 
-  //Мобилка
   const { isBelow: isMobile } = useBreakpoint(1180)
 
-  //Обработчик клика
   function handleClick() {
     if (isMobile.value) {
       router.push(`/product/${props.product.id}`)
@@ -78,6 +76,10 @@
     inline-size: clamp(8.5rem, 4.1964rem + 21.5179vw, 23.5625rem);
     block-size: clamp(11.75rem, 6.6786rem + 25.3571vw, 29.5rem);
     cursor: pointer;
+
+    @media (max-width: vars.$breakpoints-xs) {
+      inline-size: 120px;
+    }
 
     &__image-wrapper {
       position: relative;
@@ -144,9 +146,13 @@
     }
 
     &__image {
+      box-sizing: border-box;
       inline-size: 100%;
-      block-size: clamp(8.5rem, 4.6786rem + 19.1071vw, 21.875rem);
+      aspect-ratio: 1 / 1;
+      padding: 20px;
       object-fit: contain;
+      background-color: vars.$color-ligth-gray;
+      border-radius: 10px;
     }
   }
 </style>
