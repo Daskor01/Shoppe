@@ -200,17 +200,17 @@
       &-grid {
         display: flex;
         justify-content: space-between;
+      }
 
-        &-item {
-          justify-self: center;
+      &-grid-item {
+        justify-self: center;
 
-          @media (max-width: vars.$breakpoints-xl) {
-            width: 300px;
-          }
+        @media (max-width: vars.$breakpoints-xl) {
+          width: 300px;
+        }
 
-          @media (max-width: vars.$breakpoints-l) {
-            width: 220px;
-          }
+        @media (max-width: vars.$breakpoints-l) {
+          width: 220px;
         }
       }
 

@@ -28,6 +28,24 @@
 </script>
 
 <style scoped lang="scss">
+  .star {
+    cursor: pointer;
+    transition: fill 0.2s ease;
+
+    @media (max-width: vars.$breakpoints-m) {
+      inline-size: 12px;
+      block-size: 12px;
+    }
+  
+    &.filled {
+      fill: vars.$color-dark;
+    }
+  
+    &:hover:not(.readonly *) {
+      transform: scale(1.1);
+    }
+    }
+
   .star-rating {
     display: flex;
     gap: 0.25rem;
@@ -38,21 +56,4 @@
     }
   }
 
-  .star {
-    cursor: pointer;
-    transition: fill 0.2s ease;
-
-    @media (max-width: vars.$breakpoints-m) {
-      inline-size: 12px;
-      block-size: 12px;
-    }
-
-    &.filled {
-      fill: vars.$color-dark;
-    }
-
-    &:hover:not(.readonly *) {
-      transform: scale(1.1);
-    }
-  }
 </style>
