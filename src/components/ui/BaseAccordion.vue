@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import IconBaseArrowDown from '@/components/icons/IconBaseArrowDown.vue'
 
   interface AccordionItem {
@@ -29,7 +29,7 @@
     name: string
   }
 
-  const props = defineProps<{
+  defineProps<{
     items: AccordionItem[]
   }>()
 

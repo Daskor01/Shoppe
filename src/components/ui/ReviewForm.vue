@@ -80,7 +80,7 @@
   import BaseInput from '@/components/ui/BaseInput.vue'
   import BaseTextarea from '@/components/ui/BaseTextarea.vue'
 
-  const props = defineProps<{
+  defineProps<{
     productId: number | string
     productTitle: string
   }>()

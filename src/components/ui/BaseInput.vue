@@ -32,6 +32,7 @@
   // get placeholder separately
   const placeholder = computed(() => attrs.placeholder as string)
   const inputAttrs = computed(() => {
+    // eslint-disable-next-line no-unused-vars
     const { placeholder, ...rest } = attrs
     return rest
   })

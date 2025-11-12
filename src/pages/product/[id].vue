@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue'
+  import { onMounted, ref, onUnmounted } from 'vue'
   import { computed } from 'vue'
   import { useRoute } from 'vue-router'
   import { useProductsStore } from '@/stores/useProductsStore'

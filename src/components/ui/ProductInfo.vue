@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import { useCartStore } from '@/stores/useCartStore'
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { useNotification } from '@/composables/useNotification'
