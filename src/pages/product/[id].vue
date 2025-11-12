@@ -53,7 +53,7 @@
         />
       </div>
 
-      <div class="product__similar-carousel" v-else>
+      <div v-else class="product__similar-carousel">
         <Swiper
           :modules="[Navigation, Pagination]"
           :slides-per-view="2.2"
