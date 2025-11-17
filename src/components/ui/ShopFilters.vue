@@ -85,7 +85,7 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
-    inline-size: 288px;
+    inline-size: 262px;
     background-color: vars.$color-light;
 
     &__search {

@@ -36,24 +36,23 @@
       inline-size: 12px;
       block-size: 12px;
     }
-  
+
     &.filled {
       fill: vars.$color-dark;
     }
-  
+
     &:hover:not(.readonly *) {
       transform: scale(1.1);
     }
-    }
+  }
 
   .star-rating {
     display: flex;
-    gap: 0.25rem;
+    gap: 10px;
 
     &.readonly .star {
       pointer-events: none;
       cursor: default;
     }
   }
-
 </style>

@@ -151,7 +151,7 @@
     position: sticky;
     z-index: 2000;
     inline-size: 100%;
-    margin: 24px auto;
+    margin-block: 48px 36px;
     background-color: transparent;
 
     &__container {

@@ -113,6 +113,7 @@
   import IconBaseArrowTop from '@/components/icons/IconBaseArrowTop.vue'
   import StarRating from '@/components/ui/StarRating.vue'
   import BaseButton from '@/components/ui/BaseButton.vue'
+  import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
 
   const props = defineProps<{
     product: Product
@@ -121,7 +122,7 @@
   const cartStore = useCartStore()
   const { notify } = useNotification()
 
-  const { isBelow: mobile } = useBreakpoint(1440)
+  const { isBelow: mobile } = useBreakpoint(TABLET_BREAKPOINT)
 
   const formattedPrice = computed(() => {
     return props.product.price.toFixed(2)
@@ -193,16 +194,24 @@
       @media (max-width: vars.$breakpoints-l) {
         font-size: 20px;
       }
+
+      @media (max-width: vars.$breakpoints-s) {
+        margin: 0 0 8px;
+      }
     }
 
     &__price-wrapper {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 64px;
+      margin-bottom: 72px;
 
       @media (min-width: vars.$breakpoints-xl) {
         justify-content: flex-start;
+      }
+
+      @media (max-width: vars.$breakpoints-m) {
+        margin-bottom: 0;
       }
     }
 
@@ -238,6 +247,10 @@
       display: flex;
       gap: 24px;
       margin-block-start: 48px;
+
+      @media (max-width: vars.$breakpoints-s) {
+        margin-block-start: 26px;
+      }
     }
 
     &__quantity {
@@ -265,6 +278,7 @@
 
     &__cart-button {
       width: 360px;
+      font-weight: 700;
       text-transform: uppercase;
       border-radius: 4px;
       transition: 0.2s ease;
@@ -288,7 +302,7 @@
       position: relative;
       display: flex;
       gap: 40px;
-      margin-block-start: 70px;
+      margin-block-start: 80px;
       cursor: pointer;
 
       &-like {
@@ -336,6 +350,10 @@
       white-space: normal;
       cursor: pointer;
       -webkit-box-orient: vertical;
+
+      @media (max-width: vars.$breakpoints-s) {
+        font-size: 12px;
+      }
     }
 
     &__toggle-button {
@@ -344,9 +362,23 @@
       margin-block-start: 12px;
       font-size: 14px;
       color: vars.$color-accent-light;
+
+      @media (max-width: vars.$breakpoints-s) {
+        margin-block-start: 8px;
+        font-size: 12px;
+      }
+    }
+
+    &__toggle-text {
+      display: flex;
+      gap: 4px;
+      align-items: center;
     }
 
     &__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
       margin-block-start: 38px;
 
       &-item {
@@ -359,7 +391,6 @@
         }
 
         &--accent {
-          font-weight: 700;
           color: vars.$color-dark;
         }
       }

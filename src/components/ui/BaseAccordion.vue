@@ -76,7 +76,7 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 1rem 0;
+      padding: 8px 0;
       font-size: 12px;
       text-align: left;
       cursor: pointer;

@@ -93,19 +93,19 @@
   //Адаптация под мобильные
   const showFilters = ref(false)
 
-  const { isBelow: isMobile } = useBreakpoint(1441)
+  const { isBelow: isMobile } = useBreakpoint(991.5)
 </script>
 
 <style scoped lang="scss">
   .shop {
     position: relative;
     display: flex;
-    gap: 34px;
+    gap: 28px;
     justify-content: space-between;
+    margin-block-start: 78px;
 
-    @media (max-width: vars.$breakpoints-xl) {
-      display: block;
-      gap: 20px;
+    @media (max-width: vars.$breakpoints-m) {
+      flex-direction: column;
     }
   }
 
@@ -151,22 +151,45 @@
   .product-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    justify-content: space-between;
-    margin: 2rem;
-    margin-block-start: 5rem;
+    gap: 20px;
+    width: 100%;
+    margin-block-start: 106px;
+    margin-inline: -10px;
 
     @media (max-width: vars.$breakpoints-xxl) {
-      grid-template-columns: repeat(2, 1fr);
-      margin-inline: 0;
+      grid-template-columns: repeat(3, 1fr);
     }
 
     @media (max-width: vars.$breakpoints-xl) {
-      margin-block-start: 1.5rem;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: vars.$breakpoints-m) {
+      margin-block-start: 40px;
     }
 
     &__item {
       justify-self: center;
+
+      & * {
+        inline-size: 300px;
+
+        @media (max-width: vars.$breakpoints-l) {
+          inline-size: 260px;
+        }
+
+        @media (max-width: vars.$breakpoints-s) {
+          inline-size: 200px;
+        }
+
+        @media (width <= 450px) {
+          inline-size: 160px;
+        }
+
+        @media (max-width: vars.$breakpoints-xs) {
+          inline-size: 136px;
+        }
+      }
     }
 
     &__pagination {

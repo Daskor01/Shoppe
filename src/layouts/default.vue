@@ -40,22 +40,7 @@
   .container {
     box-sizing: border-box;
     inline-size: 100%;
-    max-inline-size: 1680px;
-    padding: 0 120px;
-    margin: 0 auto;
-
-    @media (max-width: vars.$breakpoints-xxl) {
-      max-inline-size: 1248px;
-      padding: 0 40px;
-    }
-
-    @media (max-width: vars.$breakpoints-xl) {
-      max-inline-size: 1160px;
-    }
-
-    @media (max-width: vars.$breakpoints-l) {
-      max-inline-size: 900px;
-    }
+    padding: 0 96px;
 
     @media (max-width: vars.$breakpoints-m) {
       padding: 0 16px;

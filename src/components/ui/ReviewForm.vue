@@ -254,6 +254,10 @@
       margin-left: 0;
     }
 
+    @media (max-width: vars.$breakpoints-s) {
+      margin-top: 0;
+    }
+
     &__title {
       margin-bottom: 0.5rem;
       font-size: 20px;
@@ -328,6 +332,7 @@
 
       @media (max-width: vars.$breakpoints-s) {
         max-width: 100%;
+        padding: 10px;
       }
     }
   }

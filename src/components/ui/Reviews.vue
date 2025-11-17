@@ -72,6 +72,10 @@
         'reviews-item';
     }
 
+    @media (max-width: vars.$breakpoints-s) {
+      margin-top: 0;
+    }
+
     &__list {
       flex: 1;
     }

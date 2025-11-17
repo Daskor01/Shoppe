@@ -154,8 +154,31 @@
 
 <style scoped lang="scss">
   .footer {
+    position: relative;
     inline-size: 100%;
     padding-block-start: 2rem;
+    margin-block-start: 220px;
+
+    @media (max-width: vars.$breakpoints-l) {
+      margin-block-start: 120px;
+    }
+
+    @media (max-width: vars.$breakpoints-m) {
+      margin-block-start: 70px;
+    }
+
+    &::before {
+      position: absolute;
+      top: -22px;
+      width: 100%;
+      height: 2px;
+      content: '';
+      background-color: vars.$color-ligth-gray;
+
+      @media (max-width: vars.$breakpoints-s) {
+        display: none;
+      }
+    }
 
     &__container {
       display: grid;

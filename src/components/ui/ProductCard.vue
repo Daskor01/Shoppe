@@ -73,8 +73,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    inline-size: clamp(8.5rem, 4.1964rem + 21.5179vw, 23.5625rem);
-    block-size: clamp(11.75rem, 6.6786rem + 25.3571vw, 29.5rem);
     cursor: pointer;
 
     @media (max-width: vars.$breakpoints-xs) {
@@ -130,29 +128,48 @@
 
     &__title {
       inline-size: 100%;
-      margin-block: 5px;
-      overflow: hidden;
+      margin-block: 8px 6px;
       text-overflow: ellipsis;
-      font-size: clamp(0.875rem, 0.7679rem + 0.5357vw, 1.25rem);
+      font-size: 20px;
       font-weight: 400;
       line-height: 130%;
-      white-space: nowrap;
+
+      @media (max-width: vars.$breakpoints-s) {
+        font-size: 14px;
+      }
     }
 
     &__price {
       margin: 0;
-      font-weight: bold;
+      font-size: 20px;
       color: vars.$color-accent-light;
+
+      @media (max-width: vars.$breakpoints-s) {
+        font-size: 14px;
+      }
     }
 
     &__image {
       box-sizing: border-box;
       inline-size: 100%;
+      width: 380px;
       aspect-ratio: 1 / 1;
       padding: 20px;
       object-fit: contain;
       background-color: vars.$color-ligth-gray;
       border-radius: 10px;
+
+      @media (max-width: vars.$breakpoints-xl) {
+        width: 340px;
+      }
+
+      @media (max-width: vars.$breakpoints-l) {
+        width: 260px;
+      }
+
+      @media (max-width: vars.$breakpoints-xs) {
+        width: 136px;
+      }
     }
   }
 </style>

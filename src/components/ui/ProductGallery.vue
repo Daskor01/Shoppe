@@ -4,6 +4,7 @@
       <Swiper
         :modules="[Navigation]"
         :slides-per-view="1"
+        :space-between="20"
         :pagination="{ clickable: true }"
         class="swiper"
         :loop="true"
@@ -130,7 +131,7 @@
 
     &__desktop {
       display: flex;
-      gap: 38px;
+      gap: 66px;
     }
 
     &__main-content {
@@ -143,6 +144,7 @@
       display: flex;
       flex-direction: column;
       gap: 40px;
+      margin-top: 14px;
 
       @media (max-width: vars.$breakpoints-xl) {
         gap: 16px;
@@ -165,15 +167,15 @@
       }
 
       @media (max-width: vars.$breakpoints-xxl) {
-        inline-size: 100px;
+        inline-size: 120px;
       }
 
       @media (max-width: vars.$breakpoints-xl) {
-        inline-size: 80px;
+        inline-size: 100px;
       }
 
       @media (max-width: vars.$breakpoints-l) {
-        inline-size: 60px;
+        inline-size: 80px;
       }
     }
 
@@ -185,15 +187,11 @@
       background-color: vars.$color-ligth-gray;
       border-radius: 0.5rem;
 
-      @media (max-width: vars.$breakpoints-xxl) {
-        inline-size: 500px;
-      }
-
-      @media (max-width: vars.$breakpoints-xl) {
+      @media (max-width: vars.$breakpoints-l) {
         inline-size: 320px;
       }
 
-      @media (max-width: vars.$breakpoints-l) {
+      @media (max-width: vars.$breakpoints-m) {
         inline-size: 240px;
       }
 
@@ -208,13 +206,18 @@
       display: flex;
       justify-content: center;
       inline-size: 100%;
-      max-inline-size: 320px;
-      margin-block-start: 12px;
+      margin-block-start: 32px;
       margin-inline: auto;
       background: vars.$color-ligth-gray;
 
       @media (min-width: vars.$breakpoints-m) {
         max-inline-size: 100%;
+      }
+
+      @media (max-width: vars.$breakpoints-s) {
+        max-inline-size: 290px;
+        margin-block-start: 14px;
+        margin-inline: 0;
       }
     }
 
@@ -249,8 +252,11 @@
     &__slide {
       display: flex;
       align-items: center;
-      justify-content: center;
       block-size: auto;
+    }
+
+    &-wrapper {
+      gap: 16px;
     }
   }
 </style>

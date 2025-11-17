@@ -2,7 +2,7 @@
   <section v-if="product" class="product">
     <ProductGallery :ProductImages="productImages" class="product__gallery" />
 
-    <ProductInfo :product="product" />
+    <ProductInfo :product="product" class="product__info" />
 
     <BaseTabs v-if="!isMobile" :tabs="tabs" class="product__tabs">
       <template #description>
@@ -41,15 +41,15 @@
   <div v-else class="loading">Loading...</div>
 
   <ClientOnly>
-    <div class="product__simular">
-      <h2 class="product__simular__title">Simular Items</h2>
+    <div class="product__similar">
+      <h2 class="product__similar__title">Similar Items</h2>
 
-      <div v-if="!isMobile" class="product__simular-grid">
+      <div v-if="!isMobile" class="product__similar-grid">
         <ProductCard
           v-for="item in visibleProducts"
           :key="item.id"
           :product="item"
-          class="product__simular-grid-item"
+          class="product__similar-grid-item"
         />
       </div>
 
@@ -57,6 +57,7 @@
         <Swiper
           :modules="[Navigation, Pagination]"
           :slides-per-view="2.2"
+          :space-between="30"
           class="product__similar-swiper"
         >
           <SwiperSlide
@@ -69,8 +70,8 @@
         </Swiper>
       </div>
 
-      <div class="product__simular-сontinue">
-        <NuxtLink to="/Shop" class="product__simular-link">
+      <div class="product__similar-сontinue">
+        <NuxtLink to="/Shop" class="product__similar-link">
           <span>Continue shopping</span>
           <IconBaseArrowRight />
         </NuxtLink>
@@ -143,8 +144,8 @@
     grid-template-areas:
       'gallery info'
       'tabs tabs';
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    grid-template-columns: max-content 1fr;
+    column-gap: 36px;
 
     @media (max-width: vars.$breakpoints-xl) {
       gap: 1rem;
@@ -155,15 +156,28 @@
         'gallery'
         'info'
         'tabs';
-      grid-template-columns: 1fr;
+      grid-template-columns: 100%;
+    }
+
+    &__info {
+      padding-top: 20px;
+
+      @media (max-width: vars.$breakpoints-s) {
+        padding-top: 8px;
+      }
     }
 
     &__tabs {
       grid-area: tabs;
-      margin-top: 2rem;
+      margin-top: 88px;
 
       @media (max-width: vars.$breakpoints-s) {
         margin: 14px;
+      }
+
+      @media (max-width: vars.$breakpoints-s) {
+        padding: 10px 0;
+        margin: 0;
       }
     }
 
@@ -172,11 +186,11 @@
       margin-top: 24px;
 
       @media (max-width: vars.$breakpoints-m) {
-        margin-top: 12px;
+        margin-top: 4px;
       }
     }
 
-    &__simular {
+    &__similar {
       margin-bottom: 100px;
 
       @media (max-width: vars.$breakpoints-l) {
@@ -188,25 +202,28 @@
       }
 
       &__title {
+        margin-top: 78px;
         font-size: 26px;
         font-weight: 400;
         line-height: 135%;
 
         @media (max-width: vars.$breakpoints-m) {
+          margin-top: 26px;
           font-size: 16px;
         }
       }
 
       &-grid {
         display: flex;
-        justify-content: space-between;
+        gap: 54px;
+        margin-top: 44px;
       }
 
       &-grid-item {
         justify-self: center;
 
         @media (max-width: vars.$breakpoints-xl) {
-          width: 300px;
+          width: 340px;
         }
 
         @media (max-width: vars.$breakpoints-l) {
@@ -215,6 +232,8 @@
       }
 
       &-сontinue {
+        margin-block-start: 40px;
+
         @media (min-width: vars.$breakpoints-xl) {
           display: none;
         }
@@ -223,7 +242,8 @@
       &-link {
         display: flex;
         justify-content: space-between;
-        margin-top: 3rem;
+        margin-top: 24px;
+        font-size: 12px;
         color: vars.$color-accent-light;
         text-decoration: none;
       }

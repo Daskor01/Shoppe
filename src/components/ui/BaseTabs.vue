@@ -54,8 +54,7 @@
   .base-tabs {
     &__header {
       display: flex;
-      justify-content: space-between;
-      width: 50%;
+      gap: 100px;
     }
 
     &__tab {
@@ -82,7 +81,7 @@
 
         &::after {
           position: absolute;
-          inset-block-end: -18px;
+          inset-block-end: -34px;
           display: block;
           width: 100%;
           height: 2px;
@@ -94,12 +93,13 @@
 
     &__divider {
       height: 1px;
-      margin: 1rem 0;
+      margin-top: 34px;
       background-color: vars.$color-ligth-gray;
     }
 
     &__content {
-      margin-top: 1rem;
+      margin-top: 40px;
+      line-height: 170%;
     }
   }
 </style>
