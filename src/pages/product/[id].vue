@@ -216,7 +216,6 @@
       &-grid {
         display: flex;
         justify-content: space-between;
-        gap: 54px;
         margin-top: 44px;
       }
 
