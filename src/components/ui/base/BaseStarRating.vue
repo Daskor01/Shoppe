@@ -12,14 +12,14 @@
 <script setup lang="ts">
   import IconStar from '@/components/icons/IconStar.vue'
 
+  const props = defineProps<{
+    readonly?: boolean
+  }>()
+
   const rating = defineModel<number>({
     default: 0,
     required: false,
   })
-
-  const props = defineProps<{
-    readonly?: boolean
-  }>()
 
   const selectStar = (value: number) => {
     if (props.readonly) return

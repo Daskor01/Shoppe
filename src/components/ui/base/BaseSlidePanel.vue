@@ -41,11 +41,22 @@
   )
 
   //Вычисляем ширину контейнера
+  const isMounted = ref(false)
+
+  onMounted(() => {
+    isMounted.value = true
+  })
+
   const containerStyle = computed(() => {
+    if (!isMounted.value) {
+      return { maxInlineSize: '320px' }
+    }
+
     let width = props.width ?? 320
     if (typeof width === 'number') {
       width = width + 'px'
     }
+
     return {
       maxInlineSize: width,
     }

@@ -19,7 +19,7 @@
 
       <BaseSelect v-model="filters.category" :options="categoryOptions" placeholder="Category" />
 
-      <RangeSlider v-model="localPriceRange" :min="0" :max="200" :step="1" />
+      <BaseRangeSlider v-model="localPriceRange" :min="0" :max="200" :step="1" />
 
       <label class="shop-filters__toggle">
         On sale
@@ -36,9 +36,9 @@
 
 <script setup lang="ts">
   import IconSearch from '@/components/icons/IconSearch.vue'
-  import BaseInput from '@/components/ui/BaseInput.vue'
-  import RangeSlider from '@/components/ui/RangeSlider.vue'
-  import BaseSwitch from '@/components/ui/BaseSwitch.vue'
+  import BaseInput from '@/components/ui/base/BaseInput.vue'
+  import BaseRangeSlider from '@/components/ui/base/BaseRangeSlider.vue'
+  import BaseSwitch from '@/components/ui/base/BaseSwitch.vue'
   import type { Filters } from '@/types/Filters'
   import { ref, watch, computed } from 'vue'
   import { useDebouncedValue } from '@/composables/useDebouncedValue'

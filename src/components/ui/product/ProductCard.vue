@@ -129,7 +129,6 @@
     &__title {
       inline-size: 100%;
       margin-block: 8px 6px;
-      text-overflow: ellipsis;
       font-size: 20px;
       font-weight: 400;
       line-height: 130%;
@@ -152,24 +151,11 @@
     &__image {
       box-sizing: border-box;
       inline-size: 100%;
-      width: 380px;
       aspect-ratio: 1 / 1;
       padding: 20px;
       object-fit: contain;
       background-color: vars.$color-ligth-gray;
       border-radius: 10px;
-
-      @media (max-width: vars.$breakpoints-xl) {
-        width: 340px;
-      }
-
-      @media (max-width: vars.$breakpoints-l) {
-        width: 260px;
-      }
-
-      @media (max-width: vars.$breakpoints-xs) {
-        width: 136px;
-      }
     }
   }
 </style>

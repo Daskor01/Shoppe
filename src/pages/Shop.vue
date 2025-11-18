@@ -1,7 +1,7 @@
 <template>
   <section class="shop">
     <div v-if="isMobile" class="mobile__container">
-      <SearchInput />
+      <BaseSearchInput />
       <h1 class="mobile__title">Shop</h1>
       <button class="filter-toggle" @click="showFilters = !showFilters">
         <IconFilter />
@@ -16,10 +16,10 @@
       </div>
     </div>
 
-    <SlidePanel v-model="showFilters">
+    <BaseSlidePanel v-model="showFilters">
       <h2 class="filter-mobile__title">Filters</h2>
       <ShopFilters v-model:filters="filters" :categories="categories" />
-    </SlidePanel>
+    </BaseSlidePanel>
 
     <div class="product-grid">
       <ProductCard
@@ -28,7 +28,7 @@
         :product="product"
         class="product-grid__item"
       />
-      <Pagination
+      <BasePagination
         :current-page="currentPage"
         :total-pages="totalPages"
         class="product-grid__pagination"
@@ -41,10 +41,11 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { useRoute } from 'vue-router'
-  import ProductCard from '@/components/ui/ProductCard.vue'
-  import ShopFilters from '@/components/ui/ShopFilters.vue'
-  import SlidePanel from '@/components/ui/SlidePanel.vue'
-  import SearchInput from '@/components/ui/SearchInput.vue'
+  import ProductCard from '@/components/ui/product/ProductCard.vue'
+  import ShopFilters from '@/components/ui/shop/ShopFilters.vue'
+  import BaseSlidePanel from '@/components/ui/base/BaseSlidePanel.vue'
+  import BaseSearchInput from '@/components/ui/base/BaseSearchInput.vue'
+  import BasePagination from '@/components/ui/base/BasePagination.vue'
   import useShopFilters from '@/composables/useShopFilters'
   import type { Filters } from '@/types/Filters'
   import { usePagination } from '@/composables/usePagination'
@@ -106,6 +107,7 @@
 
     @media (max-width: vars.$breakpoints-m) {
       flex-direction: column;
+      margin-block-start: 30px;
     }
   }
 
@@ -154,7 +156,6 @@
     gap: 20px;
     width: 100%;
     margin-block-start: 106px;
-    margin-inline: -10px;
 
     @media (max-width: vars.$breakpoints-xxl) {
       grid-template-columns: repeat(3, 1fr);
@@ -170,25 +171,30 @@
 
     &__item {
       justify-self: center;
+      inline-size: 300px;
 
-      & * {
+      @media (min-width: vars.$breakpoints-xxl) {
+        inline-size: 340px;
+      }
+
+      @media (max-width: vars.$breakpoints-l) {
+        inline-size: 260px;
+      }
+
+      @media (max-width: vars.$breakpoints-m) {
         inline-size: 300px;
+      }
 
-        @media (max-width: vars.$breakpoints-l) {
-          inline-size: 260px;
-        }
+      @media (max-width: vars.$breakpoints-s) {
+        inline-size: 240px;
+      }
 
-        @media (max-width: vars.$breakpoints-s) {
-          inline-size: 200px;
-        }
+      @media (max-width: 560px) {
+        inline-size: 160px;
+      }
 
-        @media (width <= 450px) {
-          inline-size: 160px;
-        }
-
-        @media (max-width: vars.$breakpoints-xs) {
-          inline-size: 136px;
-        }
+      @media (max-width: vars.$breakpoints-xs) {
+        inline-size: 136px;
       }
     }
 

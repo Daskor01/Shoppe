@@ -132,6 +132,10 @@
     &__desktop {
       display: flex;
       gap: 66px;
+
+      @media (max-width: vars.$breakpoints-xl) {
+        gap: 40px;
+      }
     }
 
     &__main-content {
@@ -147,7 +151,11 @@
       margin-top: 14px;
 
       @media (max-width: vars.$breakpoints-xl) {
-        gap: 16px;
+        gap: 40px;
+      }
+
+      @media (max-width: 1120px) {
+        gap: 20px;
       }
     }
 
@@ -177,6 +185,10 @@
       @media (max-width: vars.$breakpoints-l) {
         inline-size: 80px;
       }
+
+      @media (max-width: 1120px) {
+        inline-size: 70px;
+      }
     }
 
     &__main-image {
@@ -187,8 +199,16 @@
       background-color: vars.$color-ligth-gray;
       border-radius: 0.5rem;
 
+      @media (max-width: vars.$breakpoints-xl) {
+        inline-size: 480px;
+      }
+
       @media (max-width: vars.$breakpoints-l) {
-        inline-size: 320px;
+        inline-size: 390px;
+      }
+
+      @media (max-width: 1120px) {
+        inline-size: 300px;
       }
 
       @media (max-width: vars.$breakpoints-m) {
@@ -252,6 +272,7 @@
     &__slide {
       display: flex;
       align-items: center;
+      justify-content: center;
       block-size: auto;
     }
 

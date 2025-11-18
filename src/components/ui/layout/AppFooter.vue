@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import BaseInput from '@/components/ui/BaseInput.vue'
+  import BaseInput from '@/components/ui/base/BaseInput.vue'
   import { validateInput } from '@/utils/validateInput'
   import { copyrightLinks, footerLinks, socialLinks } from '@/config/navigation'
   import { useNotification } from '@/composables/useNotification'

@@ -77,8 +77,8 @@
   import { useNotification } from '@/composables/useNotification'
   import { validateInput } from '@/utils/validateInput'
   import type { Review, FormData } from '@/types/Reviews'
-  import BaseInput from '@/components/ui/BaseInput.vue'
-  import BaseTextarea from '@/components/ui/BaseTextarea.vue'
+  import BaseInput from '@/components/ui/base/BaseInput.vue'
+  import BaseTextarea from '@/components/ui/base/BaseTextarea.vue'
 
   defineProps<{
     productId: number | string

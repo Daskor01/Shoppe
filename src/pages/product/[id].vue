@@ -92,10 +92,10 @@
   import { Swiper, SwiperSlide } from 'swiper/vue'
   import { Navigation, Pagination } from 'swiper/modules'
 
-  import ProductGallery from '@/components/ui/ProductGallery.vue'
-  import ProductInfo from '@/components/ui/ProductInfo.vue'
-  import Reviews from '@/components/ui/Reviews.vue'
-  import ProductCard from '@/components/ui/ProductCard.vue'
+  import ProductGallery from '@/components/ui/product/ProductGallery.vue'
+  import ProductInfo from '@/components/ui/product/ProductInfo.vue'
+  import Reviews from '@/components/ui/reviews/Reviews.vue'
+  import ProductCard from '@/components/ui/product/ProductCard.vue'
   import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
 
   const productStore = useProductsStore()
@@ -148,7 +148,7 @@
     column-gap: 36px;
 
     @media (max-width: vars.$breakpoints-xl) {
-      gap: 1rem;
+      column-gap: 26px;
     }
 
     @media (max-width: vars.$breakpoints-m) {
@@ -177,7 +177,7 @@
 
       @media (max-width: vars.$breakpoints-s) {
         padding: 10px 0;
-        margin: 0;
+        margin: 16px 0 0;
       }
     }
 
@@ -215,6 +215,7 @@
 
       &-grid {
         display: flex;
+        justify-content: space-between;
         gap: 54px;
         margin-top: 44px;
       }
@@ -228,6 +229,22 @@
 
         @media (max-width: vars.$breakpoints-l) {
           width: 220px;
+        }
+      }
+
+      &-slide-item {
+        width: 300px;
+
+        @media (max-width: vars.$breakpoints-s) {
+          width: 220px;
+        }
+
+        @media (max-width: 540px) {
+          width: 160px;
+        }
+
+        @media (max-width: vars.$breakpoints-xs) {
+          width: 136px;
         }
       }
 

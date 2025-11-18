@@ -4,7 +4,7 @@
     <slot />
     <AppFooter />
     <BaseNotification :notification="notification" />
-    <SlidePanel
+    <BaseSlidePanel
       v-model="cartStore.isOpen"
       :mobile-only="false"
       side="right"
@@ -14,7 +14,7 @@
       <ClientOnly>
         <CartSidebar />
       </ClientOnly>
-    </SlidePanel>
+    </BaseSlidePanel>
   </div>
 </template>
 
@@ -25,6 +25,9 @@
   import { computed } from 'vue'
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { DESKTOP_BREAKPOINT } from '@/constants/breakpoints'
+
+  import AppHeader from '@/components/ui/layout/AppHeader.vue'
+  import AppFooter from '@/components/ui/layout/AppFooter.vue'
 
   const cartStore = useCartStore()
   const store = useNotificationStore()

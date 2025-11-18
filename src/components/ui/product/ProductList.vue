@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
   import { useProductsStore } from '@/stores/useProductsStore'
-  import ProductCard from '@/components/ui/ProductCard.vue'
+  import ProductCard from '@/components/ui/product/ProductCard.vue'
   import { computed, onMounted } from 'vue'
 
   const productStore = useProductsStore()
@@ -64,16 +64,42 @@
       grid-auto-rows: auto;
       row-gap: 86px;
 
+      @media (max-width: vars.$breakpoints-m) {
+        grid-template-columns: repeat(2, 1fr);
+        row-gap: 46px;
+      }
+
       &-item {
         justify-self: center;
-      }
+        width: 378px;
 
-      @media (max-width: vars.$breakpoints-xl) {
-        grid-template-columns: repeat(2, 1fr);
-      }
+        @media (max-width: vars.$breakpoints-xl) {
+          width: 340px;
+        }
 
-      @media (max-width: vars.$breakpoints-m) {
-        row-gap: 46px;
+        @media (max-width: vars.$breakpoints-l) {
+          width: 260px;
+        }
+
+        @media (max-width: 1120px) {
+          width: 240px;
+        }
+
+        @media (max-width: vars.$breakpoints-m) {
+          width: 300px;
+        }
+
+        @media (max-width: vars.$breakpoints-s) {
+          width: 240px;
+        }
+
+        @media (max-width: 560px) {
+          width: 160px;
+        }
+
+        @media (max-width: vars.$breakpoints-xs) {
+          width: 136px;
+        }
       }
     }
   }

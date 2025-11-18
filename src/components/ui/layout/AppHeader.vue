@@ -44,8 +44,12 @@
       </div>
     </div>
 
-    <SlidePanel v-model="mobileOpen" :top-offset="`${headerHeight}px`" :show-close-button="false">
-      <SearchInput />
+    <BaseSlidePanel
+      v-model="mobileOpen"
+      :top-offset="`${headerHeight}px`"
+      :show-close-button="false"
+    >
+      <BaseSearchInput />
       <nav class="header__mobile-nav">
         <NuxtLink
           v-for="link in navigationLinks"
@@ -68,15 +72,15 @@
           {{ link.name }}
         </NuxtLink>
       </div>
-    </SlidePanel>
+    </BaseSlidePanel>
   </header>
 </template>
 
 <script setup lang="ts">
   import { ref, onMounted, onBeforeUnmount } from 'vue'
-  import SearchInput from '@/components/ui/SearchInput.vue'
+  import BaseSearchInput from '@/components/ui/base/BaseSearchInput.vue'
   import { navigationLinks, headerLinks, headerActions, mobileLinks } from '@/config/navigation'
-  import SlidePanel from '@/components/ui/SlidePanel.vue'
+  import BaseSlidePanel from '@/components/ui/base/BaseSlidePanel.vue'
   import IconCart from '@/components/icons/IconCart.vue'
   import IconMenu from '@/components/icons/IconMenu.vue'
   import IconClose from '@/components/icons/IconClose.vue'

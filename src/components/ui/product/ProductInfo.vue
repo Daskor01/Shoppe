@@ -18,7 +18,7 @@
 
     <div v-if="!mobile">
       <div class="product-info__rating">
-        <StarRating
+        <BaseStarRating
           :modelValue="Math.round(product.rating?.rate || 0)"
           class="product-info__rating-star"
           readonly
@@ -111,8 +111,8 @@
   import IconShare from '@/components/icons/IconShare.vue'
   import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
   import IconBaseArrowTop from '@/components/icons/IconBaseArrowTop.vue'
-  import StarRating from '@/components/ui/StarRating.vue'
-  import BaseButton from '@/components/ui/BaseButton.vue'
+  import BaseStarRating from '@/components/ui/base/BaseStarRating.vue'
+  import BaseButton from '@/components/ui/base/BaseButton.vue'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
 
   const props = defineProps<{
@@ -122,7 +122,7 @@
   const cartStore = useCartStore()
   const { notify } = useNotification()
 
-  const { isBelow: mobile } = useBreakpoint(TABLET_BREAKPOINT)
+  const { isBelow: mobile } = useBreakpoint(1120)
 
   const formattedPrice = computed(() => {
     return props.product.price.toFixed(2)
@@ -196,7 +196,7 @@
       }
 
       @media (max-width: vars.$breakpoints-s) {
-        margin: 0 0 8px;
+        margin: 16px 0 8px;
       }
     }
 
@@ -208,6 +208,10 @@
 
       @media (min-width: vars.$breakpoints-xl) {
         justify-content: flex-start;
+      }
+
+      @media (max-width: vars.$breakpoints-xl) {
+        margin-bottom: 30px;
       }
 
       @media (max-width: vars.$breakpoints-m) {
@@ -248,7 +252,7 @@
       gap: 24px;
       margin-block-start: 48px;
 
-      @media (max-width: vars.$breakpoints-s) {
+      @media (max-width: vars.$breakpoints-l) {
         margin-block-start: 26px;
       }
     }
@@ -288,6 +292,10 @@
         background-color: vars.$color-dark;
       }
 
+      @media (max-width: vars.$breakpoints-xl) {
+        width: 300px;
+      }
+
       @media (max-width: vars.$breakpoints-l) {
         width: 100%;
       }
@@ -304,6 +312,10 @@
       gap: 40px;
       margin-block-start: 80px;
       cursor: pointer;
+
+      @media (max-width: vars.$breakpoints-xl) {
+        margin-block-start: 40px;
+      }
 
       &-like {
         @include mixins.reset-appearance;

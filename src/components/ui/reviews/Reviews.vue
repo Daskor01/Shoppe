@@ -23,8 +23,8 @@
 <script setup lang="ts">
   import { ref, onMounted, watch } from 'vue'
   import type { Review } from '@/types/Reviews'
-  import ReviewForm from '@/components/ui/ReviewForm.vue'
-  import ReviewItem from '@/components/ui/ReviewItem.vue'
+  import ReviewForm from '@/components/ui/reviews/ReviewForm.vue'
+  import ReviewItem from '@/components/ui/reviews/ReviewItem.vue'
 
   const props = defineProps<{
     productId: number | string
