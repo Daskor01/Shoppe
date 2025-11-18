@@ -113,7 +113,6 @@
   import IconBaseArrowTop from '@/components/icons/IconBaseArrowTop.vue'
   import BaseStarRating from '@/components/ui/base/BaseStarRating.vue'
   import BaseButton from '@/components/ui/base/BaseButton.vue'
-  import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
 
   const props = defineProps<{
     product: Product
