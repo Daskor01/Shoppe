@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
   import CartItem from '@/components/ui/cart/CartItem.vue'
-  import BaseButton from '@/components/ui/Base/BaseButton.vue'
+  import BaseButton from '@/components/ui/base/BaseButton.vue'
   import { useCartStore } from '@/stores/useCartStore'
   import { useRouter } from 'vue-router'
   import { storeToRefs } from 'pinia'
