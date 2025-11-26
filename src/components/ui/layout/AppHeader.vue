@@ -29,6 +29,11 @@
           >
             <component :is="item.icon" />
           </button>
+
+          <button type="button" class="header__user-button" @click="handleUserAction">
+            <IconUser />
+            <span v-if="isAuthenticated" class="header__user-indicator"></span>
+          </button>
         </div>
       </div>
 
@@ -62,14 +67,23 @@
       </nav>
       <div class="header__separator"></div>
       <div class="header__mobile-nav">
-        <NuxtLink
-          v-for="(link, index) in mobileLinks"
-          :key="index"
-          :to="link.path"
-          class="header__mobile-link"
+        <NuxtLink to="/account" class="header__mobile-link">
+          <IconAccount />
+          My account
+        </NuxtLink>
+
+        <button
+          v-if="isAuthenticated"
+          class="header__mobile-link header__mobile-link--button"
+          @click="handleLogout"
         >
-          <component :is="link.icon" />
-          {{ link.name }}
+          <IconLogout />
+          Logout
+        </button>
+
+        <NuxtLink v-else to="/account" class="header__mobile-link">
+          <IconAddAccount />
+          Sign In
         </NuxtLink>
       </div>
     </BaseSlidePanel>
@@ -79,16 +93,26 @@
 <script setup lang="ts">
   import { ref, onMounted, onBeforeUnmount } from 'vue'
   import BaseSearchInput from '@/components/ui/base/BaseSearchInput.vue'
-  import { navigationLinks, headerLinks, headerActions, mobileLinks } from '@/config/navigation'
+  import { navigationLinks, headerLinks, headerActions } from '@/config/navigation'
   import BaseSlidePanel from '@/components/ui/base/BaseSlidePanel.vue'
   import IconCart from '@/components/icons/IconCart.vue'
   import IconMenu from '@/components/icons/IconMenu.vue'
   import IconClose from '@/components/icons/IconClose.vue'
   import { useCartStore } from '@/stores/useCartStore'
+  import { useAuthStore } from '@/stores/useAuthStore'
+  import { useNotification } from '@/composables/useNotification'
+  import IconUser from '@/components/icons/IconUser.vue'
+  import IconAddAccount from '@/components/icons/IconAddAccount.vue'
+  import { useRoute } from 'vue-router'
 
   const cartStore = useCartStore()
+  const authStore = useAuthStore()
+  const { notify } = useNotification()
+  const route = useRoute()
 
   const mobileOpen = ref(false)
+  const isAuthenticated = computed(() => authStore.isAuthenticated)
+  const userMenuOpen = ref(false)
 
   const toggleMenu = () => {
     mobileOpen.value = !mobileOpen.value
@@ -120,10 +144,24 @@
       case 'openCart':
         toggleCart()
         break
-      case 'openUser':
-        console.log('Профиль открыт')
-        break
     }
+  }
+
+  const handleUserAction = () => {
+    if (isAuthenticated.value) {
+      handleLogout()
+    } else {
+      navigateTo('/account')
+    }
+  }
+
+  const handleLogout = () => {
+    authStore.logout()
+    notify({
+      message: 'You have been successfully logged out',
+      type: 'success',
+    })
+    userMenuOpen.value = false
   }
 
   //Определяем высоту header
@@ -139,6 +177,17 @@
       headerHeight.value = rect.height + marginTop
     }
   }
+
+  const closeMobileMenu = () => {
+    mobileOpen.value = false
+  }
+
+  watch(
+    () => route.path,
+    () => {
+      closeMobileMenu()
+    },
+  )
 
   onMounted(() => {
     updateHeaderHeight()
@@ -171,14 +220,14 @@
 
     &__divider {
       inline-size: 1px;
-      block-size: 24px;
-      margin: 0 2rem;
-      background-color: vars.$color-dark;
+      block-size: 17px;
+      margin: 0 46px;
+      background-color: vars.$color-gray;
     }
 
     &__nav {
       display: flex;
-      gap: 20px;
+      gap: 64px;
     }
 
     &__link {
@@ -191,6 +240,12 @@
       }
     }
 
+    &__icons {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
     &__icons-button {
       cursor: pointer;
       background-color: transparent;
@@ -199,6 +254,29 @@
 
       &:hover {
         opacity: 0.5;
+      }
+    }
+
+    &__user-button {
+      @include mixins.reset-appearance;
+
+      position: relative;
+      border: none;
+    }
+
+    &__user-indicator {
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border: 1px solid white;
+      border-radius: 50%;
+
+      &--mobile {
+        top: 2px;
+        right: 2px;
       }
     }
 
@@ -228,6 +306,9 @@
     }
 
     &__mobile-link {
+      @include mixins.flexCenter;
+
+      gap: 10px;
       font-size: 20px;
       line-height: 130%;
       color: vars.$color-dark;
@@ -236,6 +317,14 @@
 
       &:hover {
         opacity: 0.5;
+      }
+
+      &--button {
+        @include mixins.reset-appearance;
+
+        max-width: fit-content;
+        font-size: 20px;
+        border: none;
       }
     }
 

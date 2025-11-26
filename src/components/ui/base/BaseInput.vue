@@ -14,6 +14,16 @@
       <label class="base-input__label">
         {{ placeholder }}
       </label>
+
+      <button
+        v-if="clearable"
+        type="button"
+        class="base-input__clear"
+        @click="handleClear"
+        @mousedown.prevent
+      >
+        <IconCross />
+      </button>
     </div>
     <span v-if="error" class="base-input__error">{{ error }}</span>
   </div>
@@ -21,6 +31,13 @@
 
 <script setup lang="ts">
   import { ref, useAttrs, computed } from 'vue'
+  import IconCross from '@/components/icons/IconCross.vue'
+
+  interface Props {
+    clearable?: boolean
+  }
+
+  defineProps<Props>()
 
   const attrs = useAttrs()
   const inputRef = ref<HTMLInputElement>()
@@ -40,6 +57,11 @@
   const handleInput = (event: Event) => {
     const target = event.target as HTMLInputElement
     modelValue.value = target.value
+  }
+
+  const handleClear = () => {
+    modelValue.value = ''
+    inputRef.value?.focus()
   }
 
   defineExpose({ inputRef })
@@ -114,6 +136,16 @@
       margin-top: 4px;
       font-size: 12px;
       color: vars.$color-accent-red;
+    }
+
+    &__clear {
+      @include mixins.reset-appearance;
+
+      position: absolute;
+      top: 50%;
+      right: 0;
+      border: none;
+      transform: translate(-50%, -50%);
     }
   }
 </style>

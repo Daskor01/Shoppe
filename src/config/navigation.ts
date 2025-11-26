@@ -3,9 +3,6 @@ import IconTwitter from '@/components/icons/IconTwitter.vue'
 import IconInstagram from '@/components/icons/IconInstagram.vue'
 import IconSearch from '@/components/icons/IconSearch.vue'
 import IconCart from '@/components/icons/IconCart.vue'
-import IconUser from '@/components/icons/IconUser.vue'
-import IconAccount from '@/components/icons/IconAccount.vue'
-import IconLogout from '@/components/icons/IconLogout.vue'
 import IconMail from '@/components/icons/IconMail.vue'
 import type { Component } from 'vue'
 
@@ -24,22 +21,16 @@ export const headerLinks = [
 export const headerActions = [
   { icon: IconSearch, action: 'openSearch' },
   { icon: IconCart, action: 'openCart' },
-  { icon: IconUser, action: 'openUser' },
 ]
 
 export const navigationLinks: LinkItem[] = [
   { name: 'Home', path: '/' },
   { name: 'Shop', path: '/Shop' },
   { name: 'About', path: '/' },
-  { name: 'Blog', path: '/Blog' },
+  { name: 'Blog', path: '/' },
   { name: 'Help', path: '/' },
-  { name: 'Contact', path: '/Contact' },
+  { name: 'Contact', path: '/' },
   { name: 'Search', path: '/' },
-]
-
-export const mobileLinks = [
-  { name: 'My account', path: '/', icon: IconAccount },
-  { name: 'Logout', path: '/', icon: IconLogout },
 ]
 
 export const copyrightLinks: LinkItem[] = [

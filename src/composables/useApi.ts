@@ -7,7 +7,7 @@ type ValidQuery =
   | undefined
 
 export interface ApiRequestOptions<
-  TBody extends ValidBody = undefined,
+  TBody extends ValidBody = ValidBody,
   TQuery extends ValidQuery = undefined,
 > {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
@@ -26,7 +26,7 @@ export function useApi(baseUrl?: string) {
 
   async function fetchApi<
     TResponse,
-    TBody extends ValidBody = undefined,
+    TBody extends ValidBody = ValidBody,
     TQuery extends ValidQuery = undefined,
   >(
     path: string,
