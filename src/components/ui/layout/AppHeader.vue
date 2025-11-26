@@ -91,7 +91,8 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted, onBeforeUnmount } from 'vue'
+  import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
+  import { navigateTo } from 'nuxt/app'
   import BaseSearchInput from '@/components/ui/base/BaseSearchInput.vue'
   import { navigationLinks, headerLinks, headerActions } from '@/config/navigation'
   import BaseSlidePanel from '@/components/ui/base/BaseSlidePanel.vue'

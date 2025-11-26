@@ -1,4 +1,5 @@
 import { $fetch, type FetchOptions } from 'ohmyfetch'
+import { useRuntimeConfig } from 'nuxt/app'
 
 type ValidBody = BodyInit | Record<string, unknown> | null | undefined
 type ValidQuery =

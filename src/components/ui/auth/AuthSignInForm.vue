@@ -62,6 +62,7 @@
   import { validateInput } from '@/utils/validateInput'
   import BaseInput from '@/components/ui/base/BaseInput.vue'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
+  import { navigateTo } from 'nuxt/app'
 
   const formRef = ref<HTMLFormElement | null>(null)
   const usernameInputRef = ref<InstanceType<typeof BaseInput> | null>(null)

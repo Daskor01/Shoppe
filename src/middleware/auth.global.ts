@@ -1,4 +1,7 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+import { defineNuxtRouteMiddleware, navigateTo } from 'nuxt/app'
+import { useAuthStore } from "@/stores/useAuthStore"
+
+export default defineNuxtRouteMiddleware((to) => {
   const authStore = useAuthStore()
 
   if (to.path === '/' || to.path === '/ResetPassword' || to.path === '/account') {

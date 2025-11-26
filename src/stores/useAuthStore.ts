@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
+import { useRuntimeConfig } from 'nuxt/app'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<string | null>(null)

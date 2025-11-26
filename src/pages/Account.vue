@@ -28,6 +28,9 @@
 </template>
 
 <script setup lang="ts">
+  import { definePageMeta } from '.nuxt/imports';
+  import {ref} from "vue"
+
   definePageMeta({
     middleware: ['guest'],
   })
