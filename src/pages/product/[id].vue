@@ -221,6 +221,7 @@
 
       &-grid-item {
         justify-self: center;
+        width: 378px;
 
         @media (max-width: vars.$breakpoints-xl) {
           width: 340px;
