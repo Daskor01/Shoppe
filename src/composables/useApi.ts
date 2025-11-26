@@ -1,7 +1,16 @@
 import { $fetch, type FetchOptions } from 'ohmyfetch'
 import { useRuntimeConfig } from 'nuxt/app'
 
-type ValidBody = BodyInit | Record<string, unknown> | null | undefined
+type ValidBody = 
+  Record<string, unknown> 
+  | string 
+  | FormData 
+  | URLSearchParams 
+  | Blob 
+  | ArrayBuffer
+  | null 
+  | undefined
+  
 type ValidQuery =
   | Record<string, string | number | boolean | undefined>
   | URLSearchParams

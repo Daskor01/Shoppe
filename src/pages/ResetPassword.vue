@@ -35,6 +35,8 @@
   import { useNotification } from '@/composables/useNotification'
   import { validateInput } from '@/utils/validateInput'
   import BaseInput from '@/components/ui/base/BaseInput.vue'
+  import { navigateTo } from 'nuxt/app'
+  import { definePageMeta } from '.nuxt/imports'
 
   definePageMeta({
     middleware: 'guest',
