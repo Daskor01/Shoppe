@@ -3,7 +3,6 @@
     <form ref="formRef" class="signin-form__form" novalidate @submit.prevent="handleSubmit">
       <div class="signin-form__field">
         <BaseInput
-          ref="usernameInputRef"
           v-model="form.username"
           :error="showErrors ? errors.username : ''"
           :clearable="isMobile"
@@ -11,26 +10,17 @@
           type="text"
           placeholder="Username"
           name="username"
-          minlength="2"
-          required
-          data-min-length-message="Minimum of 2 characters"
-          data-required-message="Enter your username"
         />
       </div>
 
       <div class="signin-form__field">
         <BaseInput
-          ref="passwordInputRef"
           v-model="form.password"
           :error="showErrors ? errors.password : ''"
           class="signin-form__input"
           type="password"
           placeholder="Password"
           name="password"
-          minlength="6"
-          required
-          data-min-length-message="Minimum of 6 characters"
-          data-required-message="Enter your password"
         />
       </div>
 
@@ -58,15 +48,14 @@
   import { ref, reactive, onMounted } from 'vue'
   import { useAuthStore } from '@/stores/useAuthStore'
   import { useNotification } from '@/composables/useNotification'
-  import { useBreakpoint } from '@/composables/useBreakpoint'
-  import { validateInput } from '@/utils/validateInput'
+  import { validateValue } from '@/utils/validate'
+  import { VALIDATION_CONFIGS } from '@/constants/validation'
   import BaseInput from '@/components/ui/base/BaseInput.vue'
+  import { useBreakpoint } from '@/composables/useBreakpoint'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
   import { navigateTo } from 'nuxt/app'
+  import { storage } from '@/utils/storage'
 
-  const formRef = ref<HTMLFormElement | null>(null)
-  const usernameInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
-  const passwordInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
   const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
 
   const form = reactive({
@@ -85,32 +74,45 @@
   const { notify } = useNotification()
   const authStore = useAuthStore()
 
-  // Safe localStorage functions
-  const getLocalStorage = (key: string): string | null => {
-    if (import.meta.client) {
-      return localStorage.getItem(key)
-    }
-    return null
+  const resetErrors = () => {
+    Object.keys(errors).forEach((key) => (errors[key as keyof typeof errors] = ''))
   }
 
-  const setLocalStorage = (key: string, value: string): void => {
-    if (import.meta.client) {
-      localStorage.setItem(key, value)
-    }
-  }
+  const validateForm = () => {
+    let isValid = true
+    resetErrors()
 
-  const removeLocalStorage = (key: string): void => {
-    if (import.meta.client) {
-      localStorage.removeItem(key)
+    // Validate username
+    const usernameError = validateValue(
+      form.username,
+      VALIDATION_CONFIGS.name.rules,
+      VALIDATION_CONFIGS.name.messages,
+    )
+    if (usernameError) {
+      errors.username = usernameError
+      isValid = false
     }
+
+    // Validate password
+    const passwordError = validateValue(
+      form.password,
+      VALIDATION_CONFIGS.password.rules,
+      VALIDATION_CONFIGS.password.messages,
+    )
+    if (passwordError) {
+      errors.password = passwordError
+      isValid = false
+    }
+
+    return isValid
   }
 
   const loadSavedUserData = () => {
     if (!import.meta.client) return
 
-    const rememberMeSaved = getLocalStorage('signinRememberMe')
-    if (rememberMeSaved === 'true') {
-      const saved = getLocalStorage('signinUserData')
+    const rememberMeSaved = Boolean(storage.get('signinRememberMe'))
+    if (rememberMeSaved === true) {
+      const saved = storage.get('signinUserData')
       if (saved) {
         try {
           const parsed = JSON.parse(saved)
@@ -121,47 +123,27 @@
         }
       }
     } else {
-      // form.username = ''
-      // form.password = ''
       rememberMe.value = false
     }
   }
 
   const saveUserData = () => {
     if (rememberMe.value) {
-      setLocalStorage(
+      storage.set(
         'signinUserData',
         JSON.stringify({
           username: form.username,
         }),
       )
-      setLocalStorage('signinRememberMe', 'true')
+      storage.set('signinRememberMe', 'true')
     } else {
       removeUserData()
     }
   }
 
   const removeUserData = () => {
-    removeLocalStorage('signinUserData')
-    removeLocalStorage('signinRememberMe')
-  }
-
-  const validateForm = (): boolean => {
-    let isValid = true
-
-    // Validate username
-    const usernameInput = usernameInputRef.value?.$el?.querySelector('input')
-    const usernameError = validateInput(usernameInput)
-    errors.username = usernameError
-    if (usernameError) isValid = false
-
-    // Validate password
-    const passwordInput = passwordInputRef.value?.$el?.querySelector('input')
-    const passwordError = validateInput(passwordInput)
-    errors.password = passwordError
-    if (passwordError) isValid = false
-
-    return isValid
+    storage.remove('signinUserData')
+    storage.remove('signinRememberMe')
   }
 
   const resetForm = () => {
@@ -202,10 +184,7 @@
       })
 
       resetForm()
-      showErrors.value = false
-      Object.keys(errors).forEach((key) => {
-        errors[key as keyof typeof errors] = ''
-      })
+      resetErrors()
 
       await navigateTo('/')
     } catch (error) {

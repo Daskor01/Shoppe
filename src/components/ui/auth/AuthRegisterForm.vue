@@ -3,7 +3,6 @@
     <form ref="formRef" class="register-form__form" novalidate @submit.prevent="handleSubmit">
       <div class="register-form__field">
         <BaseInput
-          ref="usernameInputRef"
           v-model="form.username"
           :error="showErrors ? errors.username : ''"
           :clearable="isMobile"
@@ -11,16 +10,11 @@
           type="text"
           placeholder="Choose username*"
           name="username"
-          minlength="3"
-          required
-          data-min-length-message="Minimum of 3 characters"
-          data-required-message="Enter your username"
         />
       </div>
 
       <div class="register-form__field">
         <BaseInput
-          ref="emailInputRef"
           v-model="form.email"
           :error="showErrors ? errors.email : ''"
           :clearable="isMobile"
@@ -28,39 +22,28 @@
           type="email"
           placeholder="Enter your email*"
           name="email"
-          required
-          data-required-message="Enter your email"
-          data-type-mismatch-message="Invalid email address"
         />
       </div>
 
       <div class="register-form__field">
         <BaseInput
-          ref="passwordInputRef"
           v-model="form.password"
           :error="showErrors ? errors.password : ''"
           class="register-form__input"
           type="password"
           placeholder="Create password*"
           name="password"
-          minlength="6"
-          required
-          data-min-length-message="Minimum of 6 characters"
-          data-required-message="Enter your password"
         />
       </div>
 
       <div class="register-form__field">
         <BaseInput
-          ref="confirmPasswordInputRef"
           v-model="form.confirmPassword"
           :error="showErrors ? errors.confirmPassword : ''"
           class="register-form__input"
           type="password"
           placeholder="Confirm password*"
           name="confirmPassword"
-          required
-          data-required-message="Confirm your password"
         />
       </div>
 
@@ -85,17 +68,15 @@
   import { ref, reactive } from 'vue'
   import { useAuthStore } from '@/stores/useAuthStore'
   import { useNotification } from '@/composables/useNotification'
-  import { validateInput } from '@/utils/validateInput'
+  import { validateValue } from '@/utils/validate'
+  import { VALIDATION_CONFIGS } from '@/constants/validation'
   import BaseInput from '@/components/ui/base/BaseInput.vue'
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
   import { navigateTo } from 'nuxt/app'
+  import { wait } from '@/utils/wait'
+  import { DEFAULT_DELAY } from '@/constants/delays'
 
-  const formRef = ref<HTMLFormElement | null>(null)
-  const usernameInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
-  const emailInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
-  const passwordInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
-  const confirmPasswordInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
   const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
 
   const form = reactive({
@@ -113,45 +94,69 @@
     email: '',
     password: '',
     confirmPassword: '',
+    terms: '',
   })
 
   const { notify } = useNotification()
   const authStore = useAuthStore()
 
-  const validateForm = (): boolean => {
+  const resetErrors = () => {
+    Object.keys(errors).forEach((key) => (errors[key as keyof typeof errors] = ''))
+  }
+
+  const validateForm = () => {
     let isValid = true
+    resetErrors()
 
     // Validate username
-    const usernameInput = usernameInputRef.value?.$el?.querySelector('input')
-    const usernameError = validateInput(usernameInput)
-    errors.username = usernameError
-    if (usernameError) isValid = false
+    const usernameError = validateValue(
+      form.username,
+      VALIDATION_CONFIGS.name.rules,
+      VALIDATION_CONFIGS.name.messages,
+    )
+    if (usernameError) {
+      errors.username = usernameError
+      isValid = false
+    }
 
     // Validate email
-    const emailInput = emailInputRef.value?.$el?.querySelector('input')
-    const emailError = validateInput(emailInput)
-    errors.email = emailError
-    if (emailError) isValid = false
+    const emailError = validateValue(
+      form.email,
+      VALIDATION_CONFIGS.email.rules,
+      VALIDATION_CONFIGS.email.messages,
+    )
+    if (emailError) {
+      errors.email = emailError
+      isValid = false
+    }
 
     // Validate password
-    const passwordInput = passwordInputRef.value?.$el?.querySelector('input')
-    const passwordError = validateInput(passwordInput)
-    errors.password = passwordError
-    if (passwordError) isValid = false
+    const passwordError = validateValue(
+      form.password,
+      {
+        ...VALIDATION_CONFIGS.password.rules,
+      },
+      {
+        ...VALIDATION_CONFIGS.password.messages,
+      },
+    )
+    if (passwordError) {
+      errors.password = passwordError
+      isValid = false
+    }
 
-    // Validate confirm password
-    if (!form.confirmPassword) {
+    // Validate confirmPassword
+    if (!form.confirmPassword.trim()) {
       errors.confirmPassword = 'Please confirm your password'
       isValid = false
     } else if (form.password !== form.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match'
       isValid = false
-    } else {
-      errors.confirmPassword = ''
     }
 
     // Validate terms
     if (!agreeTerms.value) {
+      errors.terms = 'You must agree to the terms and conditions'
       isValid = false
     }
 
@@ -164,6 +169,8 @@
     form.password = ''
     form.confirmPassword = ''
     agreeTerms.value = false
+    showErrors.value = false
+    Object.keys(errors).forEach((key) => (errors[key as keyof typeof errors] = ''))
   }
 
   const handleSubmit = async () => {
@@ -180,10 +187,10 @@
     isLoading.value = true
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await wait(DEFAULT_DELAY)
 
       const fakeToken = `registered-user-${Date.now()}`
-      authStore.login(fakeToken)
+      authStore.authorise(fakeToken)
 
       notify({
         message: 'Account created successfully!',
@@ -191,11 +198,6 @@
       })
 
       resetForm()
-      showErrors.value = false
-      Object.keys(errors).forEach((key) => {
-        errors[key as keyof typeof errors] = ''
-      })
-
       await navigateTo('/')
     } catch (error) {
       console.error('Registration error:', error)

@@ -6,19 +6,15 @@
         If you've forgotten your password, enter your e-mail address and we'll send you an e-mail
       </p>
 
-      <form ref="formRef" class="reset-password__form" novalidate @submit.prevent="handleSubmit">
+      <form class="reset-password__form" novalidate @submit.prevent="handleSubmit">
         <div class="reset-password__field">
           <BaseInput
             ref="emailInputRef"
             v-model="email"
             :error="showErrors ? errors.email : ''"
             class="reset-password__input"
-            type="email"
             placeholder="Enter your email address*"
             name="email"
-            required
-            data-required-message="Please enter your email address"
-            data-type-mismatch-message="Please enter a valid email address"
           />
         </div>
 
@@ -33,16 +29,16 @@
 <script setup lang="ts">
   import { ref, reactive } from 'vue'
   import { useNotification } from '@/composables/useNotification'
-  import { validateInput } from '@/utils/validateInput'
+  import { validateValue } from '@/utils/validate'
   import BaseInput from '@/components/ui/base/BaseInput.vue'
   import { navigateTo } from 'nuxt/app'
+  import { wait } from '@/utils/wait'
+  import { DEFAULT_DELAY } from '@/constants/delays'
+  import { VALIDATION_CONFIGS } from '@/constants/validation'
 
   definePageMeta({
     middleware: 'guest',
   })
-
-  const formRef = ref<HTMLFormElement | null>(null)
-  const emailInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
 
   const email = ref('')
   const isLoading = ref(false)
@@ -51,21 +47,31 @@
     email: '',
   })
 
+  const emailValidationConfig = VALIDATION_CONFIGS.email
+
   const { notify } = useNotification()
 
-  const validateForm = (): boolean => {
+  const validateForm = () => {
     let isValid = true
 
-    const emailInput = emailInputRef.value?.$el?.querySelector('input')
-    const emailError = validateInput(emailInput)
-    errors.email = emailError
-    if (emailError) isValid = false
+    const emailError = validateValue(
+      email.value,
+      emailValidationConfig.rules,
+      emailValidationConfig.messages,
+    )
+
+    if (emailError) {
+      errors.email = emailError
+      isValid = false
+    }
 
     return isValid
   }
 
   const resetForm = () => {
     email.value = ''
+    errors.email = ''
+    showErrors.value = false
   }
 
   const handleSubmit = async () => {
@@ -79,7 +85,7 @@
 
     try {
       // Emulate API call to send reset password email
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await wait(DEFAULT_DELAY)
 
       notify({
         message: 'We sent the password by email',
@@ -87,8 +93,6 @@
       })
 
       resetForm()
-      showErrors.value = false
-      errors.email = ''
 
       await navigateTo('/account')
     } catch (error) {

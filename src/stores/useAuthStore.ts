@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useRuntimeConfig } from 'nuxt/app'
+import { storage } from '@/utils/storage'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<string | null>(null)
@@ -10,40 +11,20 @@ export const useAuthStore = defineStore('auth', () => {
 
   const { fetchApi } = useApi(useRuntimeConfig().public.productApi)
 
-  //localStorage functions
-  const getLocalStorage = (key: string): string | null => {
-    if (import.meta.client) {
-      return localStorage.getItem(key)
-    }
-    return null
-  }
-
-  const setLocalStorage = (key: string, value: string): void => {
-    if (import.meta.client) {
-      localStorage.setItem(key, value)
-    }
-  }
-
-  const removeLocalStorage = (key: string): void => {
-    if (import.meta.client) {
-      localStorage.removeItem(key)
-    }
-  }
-
   //actions
-  const login = (token: string): void => {
+  const authorise = (token: string) => {
     user.value = token
-    setLocalStorage('auth-token', token)
+    storage.set('auth-token', token)
   }
 
-  const logout = (): void => {
+  const logout = () => {
     user.value = null
-    removeLocalStorage('auth-token')
+    storage.remove('auth-token')
   }
 
-  const initialize = (): void => {
+  const initialize = () => {
     if (import.meta.client) {
-      const token = getLocalStorage('auth-token')
+      const token = storage.get('auth-token')
       if (token) {
         user.value = token
       }
@@ -51,10 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   //New action for API authentication using useApi
-  const loginWithApi = async (credentials: {
-    username: string
-    password: string
-  }): Promise<string> => {
+  const loginWithApi = async (credentials: { username: string; password: string }) => {
     try {
       const data = await fetchApi<{ token: string }>('/auth/login', {
         method: 'POST',
@@ -62,7 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
       })
 
       if (data.token) {
-        login(data.token)
+        authorise(data.token)
         return data.token
       } else {
         throw new Error('No token received from API')
@@ -72,14 +50,14 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (error instanceof Error) {
         if (error.message.includes('Failed to fetch')) {
-          throw new Error('Network error. Please check your connection.')
+          throw new Error(`Network error. ${error}`)
         } else if (error.message.includes('401')) {
-          throw new Error('Invalid username or password.')
+          throw new Error(`Invalid username or password.`)
         } else {
-          throw new Error('Authentication failed. Please try again.')
+          throw new Error(`Authentication failed. ${error}`)
         }
       } else {
-        throw new Error('Authentication failed. Please check your credentials.')
+        throw new Error(`Authentication failed. ${error}`)
       }
     }
   }
@@ -87,7 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     user,
     isAuthenticated,
-    login,
+    authorise,
     logout,
     initialize,
     loginWithApi,

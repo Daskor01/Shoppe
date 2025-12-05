@@ -8,48 +8,33 @@
     <form ref="formRef" class="review-form__form" novalidate @submit.prevent="handleSubmit">
       <div class="review-form__field">
         <BaseTextarea
-          ref="messageTextareaRef"
           v-model="form.message"
-          :error="showErrors ? errors.message : ''"
+          :error="errors.message"
           class="review-form__input"
           placeholder="Enter your message*"
           name="message"
-          minlength="10"
-          data-min-length-message="Minimum of 10 characters"
-          data-required-message="Enter the text of the review"
         />
       </div>
 
       <div class="review-form__field">
         <BaseInput
-          ref="nameInputRef"
           v-model="form.name"
-          :error="showErrors ? errors.name : ''"
+          :error="errors.name"
           class="review-form__input"
           type="text"
           placeholder="Enter your name*"
           name="name"
-          minlength="2"
-          required
-          data-min-length-message="Minimum of 2 characters"
-          data-required-message="Enter a name"
         />
       </div>
 
       <div class="review-form__field">
         <BaseInput
-          ref="emailInputRef"
           v-model="form.email"
-          :error="showErrors ? errors.email : ''"
+          :error="errors.email"
           class="review-form__input"
           type="email"
           placeholder="Enter your email*"
           name="email"
-          minlength="10"
-          required
-          data-min-length-message="Minimum of 10 characters"
-          data-required-message="Enter your email address"
-          data-type-mismatch-message="Incorrect email address"
         />
       </div>
 
@@ -75,10 +60,12 @@
 <script setup lang="ts">
   import { ref, reactive, onMounted } from 'vue'
   import { useNotification } from '@/composables/useNotification'
-  import { validateInput } from '@/utils/validateInput'
+  import { validateValue } from '@/utils/validate'
   import type { Review, FormData } from '@/types/Reviews'
   import BaseInput from '@/components/ui/base/BaseInput.vue'
   import BaseTextarea from '@/components/ui/base/BaseTextarea.vue'
+  import StarRating from '@/components/ui/base/BaseStarRating.vue'
+  import { VALIDATION_CONFIGS } from '@/constants/validation'
 
   defineProps<{
     productId: number | string
@@ -86,11 +73,6 @@
   }>()
 
   const reviews = defineModel<Review[]>('reviews', { required: true })
-
-  const formRef = ref<HTMLFormElement | null>(null)
-  const messageTextareaRef = ref<InstanceType<typeof BaseTextarea> | null>(null)
-  const nameInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
-  const emailInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
 
   const form = reactive<FormData>({
     name: '',
@@ -100,7 +82,6 @@
   })
 
   const rememberMe = ref(false)
-  const showErrors = ref(false)
   const errors = reactive({
     name: '',
     email: '',
@@ -151,26 +132,48 @@
     localStorage.removeItem('reviewRememberMe')
   }
 
-  const validateForm = (): boolean => {
+  const resetErrors = () => {
+    Object.keys(errors).forEach((key) => {
+      errors[key as keyof typeof errors] = ''
+    })
+  }
+
+  const validateForm = () => {
+    resetErrors()
     let isValid = true
 
     // Validate message
-    const messageTextarea = messageTextareaRef.value?.$el?.querySelector('textarea')
-    const messageError = validateInput(messageTextarea)
-    errors.message = messageError
-    if (messageError) isValid = false
+    const messageError = validateValue(
+      form.message,
+      VALIDATION_CONFIGS.message.rules,
+      VALIDATION_CONFIGS.message.messages,
+    )
+    if (messageError) {
+      errors.message = messageError
+      isValid = false
+    }
 
     // Validate name
-    const nameInput = nameInputRef.value?.$el?.querySelector('input')
-    const nameError = validateInput(nameInput)
-    errors.name = nameError
-    if (nameError) isValid = false
+    const nameError = validateValue(
+      form.name,
+      VALIDATION_CONFIGS.name.rules,
+      VALIDATION_CONFIGS.name.messages,
+    )
+    if (nameError) {
+      errors.name = nameError
+      isValid = false
+    }
 
     // Validate email
-    const emailInput = emailInputRef.value?.$el?.querySelector('input')
-    const emailError = validateInput(emailInput)
-    errors.email = emailError
-    if (emailError) isValid = false
+    const emailError = validateValue(
+      form.email,
+      VALIDATION_CONFIGS.email.rules,
+      VALIDATION_CONFIGS.email.messages,
+    )
+    if (emailError) {
+      errors.email = emailError
+      isValid = false
+    }
 
     return isValid
   }
@@ -184,13 +187,11 @@
     form.rating = 5
   }
 
-  const isReviewDuplicate = (email: string): boolean => {
+  const isReviewDuplicate = (email: string) => {
     return reviews.value.some((r) => r.email === email.trim())
   }
 
   const handleSubmit = () => {
-    showErrors.value = true
-
     if (!validateForm()) {
       notify({
         message: 'Check that the form is filled out correctly',
@@ -233,10 +234,7 @@
     })
 
     resetForm()
-    showErrors.value = false
-    Object.keys(errors).forEach((key) => {
-      errors[key as keyof typeof errors] = ''
-    })
+    resetErrors()
   }
 
   onMounted(() => {

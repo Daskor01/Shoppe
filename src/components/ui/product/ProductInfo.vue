@@ -103,6 +103,7 @@
   import { type Review } from '@/types/Reviews'
   import { type Product } from '@/types/Product'
 
+  import ShareModal from '@/components/ui/base/BaseShareModal.vue'
   import IconMail from '@/components/icons/IconMail.vue'
   import IconFacebook from '@/components/icons/IconFacebook.vue'
   import IconInstagram from '@/components/icons/IconInstagram.vue'

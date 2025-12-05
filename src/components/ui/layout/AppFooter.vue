@@ -15,19 +15,14 @@
         </template>
       </div>
 
-      <form ref="form" class="footer__form" novalidate @submit.prevent="handleSubmit">
+      <form class="footer__form" novalidate @submit.prevent="handleSubmit">
         <BaseInput
-          ref="emailInputRef"
           v-model="email"
-          :error="showErrors ? errors.email : ''"
+          :error="errors.email"
           type="email"
           name="email"
           placeholder="Give an email, get the newsletter."
           class="footer__form-input"
-          minlength="15"
-          data-min-length-message="Минимум 15 символов"
-          data-required-message="Введите email"
-          data-type-mismatch-message="Некорректный email"
         />
 
         <button type="submit" class="footer__form-button">
@@ -35,13 +30,7 @@
         </button>
 
         <div class="footer__form-consent-container">
-          <input
-            ref="consentCheckbox"
-            type="checkbox"
-            class="footer__form-consent-checkbox"
-            required
-            checked
-          />
+          <input type="checkbox" class="footer__form-consent-checkbox" required checked />
           <p class="footer__form-consent-text">i agree to the website’s terms and conditions</p>
         </div>
       </form>
@@ -63,41 +52,49 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, reactive } from 'vue'
   import BaseInput from '@/components/ui/base/BaseInput.vue'
-  import { validateInput } from '@/utils/validateInput'
+  import { validateValue } from '@/utils/validate'
+  import { VALIDATION_CONFIGS } from '@/constants/validation'
   import { copyrightLinks, footerLinks, socialLinks } from '@/config/navigation'
   import { useNotification } from '@/composables/useNotification'
 
-  const form = ref<HTMLFormElement | null>(null)
-  const emailInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
-
   const email = ref('')
-  const consentCheckbox = ref<HTMLInputElement | null>(null)
-  const showErrors = ref(false)
-  const errors = ref<Record<string, string>>({})
+  const consent = ref(true)
+  const errors = reactive({
+    email: '',
+    consent: '',
+  })
 
   const { notify } = useNotification()
 
+  const resetErrors = () => {
+    Object.keys(errors).forEach((key) => (errors[key as keyof typeof errors] = ''))
+  }
+
   //Валидируем форму перед отправкой
-  const validateForm = (): boolean => {
-    const inputEl = emailInputRef.value?.$el?.querySelector('input')
-    const error = validateInput(inputEl)
-    errors.value.email = error
+  const validateForm = () => {
+    resetErrors()
 
-    if (error) {
-      return false
+    let isValid = true
+
+    const emailError = validateValue(
+      email.value,
+      VALIDATION_CONFIGS.email.rules,
+      VALIDATION_CONFIGS.email.messages,
+    )
+
+    if (emailError) {
+      errors.email = emailError
+      isValid = false
     }
 
-    if (!consentCheckbox.value?.checked) {
-      notify({
-        message: 'You must agree to the terms of use.',
-        type: 'warning',
-      })
-      return false
+    if (!consent.value) {
+      errors.consent = 'You must agree to the terms of use.'
+      isValid = false
     }
 
-    return true
+    return isValid
   }
 
   //Получаем сохраненные email из localStorage
@@ -121,22 +118,26 @@
   }
 
   const resetForm = () => {
-    showErrors.value = false
     email.value = ''
-    errors.value.email = ''
+    consent.value = true
   }
 
   //Обработчик отправки формы
   const handleSubmit = () => {
-    showErrors.value = true
+    email.value.trim()
 
-    if (!validateForm()) return
+    if (!validateForm()) {
+      notify({
+        message: 'Please check the form for errors',
+        type: 'warning',
+      })
+      return
+    }
 
-    const emailValue = email.value.trim()
     const emails = getStoredEmails()
 
-    if (isEmailNew(emailValue, emails)) {
-      saveEmail(emailValue, emails)
+    if (isEmailNew(email.value, emails)) {
+      saveEmail(email.value, emails)
       notify({
         message: 'Email sent!',
         type: 'success',
@@ -156,7 +157,7 @@
   .footer {
     position: relative;
     inline-size: 100%;
-    padding-block-start: 2rem;
+    padding-block: 2rem 20px;
     margin-block-start: 220px;
 
     @media (max-width: vars.$breakpoints-l) {
@@ -265,12 +266,23 @@
       justify-self: end;
       list-style: none;
 
+      @media (max-width: vars.$breakpoints-l) {
+        justify-self: start;
+      }
+
       &-text {
-        display: none;
+        @media (min-width: vars.$breakpoints-s) {
+          display: none;
+        }
       }
 
       &-separator {
-        display: none;
+        height: 2px;
+        background-color: vars.$color-dark;
+        inline-size: 54px;
+        @media (min-width: vars.$breakpoints-s) {
+          display: none;
+        }
       }
 
       &-link {

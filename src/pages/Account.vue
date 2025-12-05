@@ -2,22 +2,7 @@
   <div class="account">
     <h1 class="account__title">My account</h1>
     <div class="account__container">
-      <div class="account__tabs">
-        <button
-          class="account__tab"
-          :class="{ 'account__tab--active': activeTab === 'signin' }"
-          @click="activeTab = 'signin'"
-        >
-          Sign In
-        </button>
-        <button
-          class="account__tab"
-          :class="{ 'account__tab--active': activeTab === 'register' }"
-          @click="activeTab = 'register'"
-        >
-          Register
-        </button>
-      </div>
+      <AuthTabs v-model:activeTab="activeTab" />
 
       <div class="account__forms">
         <AuthSignInForm v-if="activeTab === 'signin'" />
@@ -28,13 +13,14 @@
 </template>
 
 <script setup lang="ts">
-  import {ref} from "vue"
+  import { ref } from 'vue'
+  import { type Tabs } from '@/types/Auth'
 
   definePageMeta({
-    middleware: ['guest'],
+    middleware: 'guest',
   })
 
-  const activeTab = ref<'signin' | 'register'>('signin')
+  const activeTab = ref<Tabs>('signin')
 </script>
 
 <style scoped lang="scss">
@@ -72,51 +58,6 @@
 
       @media (max-width: vars.$breakpoints-s) {
         font-size: 20px;
-      }
-    }
-
-    &__tabs {
-      display: flex;
-      width: 100%;
-      padding: 4px;
-      margin-inline: auto;
-      margin-top: 50px;
-      background: vars.$color-ligth-gray;
-      border-radius: 8px;
-
-      @media (max-width: vars.$breakpoints-s) {
-        margin-top: 12px;
-      }
-    }
-
-    &__tab {
-      @include mixins.flexCenter;
-
-      flex: 1;
-      padding: 12px 16px;
-      font-size: 20px;
-      color: vars.$color-gray;
-      cursor: pointer;
-      border: none;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-
-      &:hover {
-        opacity: 0.7;
-      }
-
-      &--active {
-        color: vars.$color-dark;
-        background: vars.$color-light;
-      }
-
-      @media (max-width: vars.$breakpoints-l) {
-        padding: 8px;
-        font-size: 16px;
-      }
-
-      @media (max-width: vars.$breakpoints-s) {
-        font-size: 12px;
       }
     }
 
