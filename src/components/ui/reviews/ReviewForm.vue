@@ -66,6 +66,7 @@
   import BaseTextarea from '@/components/ui/base/BaseTextarea.vue'
   import StarRating from '@/components/ui/base/BaseStarRating.vue'
   import { VALIDATION_CONFIGS } from '@/constants/validation'
+  import { getFromLocalStorage, removeFromLocalStorage, setToLocalStorage } from '@/utils/localStorage'
 
   defineProps<{
     productId: number | string
@@ -91,10 +92,10 @@
   const { notify } = useNotification()
 
   const loadSavedUserData = () => {
-    const rememberMeSaved = localStorage.getItem('reviewRememberMe')
+    const rememberMeSaved = Boolean(getFromLocalStorage('reviewRememberMe'))
 
-    if (rememberMeSaved === 'true') {
-      const saved = localStorage.getItem('reviewUserData')
+    if (rememberMeSaved) {
+      const saved = getFromLocalStorage('reviewUserData')
       if (saved) {
         try {
           const parsed = JSON.parse(saved)
@@ -113,23 +114,23 @@
   }
 
   const saveUserData = () => {
-    if (rememberMe.value) {
-      localStorage.setItem(
+    if (rememberMe) {
+      setToLocalStorage(
         'reviewUserData',
         JSON.stringify({
           name: form.name,
           email: form.email,
         }),
       )
-      localStorage.setItem('reviewRememberMe', 'true')
+      setToLocalStorage('reviewRememberMe', 'true')
     } else {
       removeUserData()
     }
   }
 
   const removeUserData = () => {
-    localStorage.removeItem('reviewUserData')
-    localStorage.removeItem('reviewRememberMe')
+    removeFromLocalStorage('reviewUserData')
+    removeFromLocalStorage('reviewRememberMe')
   }
 
   const resetErrors = () => {
@@ -140,7 +141,6 @@
 
   const validateForm = () => {
     resetErrors()
-    let isValid = true
 
     // Validate message
     const messageError = validateValue(
@@ -172,11 +172,11 @@
       errors.email = emailError
     }
 
-    return isValid = !(messageError || nameError || emailError)
+    return !(messageError || nameError || emailError)
   }
 
   const resetForm = () => {
-    if (!rememberMe.value) {
+    if (!rememberMe) {
       form.name = ''
       form.email = ''
     }
@@ -219,7 +219,7 @@
 
     reviews.value.push(newReview)
 
-    if (rememberMe.value) {
+    if (rememberMe) {
       saveUserData()
     } else {
       removeUserData()
