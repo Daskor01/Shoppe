@@ -2,15 +2,15 @@
   <div class="tabs">
     <button
       class="tabs__tab"
-      :class="{ 'tabs__tab--active': activeTab === 'signin' }"
-      @click="activeTab = 'signin'"
+      :class="{ 'tabs__tab--active': activeTab === SIGNIN }"
+      @click="activeTab = SIGNIN"
     >
       Sign In
     </button>
     <button
       class="tabs__tab"
-      :class="{ 'tabs__tab--active': activeTab === 'register' }"
-      @click="activeTab = 'register'"
+      :class="{ 'tabs__tab--active': activeTab === REGISTER }"
+      @click="activeTab = REGISTER"
     >
       Register
     </button>
@@ -18,9 +18,11 @@
 </template>
 
 <script setup lang="ts">
-  import { type Tabs } from '@/types/Auth'
+  import { Tabs } from "@/enums/authTabs.enum";
 
-  const activeTab = defineModel<Tabs>('activeTab')
+  const { SIGNIN, REGISTER } = Tabs;
+
+  const activeTab = defineModel<Tabs>()
 </script>
 
 <style lang="scss" scoped>

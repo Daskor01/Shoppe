@@ -11,7 +11,7 @@
           <BaseInput
             ref="emailInputRef"
             v-model="email"
-            :error="showErrors ? errors.email : ''"
+            :error="errors.email"
             class="reset-password__input"
             placeholder="Enter your email address*"
             name="email"
@@ -33,7 +33,7 @@
   import BaseInput from '@/components/ui/base/BaseInput.vue'
   import { navigateTo } from 'nuxt/app'
   import { wait } from '@/utils/wait'
-  import { DEFAULT_DELAY } from '@/constants/delays'
+  import { DEFAULT_DELAY } from '@/constants/common'
   import { VALIDATION_CONFIGS } from '@/constants/validation'
 
   definePageMeta({
@@ -42,7 +42,6 @@
 
   const email = ref('')
   const isLoading = ref(false)
-  const showErrors = ref(false)
   const errors = reactive({
     email: '',
   })
@@ -71,11 +70,9 @@
   const resetForm = () => {
     email.value = ''
     errors.email = ''
-    showErrors.value = false
   }
 
   const handleSubmit = async () => {
-    showErrors.value = true
 
     if (!validateForm()) {
       return

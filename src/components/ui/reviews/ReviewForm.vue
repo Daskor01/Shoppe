@@ -133,9 +133,9 @@
   }
 
   const resetErrors = () => {
-    Object.keys(errors).forEach((key) => {
-      errors[key as keyof typeof errors] = ''
-    })
+    errors.name = ''
+    errors.email = ''
+    errors.message = ''
   }
 
   const validateForm = () => {
@@ -150,7 +150,6 @@
     )
     if (messageError) {
       errors.message = messageError
-      isValid = false
     }
 
     // Validate name
@@ -161,7 +160,6 @@
     )
     if (nameError) {
       errors.name = nameError
-      isValid = false
     }
 
     // Validate email
@@ -172,10 +170,9 @@
     )
     if (emailError) {
       errors.email = emailError
-      isValid = false
     }
 
-    return isValid
+    return isValid = !(messageError || nameError || emailError)
   }
 
   const resetForm = () => {

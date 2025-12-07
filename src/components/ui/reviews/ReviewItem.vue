@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
   import type { Review } from '@/types/Reviews'
+  import StarRating from '@/components/ui/base/BaseStarRating.vue'
 
   defineProps<{
     review: Review

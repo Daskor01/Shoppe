@@ -4,7 +4,7 @@
       <div class="signin-form__field">
         <BaseInput
           v-model="form.username"
-          :error="showErrors ? errors.username : ''"
+          :error="errors.username"
           :clearable="isMobile"
           class="signin-form__input"
           type="text"
@@ -16,7 +16,7 @@
       <div class="signin-form__field">
         <BaseInput
           v-model="form.password"
-          :error="showErrors ? errors.password : ''"
+          :error="errors.password"
           class="signin-form__input"
           type="password"
           placeholder="Password"
@@ -54,7 +54,7 @@
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
   import { navigateTo } from 'nuxt/app'
-  import { storage } from '@/utils/storage'
+  import { getFromLocalStorage, setToLocalStorage, removeFromLocalStorage } from '@/utils/localStorage'
 
   const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
 
@@ -65,7 +65,6 @@
 
   const rememberMe = ref(false)
   const isLoading = ref(false)
-  const showErrors = ref(false)
   const errors = reactive({
     username: '',
     password: '',
@@ -75,7 +74,8 @@
   const authStore = useAuthStore()
 
   const resetErrors = () => {
-    Object.keys(errors).forEach((key) => (errors[key as keyof typeof errors] = ''))
+    errors.username = ''
+    errors.password = ''
   }
 
   const validateForm = () => {
@@ -110,9 +110,9 @@
   const loadSavedUserData = () => {
     if (!import.meta.client) return
 
-    const rememberMeSaved = Boolean(storage.get('signinRememberMe'))
-    if (rememberMeSaved === true) {
-      const saved = storage.get('signinUserData')
+    const rememberMeSaved = Boolean(getFromLocalStorage('signinRememberMe'))
+    if (rememberMeSaved) {
+      const saved = getFromLocalStorage('signinUserData')
       if (saved) {
         try {
           const parsed = JSON.parse(saved)
@@ -128,33 +128,32 @@
   }
 
   const saveUserData = () => {
-    if (rememberMe.value) {
-      storage.set(
+    if (rememberMe) {
+      setToLocalStorage(
         'signinUserData',
         JSON.stringify({
           username: form.username,
         }),
       )
-      storage.set('signinRememberMe', 'true')
+      setToLocalStorage('signinRememberMe', 'true')
     } else {
       removeUserData()
     }
   }
 
   const removeUserData = () => {
-    storage.remove('signinUserData')
-    storage.remove('signinRememberMe')
+    removeFromLocalStorage('signinUserData')
+    removeFromLocalStorage('signinRememberMe')
   }
 
   const resetForm = () => {
-    if (!rememberMe.value) {
+    if (!rememberMe) {
       form.username = ''
     }
     form.password = ''
   }
 
   const handleSubmit = async () => {
-    showErrors.value = true
 
     if (!validateForm()) {
       notify({
@@ -185,8 +184,8 @@
 
       resetForm()
       resetErrors()
-
       await navigateTo('/')
+      
     } catch (error) {
       console.error('Login error:', error)
       notify({

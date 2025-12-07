@@ -2,10 +2,10 @@
   <div class="account">
     <h1 class="account__title">My account</h1>
     <div class="account__container">
-      <AuthTabs v-model:activeTab="activeTab" />
+      <AuthTabs v-model="activeTab" />
 
       <div class="account__forms">
-        <AuthSignInForm v-if="activeTab === 'signin'" />
+        <AuthSignInForm v-if="activeTab === Tabs.SIGNIN" />
         <AuthRegisterForm v-else />
       </div>
     </div>
@@ -14,13 +14,13 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { type Tabs } from '@/types/Auth'
+  import { Tabs } from "@/enums/authTabs.enum"
 
   definePageMeta({
     middleware: 'guest',
   })
 
-  const activeTab = ref<Tabs>('signin')
+  const activeTab = ref<Tabs>(Tabs.SIGNIN)
 </script>
 
 <style scoped lang="scss">

@@ -4,7 +4,7 @@
       <div class="register-form__field">
         <BaseInput
           v-model="form.username"
-          :error="showErrors ? errors.username : ''"
+          :error="errors.username"
           :clearable="isMobile"
           class="register-form__input"
           type="text"
@@ -16,7 +16,7 @@
       <div class="register-form__field">
         <BaseInput
           v-model="form.email"
-          :error="showErrors ? errors.email : ''"
+          :error="errors.email"
           :clearable="isMobile"
           class="register-form__input"
           type="email"
@@ -28,7 +28,7 @@
       <div class="register-form__field">
         <BaseInput
           v-model="form.password"
-          :error="showErrors ? errors.password : ''"
+          :error="errors.password"
           class="register-form__input"
           type="password"
           placeholder="Create password*"
@@ -39,7 +39,7 @@
       <div class="register-form__field">
         <BaseInput
           v-model="form.confirmPassword"
-          :error="showErrors ? errors.confirmPassword : ''"
+          :error="errors.confirmPassword"
           class="register-form__input"
           type="password"
           placeholder="Confirm password*"
@@ -52,7 +52,7 @@
           <input v-model="agreeTerms" type="checkbox" class="register-form__checkbox" required />
           I agree to the Terms of Service and Privacy Policy
         </label>
-        <span v-if="showErrors && !agreeTerms" class="register-form__error">
+        <span v-if="!!errors.terms && !agreeTerms" class="register-form__error">
           You must agree to the terms
         </span>
       </div>
@@ -75,7 +75,7 @@
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
   import { navigateTo } from 'nuxt/app'
   import { wait } from '@/utils/wait'
-  import { DEFAULT_DELAY } from '@/constants/delays'
+  import { DEFAULT_DELAY } from '@/constants/common'
 
   const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
 
@@ -88,7 +88,6 @@
 
   const agreeTerms = ref(false)
   const isLoading = ref(false)
-  const showErrors = ref(false)
   const errors = reactive({
     username: '',
     email: '',
@@ -101,11 +100,14 @@
   const authStore = useAuthStore()
 
   const resetErrors = () => {
-    Object.keys(errors).forEach((key) => (errors[key as keyof typeof errors] = ''))
+    errors.username = ''
+    errors.email = ''
+    errors.password = ''
+    errors.confirmPassword = ''
+    errors.terms = ''
   }
 
   const validateForm = () => {
-    let isValid = true
     resetErrors()
 
     // Validate username
@@ -116,7 +118,6 @@
     )
     if (usernameError) {
       errors.username = usernameError
-      isValid = false
     }
 
     // Validate email
@@ -127,40 +128,31 @@
     )
     if (emailError) {
       errors.email = emailError
-      isValid = false
     }
 
     // Validate password
     const passwordError = validateValue(
       form.password,
-      {
-        ...VALIDATION_CONFIGS.password.rules,
-      },
-      {
-        ...VALIDATION_CONFIGS.password.messages,
-      },
+      VALIDATION_CONFIGS.password.rules,
+      VALIDATION_CONFIGS.password.messages,
     )
     if (passwordError) {
       errors.password = passwordError
-      isValid = false
     }
 
     // Validate confirmPassword
     if (!form.confirmPassword.trim()) {
       errors.confirmPassword = 'Please confirm your password'
-      isValid = false
     } else if (form.password !== form.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match'
-      isValid = false
     }
 
     // Validate terms
     if (!agreeTerms.value) {
       errors.terms = 'You must agree to the terms and conditions'
-      isValid = false
     }
 
-    return isValid
+    return !(errors.username || errors.email || errors.password || errors.confirmPassword || errors.terms)
   }
 
   const resetForm = () => {
@@ -169,12 +161,9 @@
     form.password = ''
     form.confirmPassword = ''
     agreeTerms.value = false
-    showErrors.value = false
-    Object.keys(errors).forEach((key) => (errors[key as keyof typeof errors] = ''))
   }
 
   const handleSubmit = async () => {
-    showErrors.value = true
 
     if (!validateForm()) {
       notify({

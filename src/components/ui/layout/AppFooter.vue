@@ -76,8 +76,6 @@
   const validateForm = () => {
     resetErrors()
 
-    let isValid = true
-
     const emailError = validateValue(
       email.value,
       VALIDATION_CONFIGS.email.rules,
@@ -86,19 +84,17 @@
 
     if (emailError) {
       errors.email = emailError
-      isValid = false
     }
 
     if (!consent.value) {
       errors.consent = 'You must agree to the terms of use.'
-      isValid = false
     }
 
-    return isValid
+    return !emailError
   }
 
   //Получаем сохраненные email из localStorage
-  const getStoredEmails = (): string[] => {
+  const getStoredEmails = () => {
     const stored = localStorage.getItem('subscribedEmails') || '[]'
     try {
       return JSON.parse(stored)
