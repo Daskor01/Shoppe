@@ -152,7 +152,13 @@
       errors.terms = 'You must agree to the terms and conditions'
     }
 
-    return !(errors.username || errors.email || errors.password || errors.confirmPassword || errors.terms)
+    return !(
+      errors.username ||
+      errors.email ||
+      errors.password ||
+      errors.confirmPassword ||
+      errors.terms
+    )
   }
 
   const resetForm = () => {
@@ -164,7 +170,6 @@
   }
 
   const handleSubmit = async () => {
-
     if (!validateForm()) {
       notify({
         message: 'Please check the form for errors',

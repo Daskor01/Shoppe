@@ -2,7 +2,6 @@ const getFromLocalStorage = (key: string) => {
   if (import.meta.client) {
     return localStorage.getItem(key)
   }
-  return null
 }
 
 const setToLocalStorage = (key: string, value: string) => {
@@ -17,4 +16,4 @@ const removeFromLocalStorage = (key: string) => {
   }
 }
 
-export  {getFromLocalStorage, setToLocalStorage, removeFromLocalStorage }
+export { getFromLocalStorage, setToLocalStorage, removeFromLocalStorage }

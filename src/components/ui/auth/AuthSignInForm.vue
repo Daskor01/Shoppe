@@ -54,7 +54,11 @@
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
   import { navigateTo } from 'nuxt/app'
-  import { getFromLocalStorage, setToLocalStorage, removeFromLocalStorage } from '@/utils/localStorage'
+  import {
+    getFromLocalStorage,
+    setToLocalStorage,
+    removeFromLocalStorage,
+  } from '@/utils/localStorage'
 
   const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
 
@@ -154,7 +158,6 @@
   }
 
   const handleSubmit = async () => {
-
     if (!validateForm()) {
       notify({
         message: 'Check that the form is filled out correctly',
@@ -185,7 +188,6 @@
       resetForm()
       resetErrors()
       await navigateTo('/')
-      
     } catch (error) {
       console.error('Login error:', error)
       notify({

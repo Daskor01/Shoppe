@@ -66,7 +66,11 @@
   import BaseTextarea from '@/components/ui/base/BaseTextarea.vue'
   import StarRating from '@/components/ui/base/BaseStarRating.vue'
   import { VALIDATION_CONFIGS } from '@/constants/validation'
-  import { getFromLocalStorage, removeFromLocalStorage, setToLocalStorage } from '@/utils/localStorage'
+  import {
+    getFromLocalStorage,
+    removeFromLocalStorage,
+    setToLocalStorage,
+  } from '@/utils/localStorage'
 
   defineProps<{
     productId: number | string

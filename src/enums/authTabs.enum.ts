@@ -1,4 +1,4 @@
 export enum Tabs {
   SIGNIN = 'signin',
-  REGISTER = 'register'
+  REGISTER = 'register',
 }

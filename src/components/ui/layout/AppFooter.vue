@@ -273,9 +273,10 @@
       }
 
       &-separator {
+        inline-size: 54px;
         height: 2px;
         background-color: vars.$color-dark;
-        inline-size: 54px;
+
         @media (min-width: vars.$breakpoints-s) {
           display: none;
         }

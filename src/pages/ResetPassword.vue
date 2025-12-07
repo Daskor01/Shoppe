@@ -73,7 +73,6 @@
   }
 
   const handleSubmit = async () => {
-
     if (!validateForm()) {
       return
     }

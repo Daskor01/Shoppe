@@ -18,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-  import { Tabs } from "@/enums/authTabs.enum";
+  import { Tabs } from '@/enums/authTabs.enum'
 
-  const { SIGNIN, REGISTER } = Tabs;
+  const { SIGNIN, REGISTER } = Tabs
 
   const activeTab = defineModel<Tabs>()
 </script>
