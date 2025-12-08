@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { Tabs } from '@/enums/authTabs.enum'
+  import { Tabs } from '@/types/AuthTabs.enum'
 
   definePageMeta({
     middleware: 'guest',
