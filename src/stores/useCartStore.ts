@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue'
 import type { Product } from '@/types/Product'
 import { useApi } from '@/composables/useApi'
 import { useDebouncedFn } from '@/composables/useDebouncedFn'
+import { useRuntimeConfig } from 'nuxt/app'
 
 export interface CartItem {
   product: Product

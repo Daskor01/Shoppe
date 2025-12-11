@@ -46,12 +46,13 @@
 <style scoped lang="scss">
   .error {
     @include mixins.flexCenter;
+
     flex-direction: column;
     margin-top: 130px;
 
     &__title {
-      font-weight: 500;
       font-size: 32px;
+      font-weight: 500;
       line-height: 130%;
       text-transform: uppercase;
 
@@ -61,39 +62,39 @@
     }
 
     &__subtitle {
+      max-width: 400px;
       font-size: 20px;
       line-height: 130%;
       color: vars.$color-gray;
-      max-width: 400px;
       text-align: center;
 
       @media (max-width: vars.$breakpoints-m) {
-        font-size: 12px;
         max-width: 160px;
+        font-size: 12px;
       }
     }
 
     &__button {
-      font-weight: 700;
-      font-size: 16px;
-      border-radius: 4px;
-      margin-top: 40px;
       min-width: 186px;
       padding: 12px;
+      margin-top: 40px;
+      font-size: 16px;
+      font-weight: 700;
       text-transform: uppercase;
+      border-radius: 4px;
       transition: all 0.5s;
 
       @media (max-width: vars.$breakpoints-m) {
-        font-size: 12px;
         min-width: 115px;
-        font-weight: 400;
         padding: 6px;
         margin-top: 20px;
+        font-size: 12px;
+        font-weight: 400;
       }
 
       &:hover {
-        background-color: vars.$color-dark;
         color: vars.$color-light;
+        background-color: vars.$color-dark;
       }
     }
 
