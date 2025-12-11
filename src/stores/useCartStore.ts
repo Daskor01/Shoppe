@@ -34,7 +34,7 @@ export const useCartStore = defineStore('cart', () => {
 
   //Сохраняем корзину в localStorage
   function saveCartToStorage() {
-    if (typeof window === 'undefined') return
+    if (!window) return
     localStorage.setItem('cart', JSON.stringify(cartItems.value))
   }
 
@@ -45,7 +45,7 @@ export const useCartStore = defineStore('cart', () => {
       const baseUrl = config.public.productApi
       const { fetchApi } = useApi(baseUrl)
 
-      const response = await fetchApi('/carts', {
+      await fetchApi('/carts', {
         method: 'POST',
         body: {
           userId: 1,
