@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <AppHeader />
-    <slot />
+    <main>
+      <slot />
+    </main>
     <AppFooter />
     <BaseNotification :notification="notification" />
     <BaseSlidePanel

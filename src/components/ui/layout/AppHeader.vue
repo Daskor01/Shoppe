@@ -207,6 +207,7 @@
     inline-size: 100%;
     margin-block: 48px 36px;
     background-color: transparent;
+    border-block-end: 1px solid vars.$color-ligth-gray;
 
     &__container {
       display: flex;
