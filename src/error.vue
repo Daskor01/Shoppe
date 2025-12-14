@@ -1,46 +1,30 @@
 <template>
   <NuxtLayout name="default">
-    <div class="error">
-      <h1 class="error__title">{{ title }}</h1>
-      <p class="error__subtitle">{{ message }}</p>
-
-      <BaseButton class="error__button" @click="$router.push('/')"> HomePage </BaseButton>
-
-      <p v-if="showContact" class="error__contact">
-        If the problem persists, please
-        <NuxtLink to="/" class="error__contact--link"> contact us </NuxtLink>.
+    <div v-if="error?.statusCode === 404" class="error">
+      <h1 class="error__title">404 Error</h1>
+      <p class="error__subtitle">
+        This page not found. 
+        Please go back to home and start again.
       </p>
+      <BaseButton class="error__button" @click="handleError()"> HomePage </BaseButton>
     </div>
+    <div v-else class="error">
+      <h1 class="error__title">{{ error?.statusCode }}</h1>
+      <p class="error__subtitle">{{ error?.statusMessage }}</p>
+      <BaseButton class="error__button" @click="handleError()"> HomePage </BaseButton>
+    </div>
+
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue'
-  import { useError } from '@/composables/useError'
-  import { useRequestEvent } from 'nuxt/app'
+  import { type NuxtError, clearError } from 'nuxt/app'
 
-  interface ErrorProps {
-    statusCode?: number
-    message?: string
-  }
+  const props = defineProps({
+    error: Object as () => NuxtError
+  })
 
-  const props = defineProps<{
-    error?: ErrorProps
-  }>()
-
-  //use fallback status code 404
-  const statusCode = computed(() => props.error?.statusCode || 404)
-  const customMessage = computed(() => props.error?.message || 'Page not found')
-
-  const { title, message, showContact } = useError(statusCode.value, customMessage.value)
-
-  if (import.meta.server) {
-    const event = useRequestEvent()
-    if (event) {
-      event.node.res.statusCode = statusCode.value
-      event.node.res.statusMessage = message
-    }
-  }
+  const handleError = () => clearError({ redirect: '/' })
 </script>
 
 <style scoped lang="scss">
