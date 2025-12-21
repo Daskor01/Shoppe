@@ -3,9 +3,9 @@ import { mount } from '@vue/test-utils'
 import BaseTabs from '@/components/ui/base/BaseTabs.vue'
 
 interface Tab {
-    label: string
-    name: string
-  }
+  label: string
+  name: string
+}
 
 type BaseTabsProps = {
   tabs: Tab[]
@@ -25,7 +25,8 @@ const MOCK_CONTENT = {
 }
 
 describe('BaseTabs', () => {
-  const createWrapper = (modelValue?: number | 0) => mount(BaseTabs, {
+  const createWrapper = (modelValue?: number | 0) => {
+    return mount(BaseTabs, {
       props: {
         tabs: MOCK_TABS,
         modelValue: modelValue,
@@ -35,7 +36,7 @@ describe('BaseTabs', () => {
         additional: `<div>${MOCK_CONTENT.additional}</div>`,
         reviews: `<div>${MOCK_CONTENT.reviews}</div>`
       }
-    })
+    })}
 
   describe('Initial render', () => {
     it('shows all tab labels to the user', () => {
