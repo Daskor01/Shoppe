@@ -19,6 +19,7 @@ describe('BaseTabs', () => {
     return mount(BaseTabs, {
       props: {
         tabs: MOCK_TABS,
+        // @ts-ignore
         activeIndex
       },
       slots: {
@@ -99,6 +100,7 @@ describe('BaseTabs', () => {
       const wrapper = mount(BaseTabs, {
         props: {
           tabs: [{ label: 'Only Tab', name: 'single' }],
+          // @ts-ignore
           activeIndex: 0
         },
         slots: {

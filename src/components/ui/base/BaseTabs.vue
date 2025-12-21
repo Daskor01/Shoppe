@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch } from 'vue'
+  import { computed } from 'vue'
 
   interface Tab {
     label: string
@@ -31,23 +31,16 @@
     tabs: Tab[]
   }>()
 
-  const activeIndex = ref(0)
+  const activeIndex = defineModel<number>('activeIndex', { 
+    default: 0,
+    required: false 
+  })
 
   const activeTab = computed(() => props.tabs[activeIndex.value])
 
   const setActiveTab = (index: number) => {
     activeIndex.value = index
   }
-
-  const modelValue = defineModel<number>('activeIndex', { default: 0 })
-
-  watch(modelValue, (newVal) => {
-    activeIndex.value = newVal
-  })
-
-  watch(activeIndex, (newVal) => {
-    modelValue.value = newVal
-  })
 </script>
 
 <style scoped lang="scss">
