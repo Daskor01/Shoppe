@@ -10,9 +10,9 @@ const MOCK_TABS = [
 ]
 
 const MOCK_CONTENT = {
-  description: 'Detailed product description',
-  additional: 'Technical specifications and details',
-  reviews: 'Feedback from customers'
+  description: 'Description',
+  additional: 'Additional',
+  reviews: 'Reviews'
 }
 
 describe('BaseTabs', () => {
@@ -80,16 +80,16 @@ describe('BaseTabs', () => {
       expect(tabButtons[1].classes()).not.toContain('base-tabs__tab--active')
     })
 
-    it('emits update:activeIndex event when tab is clicked', async () => {
+    it('emits update:modelValue event when tab is clicked', async () => {
       const wrapper = createWrapper()
       const tabButtons = wrapper.findAll('.base-tabs__tab')
 
       await tabButtons[1].trigger('click')
-      expect(wrapper.emitted('update:activeIndex')).toBeTruthy()
-      expect(wrapper.emitted('update:activeIndex')?.[0]).toEqual([1])
+      expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+      expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([1])
 
       await tabButtons[2].trigger('click')
-      expect(wrapper.emitted('update:activeIndex')?.[1]).toEqual([2])
+      expect(wrapper.emitted('update:modelValue')?.[1]).toEqual([2])
     })
   })
 

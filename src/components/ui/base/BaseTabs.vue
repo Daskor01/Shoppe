@@ -20,36 +20,36 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue'
+  import { ref, computed, watch } from 'vue'
 
   interface Tab {
     label: string
     name: string
   }
 
-  interface Props {
-    tabs: Tab[]
+  const props = defineProps<{
+    tabs: Tab[],
     modelValue?: number
-  }
-
-  const props = withDefaults(defineProps<Props>(), {
-    modelValue: 0
-  })
-
-  const emit = defineEmits<{
-    'update:modelValue': [value: number]
   }>()
 
-  const activeIndex = computed({
-    get: () => props.modelValue,
-    set: (value) => emit('update:modelValue', value)
-  })
+  const emit = defineEmits<{
+    (e: 'update:modelValue', value: number):void
+  }>()
+
+  const activeIndex = ref(props.modelValue ?? 0)
 
   const activeTab = computed(() => props.tabs[activeIndex.value])
 
   const setActiveTab = (index: number) => {
     activeIndex.value = index
+    emit('update:modelValue', index)
   }
+
+  watch(() => props.modelValue, (newVal) => {
+    if (newVal !== undefined && newVal !== activeIndex.value) {
+      activeIndex.value = newVal
+    }
+  })
 </script>
 
 <style scoped lang="scss">
