@@ -111,7 +111,7 @@ describe('BaseTabs', () => {
       const wrapper = mount(BaseTabs, {
         props: {
           tabs: [{ label: 'Only Tab', name: 'single' }],
-          activeIndex: 0
+          modelValue: 0
         },
         slots: {
           single: '<div>Single tab content</div>'
