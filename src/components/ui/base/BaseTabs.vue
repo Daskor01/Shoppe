@@ -28,7 +28,8 @@
   }
 
   const props = defineProps<{
-    tabs: Tab[]
+    tabs: Tab[],
+    activeIndex?: number
   }>()
 
   const activeIndex = defineModel<number>('activeIndex', { 
