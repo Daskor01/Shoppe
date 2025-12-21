@@ -15,11 +15,10 @@ const MOCK_CONTENT = {
 }
 
 describe('BaseTabs', () => {
-  const createWrapper = (activeIndex = 0) => {
-    return mount(BaseTabs, {
+  const createWrapper = (activeIndex?: number | 0) => mount(BaseTabs, {
       props: {
         tabs: MOCK_TABS,
-        activeIndex,
+        activeIndex: activeIndex,
       },
       slots: {
         description: `<div>${MOCK_CONTENT.description}</div>`,
@@ -27,7 +26,6 @@ describe('BaseTabs', () => {
         reviews: `<div>${MOCK_CONTENT.reviews}</div>`
       }
     })
-  }
 
   describe('Initial render', () => {
     it('shows all tab labels to the user', () => {
