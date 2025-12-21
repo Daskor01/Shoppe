@@ -73,7 +73,7 @@ interface ProductPageOptions {
   product?: Product | null
   isMobile?: boolean
   reviewsCount?: number
-  visibleProducts?: any[]
+  visibleProducts?: Product[]
 }
 
 // Factory for creating product page
