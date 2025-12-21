@@ -15,11 +15,11 @@ const MOCK_CONTENT = {
 }
 
 describe('BaseTabs', () => {
-  const createWrapper = () => {
+  const createWrapper = (activeIndex = 0) => {
     return mount(BaseTabs, {
       props: {
         tabs: MOCK_TABS,
-        modelValue: 0,
+        activeIndex,
       },
       slots: {
         description: `<div>${MOCK_CONTENT.description}</div>`,
@@ -80,11 +80,23 @@ describe('BaseTabs', () => {
       expect(tabButtons[2].classes()).toContain('base-tabs__tab--active')
       expect(tabButtons[1].classes()).not.toContain('base-tabs__tab--active')
     })
+
+    it('emits update:activeIndex event when tab is clicked', async () => {
+      const wrapper = createWrapper()
+      const tabButtons = wrapper.findAll('.base-tabs__tab')
+
+      await tabButtons[1].trigger('click')
+      expect(wrapper.emitted('update:activeIndex')).toBeTruthy()
+      expect(wrapper.emitted('update:activeIndex')?.[0]).toEqual([1])
+
+      await tabButtons[2].trigger('click')
+      expect(wrapper.emitted('update:activeIndex')?.[1]).toEqual([2])
+    })
   })
 
   describe('External control via props', () => {
     it('shows correct content when activeIndex changes externally', async () => {
-      const wrapper = createWrapper()
+      const wrapper = createWrapper(0)
 
       await wrapper.setProps({ activeIndex: 1 })
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.additional)
@@ -99,7 +111,6 @@ describe('BaseTabs', () => {
       const wrapper = mount(BaseTabs, {
         props: {
           tabs: [{ label: 'Only Tab', name: 'single' }],
-          // @ts-ignore
           activeIndex: 0
         },
         slots: {
