@@ -20,7 +20,12 @@ describe('BaseTabs', () => {
       props: {
         tabs: MOCK_TABS,
         // @ts-ignore
-        activeIndex
+        modelValue: 0,
+      },
+        listeners: {
+        'onUpdate:modelValue': (newValue: number) => {
+          activeIndex = newValue
+        }
       },
       slots: {
         description: `<div>${MOCK_CONTENT.description}</div>`,
