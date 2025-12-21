@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import BaseTabs from '@/components/ui/base/BaseTabs.vue'
 
+type BaseTabsProps = InstanceType<typeof BaseTabs>['$props']
+
 const MOCK_TABS = [
   { label: 'Product Description', name: 'description' },
   { label: 'Additional Info', name: 'additional' },
@@ -19,7 +21,7 @@ describe('BaseTabs', () => {
       props: {
         tabs: MOCK_TABS,
         activeIndex: activeIndex,
-      },
+      } as BaseTabsProps,
       slots: {
         description: `<div>${MOCK_CONTENT.description}</div>`,
         additional: `<div>${MOCK_CONTENT.additional}</div>`,
