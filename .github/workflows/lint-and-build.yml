@@ -1,4 +1,4 @@
-name: Lint & Build
+name: Lint, Test & Build
 
 on:
   pull_request:
@@ -59,6 +59,18 @@ jobs:
             echo "TypeScript config not found, skipping type check"
           fi
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      
+      - run: npm ci
+      - run: npx vitest run 
+            
   build:
     name: Build project
     runs-on: ubuntu-latest
