@@ -97,10 +97,10 @@ describe('BaseTabs', () => {
     it('shows correct content when activeIndex changes externally', async () => {
       const wrapper = createWrapper(0)
 
-      await wrapper.setProps({ modelValue: 1 } as { modelValue: number })
+      await wrapper.setProps({ modelValue: 1 })
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.additional)
 
-      await wrapper.setProps({ modelValue: 2 } as { modelValue: number })
+      await wrapper.setProps({ modelValue: 2 })
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.reviews)
     })
   })
@@ -110,7 +110,7 @@ describe('BaseTabs', () => {
       const wrapper = mount(BaseTabs, {
         props: {
           tabs: [{ label: 'Only Tab', name: 'single' }],
-          activeIndex: 0
+          modelValue: 0
         },
         slots: {
           single: '<div>Single tab content</div>'
