@@ -15,17 +15,11 @@ const MOCK_CONTENT = {
 }
 
 describe('BaseTabs', () => {
-  const createWrapper = (activeIndex = 0) => {
+  const createWrapper = () => {
     return mount(BaseTabs, {
       props: {
         tabs: MOCK_TABS,
-        // @ts-ignore
         modelValue: 0,
-      },
-        listeners: {
-        'onUpdate:modelValue': (newValue: number) => {
-          activeIndex = newValue
-        }
       },
       slots: {
         description: `<div>${MOCK_CONTENT.description}</div>`,
@@ -90,7 +84,7 @@ describe('BaseTabs', () => {
 
   describe('External control via props', () => {
     it('shows correct content when activeIndex changes externally', async () => {
-      const wrapper = createWrapper(0)
+      const wrapper = createWrapper()
 
       await wrapper.setProps({ activeIndex: 1 })
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.additional)
