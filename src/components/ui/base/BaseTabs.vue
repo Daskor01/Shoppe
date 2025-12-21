@@ -27,14 +27,22 @@
     name: string
   }
 
-  const props = defineProps<{
-    tabs: Tab[],
-    activeIndex?: number
+  interface Props {
+    tabs: Tab[]
+    modelValue?: number
+  }
+
+  const props = withDefaults(defineProps<Props>(), {
+    modelValue: 0
+  })
+
+  const emit = defineEmits<{
+    'update:modelValue': [value: number]
   }>()
 
-  const activeIndex = defineModel<number>('activeIndex', { 
-    default: 0,
-    required: false 
+  const activeIndex = computed({
+    get: () => props.modelValue,
+    set: (value) => emit('update:modelValue', value)
   })
 
   const activeTab = computed(() => props.tabs[activeIndex.value])

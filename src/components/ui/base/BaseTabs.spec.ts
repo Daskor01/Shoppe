@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import BaseTabs from '@/components/ui/base/BaseTabs.vue'
 
-type BaseTabsProps = InstanceType<typeof BaseTabs>['$props']
 
 const MOCK_TABS = [
   { label: 'Product Description', name: 'description' },
@@ -17,11 +16,11 @@ const MOCK_CONTENT = {
 }
 
 describe('BaseTabs', () => {
-  const createWrapper = (activeIndex?: number | 0) => mount(BaseTabs, {
+  const createWrapper = (modelValue?: number | 0) => mount(BaseTabs, {
       props: {
         tabs: MOCK_TABS,
-        activeIndex: activeIndex,
-      } as BaseTabsProps,
+        modelValue: modelValue,
+      },
       slots: {
         description: `<div>${MOCK_CONTENT.description}</div>`,
         additional: `<div>${MOCK_CONTENT.additional}</div>`,
@@ -98,10 +97,10 @@ describe('BaseTabs', () => {
     it('shows correct content when activeIndex changes externally', async () => {
       const wrapper = createWrapper(0)
 
-      await wrapper.setProps({ activeIndex: 1 })
+      await wrapper.setProps({ modelValue: 1 })
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.additional)
 
-      await wrapper.setProps({ activeIndex: 2 })
+      await wrapper.setProps({ modelValue: 2 })
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.reviews)
     })
   })
