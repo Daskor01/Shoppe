@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { defineComponent, ref, computed } from 'vue'
+import type { Product } from '@/types/Product'
 
 // Mock components - simplified and more realistic
 const ProductGallery = defineComponent({
@@ -67,7 +70,7 @@ const mockSimilarProducts = [
 
 // Define interface for component options
 interface ProductPageOptions {
-  product?: any | null
+  product?: Product | null
   isMobile?: boolean
   reviewsCount?: number
   visibleProducts?: any[]

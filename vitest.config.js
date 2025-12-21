@@ -1,5 +1,5 @@
-import { resolve } from 'path'
-import { defineConfig } from 'vitest/config'
+import path from 'path'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
-    setupFiles: ['test/setup.ts'],
+    setupFiles: ['src/test/setup.ts'],
     environmentOptions: {
       happyDOM: {
         settings: {
@@ -22,9 +22,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '~': resolve(__dirname),
-      '@': resolve(__dirname, './src'),
-      '#imports': resolve(__dirname, './.nuxt/imports.d.ts'),
-    },
+        '@': path.resolve(__dirname, 'src'),
+        '~': path.resolve(__dirname, 'src'),
+      },
   }
 })

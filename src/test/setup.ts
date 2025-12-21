@@ -1,5 +1,8 @@
 import { vi } from 'vitest'
 
+//Mock SCSS imports
+vi.mock('~assets/scss/main.scss', () => ({}))
+
 //Mock Nuxt-specific modules
 vi.mock('#imports', () => ({}))
 vi.mock('#app', () => ({

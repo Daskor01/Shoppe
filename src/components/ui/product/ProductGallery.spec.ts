@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ProductGallery from '@/components/ui/product/ProductGallery.vue'
+import { vi } from 'vitest'
 
 const MOCK_IMAGES = [
   'image1.jpg',

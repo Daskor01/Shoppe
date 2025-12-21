@@ -1,3 +1,4 @@
+import { defineNuxtConfig } from 'nuxt/config'
 import path from 'path'
 
 export default defineNuxtConfig({
@@ -5,15 +6,15 @@ export default defineNuxtConfig({
 
   css: ['~/assets/scss/main.scss'],
 
-  modules: ['@pinia/nuxt', 'nuxt-vitest'],
+  modules: ['@pinia/nuxt'],
 
   vite: {
     css: {
       preprocessorOptions: {
         scss: {
           additionalData: `
-            @use "@/assets/scss/variables" as vars;
-            @use "@/assets/scss/mixins" as mixins;
+            @use "@/assets/scss/_variables" as vars;
+            @use "@/assets/scss/_mixins" as mixins;
           `,
         },
       },
@@ -21,6 +22,7 @@ export default defineNuxtConfig({
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),
+        '~': path.resolve(__dirname, 'src'),
       },
     },
   },
