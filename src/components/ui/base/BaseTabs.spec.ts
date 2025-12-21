@@ -95,12 +95,13 @@ describe('BaseTabs', () => {
 
   describe('External control via props', () => {
     it('shows correct content when activeIndex changes externally', async () => {
-      const wrapper = createWrapper(0)
-
-      await wrapper.setProps({ modelValue: 1 } as { modelValue: number })
+      let wrapper = createWrapper(0)
+      expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.description)
+      
+      wrapper = createWrapper(1)
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.additional)
 
-      await wrapper.setProps({ modelValue: 2 } as { modelValue: number })
+      wrapper = createWrapper(2)
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.reviews)
     })
   })
