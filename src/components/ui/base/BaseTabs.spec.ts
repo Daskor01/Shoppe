@@ -2,6 +2,15 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import BaseTabs from '@/components/ui/base/BaseTabs.vue'
 
+interface Tab {
+    label: string
+    name: string
+  }
+
+type BaseTabsProps = {
+  tabs: Tab[]
+  modelValue?: number
+}
 
 const MOCK_TABS = [
   { label: 'Product Description', name: 'description' },
@@ -97,10 +106,10 @@ describe('BaseTabs', () => {
     it('shows correct content when activeIndex changes externally', async () => {
       const wrapper = createWrapper(0)
 
-      await wrapper.setProps({ modelValue: 1 })
+      await wrapper.setProps({ modelValue: 1 } as Partial<BaseTabsProps>)
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.additional)
 
-      await wrapper.setProps({ modelValue: 2 })
+      await wrapper.setProps({ modelValue: 2 } as Partial<BaseTabsProps>)
       expect(wrapper.find('.base-tabs__content').text()).toContain(MOCK_CONTENT.reviews)
     })
   })
