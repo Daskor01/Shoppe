@@ -1,0 +1,6 @@
+export const MOCK_IMAGES: string[] = [
+  'image1.jpg',
+  'image2.jpg',
+  'image3.jpg',
+  'image4.jpg'
+]

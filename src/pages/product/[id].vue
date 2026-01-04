@@ -17,7 +17,7 @@
       </template>
 
       <template #reviews>
-        <Reviews :productId="product.id" :productTitle="product.title" />
+          <Reviews :productId="product.id" :productTitle="product.title" />
       </template>
     </BaseTabs>
 

@@ -1,76 +1,104 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ProductGallery from '@/components/ui/product/ProductGallery.vue'
-import { vi } from 'vitest'
-
-const MOCK_IMAGES = [
-  'image1.jpg',
-  'image2.jpg',
-  'image3.jpg',
-  'image4.jpg'
-]
-
-vi.mock('swiper/vue', () => ({
-  Swiper: {
-    template: '<div class="swiper-mock"><slot /></div>'
-  },
-  SwiperSlide: {
-    template: '<div class="swiper-slide-mock"><slot /></div>'
-  }
-}))
-
-vi.mock('swiper/modules', () => ({
-  Navigation: vi.fn(),
-  Pagination: vi.fn(),
-  Thumbs: vi.fn()
-}))
-
-vi.mock('swiper/css', () => ({}))
-vi.mock('swiper/css/navigation', () => ({}))
-vi.mock('swiper/css/pagination', () => ({}))
+import { MOCK_IMAGES } from '@/test/mocks/data/images'
+import { isMobileRef } from '@/test/mocks/composables/useBreakpoint.mock'
 
 vi.mock('@/composables/useBreakpoint', () => ({
   useBreakpoint: () => ({
-    isBelow: { value: false }
-  })
+    isBelow: isMobileRef,
+  }),
 }))
 
 describe('ProductGallery', () => {
-  const createWrapper = (images: string[] = MOCK_IMAGES) => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    isMobileRef.value = false
+  })
+
+  const createWrapper = (images: string[] = MOCK_IMAGES, isMobile: boolean = false) => {
+    isMobileRef.value = isMobile
+
     return mount(ProductGallery, {
       props: { ProductImages: images }
     })
   }
 
-  it('displays all product images', () => {
-    const wrapper = createWrapper()
-    
-    const slides = wrapper.findAll('.swiper-slide-mock')
-    expect(slides).toHaveLength(MOCK_IMAGES.length)
+  describe('Mobile version', () => {
+    it('displays all product images', () => {
+      const wrapper = createWrapper(MOCK_IMAGES, true)
+      
+      const slides = wrapper.findAll('.swiper-slide-mock')
+      expect(slides).toHaveLength(MOCK_IMAGES.length)
+    })
+
+    it('renders swiper container for image gallery', () => {
+      const wrapper = createWrapper(MOCK_IMAGES, true)
+      
+      const swiper = wrapper.find('.swiper-mock')
+      expect(swiper.exists()).toBe(true)
+    })
+
+    it('handles empty image array gracefully', () => {
+      const wrapper = createWrapper([], true)
+      
+      const slides = wrapper.findAll('.swiper-slide-mock')
+      expect(slides).toHaveLength(0)
+      
+      const swiper = wrapper.find('.swiper-mock')
+      expect(swiper.exists()).toBe(true)
+    })
+
+    it('displays single image correctly', () => {
+      const singleImage = ['single-image.jpg']
+      const wrapper = createWrapper(singleImage, true)
+      
+      const slides = wrapper.findAll('.swiper-slide-mock')
+      expect(slides).toHaveLength(1)
+    })
   })
 
-  it('renders swiper container for image gallery', () => {
-    const wrapper = createWrapper()
-    
-    const swiper = wrapper.find('.swiper-mock')
-    expect(swiper.exists()).toBe(true)
-  })
+  describe('Desktop', () => {
+    it('displays all product images in desktop view', () => {
+      const wrapper = createWrapper(MOCK_IMAGES, false)
+      
+      const thumbnails = wrapper.findAll('.product-gallery__thumbnail-image')
+      expect(thumbnails).toHaveLength(MOCK_IMAGES.length)
+    })
 
-  it('handles empty image array gracefully', () => {
-    const wrapper = createWrapper([])
-    
-    const slides = wrapper.findAll('.swiper-slide-mock')
-    expect(slides).toHaveLength(0)
-    
-    const swiper = wrapper.find('.swiper-mock')
-    expect(swiper.exists()).toBe(true)
-  })
+    it('renders desktop gallery structure', () => {
+      const wrapper = createWrapper(MOCK_IMAGES, false)
+      
+      const desktopGallery = wrapper.find('.product-gallery__desktop')
+      expect(desktopGallery.exists()).toBe(true)
+      
+      const thumbnailsContainer = wrapper.find('.product-gallery__thumbnails')
+      expect(thumbnailsContainer.exists()).toBe(true)
+      
+      const mainImage = wrapper.find('.product-gallery__main-image img')
+      expect(mainImage.exists()).toBe(true)
+    })
 
-  it('displays single image correctly', () => {
-    const singleImage = ['single-image.jpg']
-    const wrapper = createWrapper(singleImage)
-    
-    const slides = wrapper.findAll('.swiper-slide-mock')
-    expect(slides).toHaveLength(1)
+    it('handles empty image array in desktop view', () => {
+      const wrapper = createWrapper([], false)
+      
+      const thumbnails = wrapper.findAll('.product-gallery__thumbnail-image')
+      expect(thumbnails).toHaveLength(0)
+      
+      const desktopGallery = wrapper.find('.product-gallery__desktop')
+      expect(desktopGallery.exists()).toBe(true)
+    })
+
+    it('displays single image correctly in desktop view', () => {
+      const singleImage = ['single-image.jpg']
+      const wrapper = createWrapper(singleImage, false)
+      
+      const thumbnails = wrapper.findAll('.product-gallery__thumbnail-image')
+      expect(thumbnails).toHaveLength(1)
+      
+      const mainImage = wrapper.find('.product-gallery__main-image img')
+      expect(mainImage.exists()).toBe(true)
+      expect(mainImage.attributes('src')).toBe(singleImage[0])
+    })
   })
 })

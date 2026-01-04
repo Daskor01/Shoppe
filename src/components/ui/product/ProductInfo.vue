@@ -1,13 +1,15 @@
 <template>
   <div class="product-info">
-    <h1 class="product-info__title">{{ product.title }}</h1>
+    <h1 class="product-info__title" data-test="product-info__title">{{ product.title }}</h1>
 
     <div class="product-info__price-wrapper">
-      <p class="product-info__price">${{ formattedPrice }}</p>
+      <p class="product-info__price" data-test="product-info__price">${{ formattedPrice }}</p>
 
       <div v-if="mobile">
         <div class="product-info__share-mobile">
-          <button class="product-info__share-mobile-button" @click="toggleShare">
+          <button class="product-info__share-mobile-button"
+          data-test="product-info__share-mobile-button"
+          @click="toggleShare">
             <IconShare />
           </button>
 
@@ -17,39 +19,50 @@
     </div>
 
     <div v-if="!mobile">
-      <div class="product-info__rating">
+      <div class="product-info__rating" data-test="product-info__rating">
         <BaseStarRating
           :modelValue="Math.round(product.rating?.rate || 0)"
           class="product-info__rating-star"
           readonly
         />
-        <span class="product-info__rating-text">{{ counterReviews }} customer review</span>
+        <span class="product-info__rating-text" data-test="product-info__rating-text">{{ counterReviews }} customer review</span>
       </div>
 
-      <div class="product-info__description">
+      <div class="product-info__description" data-test="product-info__description">
         {{ product.description }}
       </div>
     </div>
     <div class="product-info__actions">
-      <div v-if="!mobile" class="product-info__quantity">
-        <button class="product-info__quantity-button" @click="decrease">-</button>
-        <span class="product-info__quantity-value">{{ quantity }}</span>
-        <button class="product-info__quantity-button" @click="increase">+</button>
+      <div v-if="!mobile" class="product-info__quantity" data-test="product-info__quantity">
+        <button class="product-info__quantity-button"
+        data-test="product-info__quantity-decrease"
+        @click="decrease">-</button>
+        <span class="product-info__quantity-value" data-test="product-info__quantity-value">{{ quantity }}</span>
+        <button class="product-info__quantity-button" 
+        data-test="product-info__quantity-increase"
+        @click="increase">+</button>
       </div>
 
-      <BaseButton class="product-info__cart-button" @click="addToCart">Add to cart</BaseButton>
+      <BaseButton 
+        class="product-info__cart-button" 
+        data-test="product-info__add-to-cart"
+        @click="addToCart"
+      >
+        Add to cart
+      </BaseButton>
     </div>
 
-    <div v-if="!mobile" class="product-info__interaction">
+    <div v-if="!mobile" class="product-info__interaction" data-test="product-info__interaction">
       <button
         :class="{ liked: isLiked }"
         class="product-info__interaction-like"
+        data-test="product-info__like-button"
         @click="toggleLike"
       >
         <IconLikeProduct />
       </button>
       <div class="product-info__divider"></div>
-      <div class="product-info__share">
+      <div class="product-info__share" data-test="product-info__share">
         <IconMail />
         <IconFacebook />
         <IconInstagram />
@@ -58,21 +71,25 @@
     </div>
 
     <div v-if="mobile" class="product-info__meta-mobile">
-      <details ref="detailsRef" class="product-info__expandable">
+      <details ref="detailsRef" class="product-info__expandable" data-test="product-info__expandable">
         <summary class="product-info__summary">{{ product.description }}</summary>
 
         <div class="product-info__meta">
-          <p class="product-info__meta-item">
+          <p class="product-info__meta-item" data-test="product-info__meta-sku">
             <span class="product-info__meta-item--accent">SKU:</span> {{ product.id }}
           </p>
-          <p class="product-info__meta-item">
+          <p class="product-info__meta-item" data-test="product-info__meta-category">
             <span class="product-info__meta-item--accent">Category:</span>
             {{ product.category }}
           </p>
         </div>
       </details>
 
-      <button class="product-info__toggle-button" @click="toggleDetails">
+      <button 
+        class="product-info__toggle-button"
+        data-test="product-info__toggle-button"
+        @click="toggleDetails"
+      >
         <span v-if="!isOpen" class="product-info__toggle-text">
           View more
           <IconBaseArrowRight />
@@ -84,11 +101,11 @@
       </button>
     </div>
 
-    <div v-if="!mobile" class="product-info__meta">
-      <p class="product-info__meta-item">
+    <div v-if="!mobile" class="product-info__meta" data-test="product-info__meta">
+      <p class="product-info__meta-item" data-test="product-info__meta-sku">
         <span class="product-info__meta-item--accent">SKU:</span> {{ product.id }}
       </p>
-      <p class="product-info__meta-item">
+      <p class="product-info__meta-item" data-test="product-info__meta-category">
         <span class="product-info__meta-item--accent">Category:</span> {{ product.category }}
       </p>
     </div>
