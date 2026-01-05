@@ -46,7 +46,7 @@ export default defineNuxtConfig({
   },
 
   app: {
-    baseURL: process.env.GITHUB_ACTIONS === 'true' ? '/shoppe-project/' : '/',
+    baseURL: process.env.GITHUB_ACTIONS === 'true' ? '/Shoppe/' : '/',
     buildAssetsDir: 'assets',
   },
 
