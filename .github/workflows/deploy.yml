@@ -34,6 +34,8 @@ jobs:
         run: npm run generate
         env:
           NUXT_APP_BASE_URL: /${{ github.event.repository.name }}/
+          NUXT_PUBLIC_PRODUCTS_API: ${{ secrets.NUXT_PUBLIC_PRODUCTS_API }}
+          NUXT_PUBLIC_IMAGE_API: ${{ secrets.NUXT_PUBLIC_IMAGE_API }}
 
       - name: Create .nojekyll file
         run: touch .output/public/.nojekyll
