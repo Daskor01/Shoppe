@@ -2,6 +2,7 @@ import path from 'path'
 
 export default defineNuxtConfig({
   srcDir: 'src',
+  ssr: true,
 
   css: ['~/assets/scss/main.scss'],
 
@@ -43,7 +44,16 @@ export default defineNuxtConfig({
   },
 
   app: {
-    baseURL: '/',
+    baseURL: process.env.GITHUB_ACTIONS === 'true' ? '/shoppe-project/' : '/',
+    buildAssetsDir: 'assets',
+  },
+
+  nitro: {
+    prerender: {
+      routes: ['/'],
+      crawlLinks: true,
+      failOnError: false 
+    }
   },
 
   compatibilityDate: '2025-05-31',
