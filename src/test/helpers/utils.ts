@@ -1,3 +1,5 @@
+import { vi } from 'vitest'
+
 export const createComponentMock = vi.hoisted(() => (name: string) => ({
   default: {
     name,

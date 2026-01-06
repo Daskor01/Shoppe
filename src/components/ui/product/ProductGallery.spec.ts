@@ -16,7 +16,7 @@ describe('ProductGallery', () => {
     isMobileRef.value = false
   })
 
-  const createWrapper = (images: string[] = MOCK_IMAGES, isMobile: boolean = false) => {
+  const createWrapper = (images: string[] = MOCK_IMAGES, isMobile = false) => {
     isMobileRef.value = isMobile
 
     return mount(ProductGallery, {
