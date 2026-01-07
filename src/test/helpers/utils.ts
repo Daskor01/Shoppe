@@ -1,8 +1,6 @@
-import { vi } from 'vitest'
-
-export const createComponentMock = vi.hoisted(() => (name: string) => ({
+export const createComponentMock = (name: string) => ({
   default: {
     name,
-    template: `<div class="${name.toLowerCase().replace('icon', 'icon-')}-mock"></div>`
+    template: `<div class="${name.replace(/([A-Z])/g, '-$1').toLowerCase().slice(1)}-mock"></div>`
   }
-}))
+})

@@ -4,32 +4,6 @@ import ProductInfo from '@/components/ui/product/ProductInfo.vue'
 import { MOCK_PRODUCT } from '@/test/mocks/data/product'
 import { setMobile, resetMobile } from '@/test/helpers/window'
 
-const createComponentMock = vi.hoisted(() => (name: string) => ({
-  default: {
-    name,
-    template: `<div class="${name.toLowerCase().replace('icon', 'icon-')}-mock"></div>`
-  }
-}))
-
-const iconMailMock = vi.hoisted(() => createComponentMock('IconMail'))
-const iconFacebookMock = vi.hoisted(() => createComponentMock('IconFacebook'))
-const iconInstagramMock = vi.hoisted(() => createComponentMock('IconInstagram'))
-const iconLikeProductMock = vi.hoisted(() => createComponentMock('IconLikeProduct'))
-const iconTwitterMock = vi.hoisted(() => createComponentMock('IconTwitter'))
-const iconShareMock = vi.hoisted(() => createComponentMock('IconShare'))
-const iconBaseArrowRightMock = vi.hoisted(() => createComponentMock('IconBaseArrowRight'))
-const iconBaseArrowTopMock = vi.hoisted(() => createComponentMock('IconBaseArrowTop'))
-
-
-vi.mock('@/components/icons/IconMail.vue', () => iconMailMock)
-vi.mock('@/components/icons/IconFacebook.vue', () => iconFacebookMock)
-vi.mock('@/components/icons/IconInstagram.vue', () => iconInstagramMock)
-vi.mock('@/components/icons/IconLikeProduct.vue', () => iconLikeProductMock)
-vi.mock('@/components/icons/IconTwitter.vue', () => iconTwitterMock)
-vi.mock('@/components/icons/IconShare.vue', () => iconShareMock)
-vi.mock('@/components/icons/IconBaseArrowRight.vue', () => iconBaseArrowRightMock)
-vi.mock('@/components/icons/IconBaseArrowTop.vue', () => iconBaseArrowTopMock)
-
 vi.mock('@/components/ui/base/BaseShareModal.vue', () => ({
   default: {
     name: 'BaseShareModal',

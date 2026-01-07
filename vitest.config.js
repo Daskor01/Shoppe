@@ -1,7 +1,9 @@
 import path from 'path'
 import { defineVitestConfig } from '@nuxt/test-utils/config'
+import { iconAutoMockPlugin } from './src/test/plugins/iconAutoMock'
 
 export default defineVitestConfig({
+  plugins: [iconAutoMockPlugin()],
   test: {
     environment: 'nuxt',
     globals: true,
