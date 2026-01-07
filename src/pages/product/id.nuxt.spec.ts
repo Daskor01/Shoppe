@@ -1,25 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import ProductPage from '@/pages/product/[id].vue'
-import type { Product } from '@/types/Product'
 import { routeMock } from '@/test/mocks/router.mock'
-import { isMobileRef } from '@/test/mocks/composables/useBreakpoint.mock'
+import { setMobile, resetMobile } from '@/test/helpers/window'
 import { mountProductPage } from '@/test/helpers/mountProductPage'
 import { MOCK_PRODUCT } from '@/test/mocks/data/product'
-
-vi.mock('@/composables/useBreakpoint', () => ({
-  useBreakpoint: () => ({
-    isBelow: isMobileRef,
-  }),
-}))
-
-const fetchApiMock = vi.fn<(url: string) => Promise<Product>>()
-
-vi.mock('@/composables/useApi', () => ({
-  useApi: () => ({
-    fetchApi: fetchApiMock,
-  }),
-}))
+import { fetchApiMock } from '@/test/vitest.setup'
 
 describe('Product page', () => {
   beforeEach(() => {
@@ -27,7 +13,7 @@ describe('Product page', () => {
     vi.clearAllMocks()
     localStorage.clear()
 
-    isMobileRef.value = false
+    resetMobile()
     routeMock.params.id = '1'
     fetchApiMock.mockResolvedValue(MOCK_PRODUCT)
   })
@@ -64,7 +50,7 @@ describe('Product page', () => {
   })
 
   it('renders BaseTabs on desktop', async () => {
-    isMobileRef.value = false
+    resetMobile()
 
     const wrapper = await mountProductPage()
 
@@ -73,7 +59,7 @@ describe('Product page', () => {
   })
 
   it('renders BaseAccordion on mobile', async () => {
-    isMobileRef.value = true
+    setMobile()
 
     const wrapper = await mountProductPage()
 
@@ -101,9 +87,6 @@ describe('Product page', () => {
     const baseTabs = wrapper.findComponent({ name: 'BaseTabs' })
     const tabs = baseTabs.props('tabs') as { name: string; label: string }[]
     const reviewsTab = tabs.find(tab => tab.name === 'reviews')
-
-    expect(reviewsTab?.label).toBe('Reviews(2)')
-
 
     expect(reviewsTab?.label).toBe('Reviews(2)')
   })

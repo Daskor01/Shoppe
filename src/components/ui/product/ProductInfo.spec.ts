@@ -2,13 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ProductInfo from '@/components/ui/product/ProductInfo.vue'
 import { MOCK_PRODUCT } from '@/test/mocks/data/product'
-import { isMobileRef } from '@/test/mocks/composables/useBreakpoint.mock'
-
-vi.mock('@/composables/useBreakpoint', () => ({
-  useBreakpoint: () => ({
-    isBelow: isMobileRef,
-  }),
-}))
+import { setMobile, resetMobile } from '@/test/helpers/window'
 
 const createComponentMock = vi.hoisted(() => (name: string) => ({
   default: {
@@ -60,8 +54,11 @@ vi.mock('@/components/ui/base/BaseButton.vue', () => ({
 
 describe('ProductInfo', () => {
   const createWrapper = (isMobile = false) => {
-
-    isMobileRef.value = isMobile
+    if (isMobile) {
+      setMobile()
+    } else {
+      resetMobile()
+    }
 
     return mount(ProductInfo, {
       props: { product: MOCK_PRODUCT }
@@ -70,7 +67,7 @@ describe('ProductInfo', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    isMobileRef.value = false
+    resetMobile()
   })
 
   it('displays product title correctly', () => {

@@ -2,22 +2,20 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import ProductGallery from '@/components/ui/product/ProductGallery.vue'
 import { MOCK_IMAGES } from '@/test/mocks/data/images'
-import { isMobileRef } from '@/test/mocks/composables/useBreakpoint.mock'
-
-vi.mock('@/composables/useBreakpoint', () => ({
-  useBreakpoint: () => ({
-    isBelow: isMobileRef,
-  }),
-}))
+import { setMobile, resetMobile } from '@/test/helpers/window'
 
 describe('ProductGallery', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    isMobileRef.value = false
+    resetMobile()
   })
 
   const createWrapper = (images: string[] = MOCK_IMAGES, isMobile = false) => {
-    isMobileRef.value = isMobile
+    if (isMobile) {
+      setMobile()
+    } else {
+      resetMobile()
+    }
 
     return mount(ProductGallery, {
       props: { ProductImages: images }
