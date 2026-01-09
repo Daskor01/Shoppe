@@ -1,5 +1,5 @@
 export interface Review {
-  id: number | string;
+  id: number | string
   name: string
   message: string
   email: string

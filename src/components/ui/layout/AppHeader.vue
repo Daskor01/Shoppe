@@ -2,11 +2,11 @@
   <header ref="headerRef" class="header">
     <div class="header__container">
       <NuxtLink to="/" class="header__logo" aria-label="Shoppe Home">
-        <img 
-          src="@/assets/Logo.png" 
-          alt="Shoppe Store" 
+        <img
+          src="@/assets/Logo.png"
+          alt="Shoppe Store"
           class="header__logo-image"
-          width="129" 
+          width="129"
           height="27"
           fetchpriority="high"
           loading="eager"
@@ -25,7 +25,7 @@
           </NuxtLink>
         </nav>
 
-        <div class="header__divider" role="presentation"/>
+        <div class="header__divider" role="presentation" />
 
         <div class="header__icons">
           <button
@@ -36,17 +36,17 @@
             :aria-label="item.label || 'Action'"
             @click="handleAction(item.action)"
           >
-            <component :is="item.icon" aria-hidden="true"/>
+            <component :is="item.icon" aria-hidden="true" />
           </button>
 
           <ClientOnly>
-            <button 
-              type="button" 
-              class="header__user-button" 
+            <button
+              type="button"
+              class="header__user-button"
               :aria-label="isAuthenticated ? 'Logout' : 'Go to Account'"
               @click="handleUserAction"
             >
-              <IconUser aria-hidden="true"/>
+              <IconUser aria-hidden="true" />
               <span v-if="isAuthenticated" class="header__user-indicator">
                 <span class="visually-hidden">Logged in</span>
               </span>
@@ -63,22 +63,16 @@
           :aria-label="btn.label"
           @click="btn.action?.()"
         >
-          <component 
-          :is="btn.altIcon && mobileOpen ? btn.altIcon : btn.icon"
-          aria-hidden="true"
-          />
+          <component :is="btn.altIcon && mobileOpen ? btn.altIcon : btn.icon" aria-hidden="true" />
         </button>
       </div>
     </div>
 
-    <BaseSlidePanel
-      v-model="mobileOpen"
-      :show-close-button="false"
-    >
-      <button class="header__mobile--button-close" @click="closeMobileMenu" aria-label="Close menu">
+    <BaseSlidePanel v-model="mobileOpen" :show-close-button="false">
+      <button class="header__mobile--button-close" aria-label="Close menu" @click="closeMobileMenu">
         <IconClose aria-hidden="true" />
       </button>
-      <BaseSearchInput class="header__mobile--search-input"/>
+      <BaseSearchInput class="header__mobile--search-input" />
       <nav class="header__mobile-nav">
         <NuxtLink
           v-for="link in navigationLinks"
@@ -317,8 +311,8 @@
       position: absolute;
       top: 16px;
       right: 16px;
-      cursor: pointer;
       padding: 8px;
+      cursor: pointer;
       transition: opacity 0.2s;
 
       &:hover {

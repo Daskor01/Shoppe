@@ -5,5 +5,5 @@ export interface SlidePanelProps {
   showCloseButton?: boolean
   mobileOnly?: boolean
   width?: string
-  ariaLabel?: string 
+  ariaLabel?: string
 }

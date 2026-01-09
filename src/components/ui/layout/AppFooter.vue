@@ -15,11 +15,11 @@
         </template>
       </div>
 
-      <form 
-        class="footer__form" 
-        novalidate 
-        @submit.prevent="handleSubmit"
+      <form
+        class="footer__form"
+        novalidate
         aria-label="Newsletter subscription"
+        @submit.prevent="handleSubmit"
       >
         <BaseInput
           v-model="email"
@@ -32,24 +32,26 @@
         />
 
         <button type="submit" class="footer__form-button" aria-label="Subscribe">
-          <IconArrowRight class="footer__form-button--icon" aria-hidden="true"/>
+          <IconArrowRight class="footer__form-button--icon" aria-hidden="true" />
         </button>
 
         <div class="footer__form-consent-container">
-          <input 
+          <input
             v-model="consent"
-            type="checkbox" 
-            class="footer__form-consent-checkbox" 
-            required 
+            type="checkbox"
+            class="footer__form-consent-checkbox"
+            required
             checked
             aria-label="Agree to terms and conditions"
           />
-          <span class="footer__form-consent-text">i agree to the website’s terms and conditions</span>
+          <span class="footer__form-consent-text"
+            >i agree to the website’s terms and conditions</span
+          >
         </div>
       </form>
 
       <div class="footer__socials">
-        <p class="footer__socials-text" id="socials-label">Follow us</p>
+        <p id="socials-label" class="footer__socials-text">Follow us</p>
         <div class="footer__socials-separator" role="presentation"></div>
         <div class="footer__socials-list" role="list" aria-labelledby="socials-label">
           <NuxtLink
@@ -60,7 +62,7 @@
             :aria-label="`Follow us on ${link.name}`"
             role="listitem"
           >
-            <component class="footer__socials-link--icon" :is="link.icon" aria-hidden="true" />
+            <component :is="link.icon" class="footer__socials-link--icon" aria-hidden="true" />
           </NuxtLink>
         </div>
       </div>
@@ -163,169 +165,204 @@
 </script>
 
 <style scoped lang="scss">
-.footer {
-  position: relative;
-  inline-size: 100%;
-  padding-block: 2rem 20px;
-  margin-block-start: 220px;
-
-  @media (max-width: vars.$breakpoints-l) { margin-block-start: 120px; }
-  @media (max-width: vars.$breakpoints-m) { margin-block-start: 70px; }
-  @media (max-width: vars.$breakpoints-s) { font-size: 14px; }
-
-  &::before {
-    position: absolute;
-    top: -22px;
-    width: 100%;
-    height: 2px;
-    content: '';
-    background-color: vars.$color-ligth-gray;
-
-    @media (max-width: vars.$breakpoints-s) { display: none; }
-  }
-
-  &__container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      'nav form'
-      'copyright socials';
-    row-gap: 50px;
+  .footer {
+    position: relative;
+    inline-size: 100%;
+    padding-block: 2rem 20px;
+    margin-block-start: 220px;
 
     @media (max-width: vars.$breakpoints-l) {
-      grid-template-columns: 1fr;
-      grid-template-areas:
-        'form'
-        'nav'
-        'socials'
-        'copyright';
+      margin-block-start: 120px;
     }
-  }
 
-  &__nav {
-    display: flex;
-    grid-area: nav;
-    column-gap: 40px;
-    text-transform: uppercase;
+    @media (max-width: vars.$breakpoints-m) {
+      margin-block-start: 70px;
+    }
 
     @media (max-width: vars.$breakpoints-s) {
-      flex-direction: column;
-      margin-block-start: 40px;
-      gap: 15px;
+      font-size: 14px;
     }
-  }
 
-  &__link {
-    line-height: 169%;
-    color: vars.$color-gray;
-    text-decoration: none;
-    transition: color 0.4s;
+    &::before {
+      position: absolute;
+      top: -22px;
+      width: 100%;
+      height: 2px;
+      content: '';
+      background-color: vars.$color-ligth-gray;
 
-    &:hover { color: vars.$color-dark; }
-  }
+      @media (max-width: vars.$breakpoints-s) {
+        display: none;
+      }
+    }
 
-  &__form {
-    position: relative;
-    display: flex;
-    gap: 14px;
-    grid-area: form;
-    align-items: center;
-    justify-self: end;
-    min-inline-size: 288px;
-    max-inline-size: 396px;
-    block-size: 40px;
-    border-block-end: 2px solid vars.$color-gray;
-    transition: border-color 0.2s;
-
-    @media (max-width: vars.$breakpoints-l) { justify-self: start; }
-
-    @media (max-width: vars.$breakpoints-s) {
+    &__container {
       display: grid;
       grid-template-areas:
-        'input button'
-        'consent .';
-      grid-template-columns: 1fr auto;
-      inline-size: 100%;
-    }
+        'nav form'
+        'copyright socials';
+      grid-template-columns: 1fr 1fr;
+      row-gap: 50px;
 
-    &:has(input:focus) { border-block-end-color: vars.$color-dark; }
-
-    &-input {
-      inline-size: 100%;
-      padding-block-start: 10px;
-      @media (max-width: vars.$breakpoints-s) { font-size: 14px; }
-    }
-
-    &-consent-container {
-      display: none;
-      @media (max-width: vars.$breakpoints-s) {
-        display: flex;
-        grid-area: consent;
-        align-items: center;
-        margin-block-start: 10px;
+      @media (max-width: vars.$breakpoints-l) {
+        grid-template-areas:
+          'form'
+          'nav'
+          'socials'
+          'copyright';
+        grid-template-columns: 1fr;
       }
     }
 
-    &-consent-text {
-      @media (max-width: vars.$breakpoints-s) { font-size: 12px; }
-    }
-
-    &-button {
-      @include mixins.reset-appearance;
-      width: 24px;
-      height: 24px;
-      color: vars.$color-gray;
-      transition: color 0.3s;
-
-      &:hover { color: vars.$color-dark; }
-    }
-  }
-
-  &__socials {
-    display: flex;
-    grid-area: socials;
-    column-gap: 30px;
-    align-items: center;
-    justify-self: end;
-    list-style: none;
-
-    @media (max-width: vars.$breakpoints-l) { justify-self: start; }
-    @media (max-width: vars.$breakpoints-s) { column-gap: 16px; }
-
-    &-text {
-      display: none;
-      @media (max-width: vars.$breakpoints-s) { display: block; }
-    }
-
-    &-separator {
-      display: none;
-      inline-size: 54px;
-      height: 2px;
-      background-color: vars.$color-dark;
-
-      @media (max-width: vars.$breakpoints-s) {
-        display: block;
-        inline-size: 47px;
-        block-size: 1px;
-      }
-    }
-
-    &-list {
+    &__nav {
       display: flex;
-      column-gap: 24px;
+      grid-area: nav;
+      column-gap: 40px;
+      text-transform: uppercase;
+
+      @media (max-width: vars.$breakpoints-s) {
+        flex-direction: column;
+        gap: 15px;
+        margin-block-start: 40px;
+      }
     }
 
-    &-link {
+    &__link {
+      line-height: 169%;
       color: vars.$color-gray;
       text-decoration: none;
       transition: color 0.4s;
 
-      &:hover { color: vars.$color-dark; }
+      &:hover {
+        color: vars.$color-dark;
+      }
+    }
+
+    &__form {
+      position: relative;
+      display: flex;
+      grid-area: form;
+      gap: 14px;
+      align-items: center;
+      justify-self: end;
+      min-inline-size: 288px;
+      max-inline-size: 396px;
+      block-size: 40px;
+      border-block-end: 2px solid vars.$color-gray;
+      transition: border-color 0.2s;
+
+      @media (max-width: vars.$breakpoints-l) {
+        justify-self: start;
+      }
+
+      @media (max-width: vars.$breakpoints-s) {
+        display: grid;
+        grid-template-areas:
+          'input button'
+          'consent .';
+        grid-template-columns: 1fr auto;
+        inline-size: 100%;
+      }
+
+      &:has(input:focus) {
+        border-block-end-color: vars.$color-dark;
+      }
+
+      &-input {
+        inline-size: 100%;
+        padding-block-start: 10px;
+
+        @media (max-width: vars.$breakpoints-s) {
+          font-size: 14px;
+        }
+      }
+
+      &-consent-container {
+        display: none;
+
+        @media (max-width: vars.$breakpoints-s) {
+          display: flex;
+          grid-area: consent;
+          align-items: center;
+          margin-block-start: 10px;
+        }
+      }
+
+      &-consent-text {
+        @media (max-width: vars.$breakpoints-s) {
+          font-size: 12px;
+        }
+      }
+
+      &-button {
+        @include mixins.reset-appearance;
+
+        width: 24px;
+        height: 24px;
+        color: vars.$color-gray;
+        transition: color 0.3s;
+
+        &:hover {
+          color: vars.$color-dark;
+        }
+      }
+    }
+
+    &__socials {
+      display: flex;
+      grid-area: socials;
+      column-gap: 30px;
+      align-items: center;
+      justify-self: end;
+      list-style: none;
+
+      @media (max-width: vars.$breakpoints-l) {
+        justify-self: start;
+      }
+
+      @media (max-width: vars.$breakpoints-s) {
+        column-gap: 16px;
+      }
+
+      &-text {
+        display: none;
+
+        @media (max-width: vars.$breakpoints-s) {
+          display: block;
+        }
+      }
+
+      &-separator {
+        display: none;
+        inline-size: 54px;
+        height: 2px;
+        background-color: vars.$color-dark;
+
+        @media (max-width: vars.$breakpoints-s) {
+          display: block;
+          inline-size: 47px;
+          block-size: 1px;
+        }
+      }
+
+      &-list {
+        display: flex;
+        column-gap: 24px;
+      }
+
+      &-link {
+        color: vars.$color-gray;
+        text-decoration: none;
+        transition: color 0.4s;
+
+        &:hover {
+          color: vars.$color-dark;
+        }
+      }
+    }
+
+    &__copyright {
+      grid-area: copyright;
     }
   }
-
-  &__copyright {
-    grid-area: copyright;
-  }
-}
 </style>

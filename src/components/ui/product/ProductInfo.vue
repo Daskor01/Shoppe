@@ -3,13 +3,11 @@
     <h1 class="product-info__title">{{ product.title }}</h1>
 
     <div class="product-info__price-wrapper">
-      <p class="product-info__price" aria-label="Price">
-        ${{ formattedPrice }}
-      </p>
+      <p class="product-info__price" aria-label="Price">${{ formattedPrice }}</p>
 
       <div v-if="mobile" class="product-info__share-mobile">
-        <button 
-          class="product-info__share-mobile-button" 
+        <button
+          class="product-info__share-mobile-button"
           aria-label="Share product"
           type="button"
           @click="toggleShare"
@@ -39,23 +37,27 @@
 
     <div class="product-info__actions">
       <div v-if="!mobile" class="product-info__quantity" role="group" aria-label="Select quantity">
-        <button 
-          class="product-info__quantity-button" 
+        <button
+          class="product-info__quantity-button"
           aria-label="Decrease quantity"
-          type="button" 
+          type="button"
           @click="decrease"
-        >-</button>
+        >
+          -
+        </button>
         <span class="product-info__quantity-value" aria-live="polite">{{ quantity }}</span>
-        <button 
-          class="product-info__quantity-button" 
+        <button
+          class="product-info__quantity-button"
           aria-label="Increase quantity"
-          type="button" 
+          type="button"
           @click="increase"
-        >+</button>
+        >
+          +
+        </button>
       </div>
 
-      <BaseButton 
-        class="product-info__cart-button" 
+      <BaseButton
+        class="product-info__cart-button"
         :aria-label="`Add ${product.title} to cart`"
         @click="addToCart"
       >
@@ -73,9 +75,9 @@
       >
         <IconLikeProduct aria-hidden="true" />
       </button>
-      
+
       <div class="product-info__divider" role="presentation"></div>
-      
+
       <div class="product-info__share" aria-label="Share on social media">
         <IconMail role="link" aria-label="Share via Email" />
         <IconFacebook role="link" aria-label="Share on Facebook" />
@@ -99,11 +101,7 @@
         </div>
       </details>
 
-      <button 
-        class="product-info__toggle-button" 
-        type="button"
-        @click="toggleDetails"
-      >
+      <button class="product-info__toggle-button" type="button" @click="toggleDetails">
         <span class="product-info__toggle-text">
           {{ isOpen ? 'Hide' : 'View more' }}
           <component :is="isOpen ? IconBaseArrowTop : IconBaseArrowRight" aria-hidden="true" />
@@ -123,82 +121,88 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useCartStore } from '@/stores/useCartStore'
-import { useBreakpoint } from '@/composables/useBreakpoint'
-import { useNotification } from '@/composables/useNotification'
-import { type Product } from '@/types/Product'
-import IconBaseArrowTop from '@/components/icons/IconBaseArrowTop.vue'
-import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
-import IconLikeProduct from '@/components/icons/IconLikeProduct.vue'
-import IconShare from '@/components/icons/IconShare.vue'
-import IconMail from '@/components/icons/IconMail.vue'
-import IconFacebook from '@/components/icons/IconFacebook.vue'
-import IconInstagram from '@/components/icons/IconInstagram.vue'
-import IconTwitter from '@/components/icons/IconTwitter.vue'
-import BaseStarRating from '@/components/ui/base/BaseStarRating.vue'
-import BaseButton from '@/components/ui/base/BaseButton.vue'
+  import { ref, computed, onMounted } from 'vue'
+  import { useCartStore } from '@/stores/useCartStore'
+  import { useBreakpoint } from '@/composables/useBreakpoint'
+  import { useNotification } from '@/composables/useNotification'
+  import { type Product } from '@/types/Product'
+  import IconBaseArrowTop from '@/components/icons/IconBaseArrowTop.vue'
+  import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
+  import IconLikeProduct from '@/components/icons/IconLikeProduct.vue'
+  import IconShare from '@/components/icons/IconShare.vue'
+  import IconMail from '@/components/icons/IconMail.vue'
+  import IconFacebook from '@/components/icons/IconFacebook.vue'
+  import IconInstagram from '@/components/icons/IconInstagram.vue'
+  import IconTwitter from '@/components/icons/IconTwitter.vue'
+  import BaseStarRating from '@/components/ui/base/BaseStarRating.vue'
+  import BaseButton from '@/components/ui/base/BaseButton.vue'
 
-const props = defineProps<{
-  product: Product
-}>()
+  const props = defineProps<{
+    product: Product
+  }>()
 
-const cartStore = useCartStore()
-const { notify } = useNotification()
-const { isBelow: mobile } = useBreakpoint(1120)
+  const cartStore = useCartStore()
+  const { notify } = useNotification()
+  const { isBelow: mobile } = useBreakpoint(1120)
 
-const formattedPrice = computed(() => props.product.price.toFixed(2))
+  const formattedPrice = computed(() => props.product.price.toFixed(2))
 
-const quantity = ref(1)
-const increase = () => quantity.value++
-const decrease = () => { if (quantity.value > 1) quantity.value-- }
-
-const addToCart = () => {
-  cartStore.addToCart(props.product, quantity.value)
-  const addedCount = quantity.value
-  quantity.value = 1
-
-  notify({
-    message: `${addedCount} item(s) added to your Shopping bag.`,
-    type: 'success',
-    button: {
-      text: 'View Cart',
-      handler: () => cartStore.toggleCart(),
-    },
-  })
-}
-
-const isShareModalOpen = ref(false)
-const toggleShare = () => { isShareModalOpen.value = !isShareModalOpen.value }
-
-const detailsRef = ref<HTMLDetailsElement | null>(null)
-const isOpen = ref(false)
-
-const onToggle = (e: Event) => {
-  isOpen.value = (e.target as HTMLDetailsElement).open
-}
-
-function toggleDetails() {
-  if (detailsRef.value) {
-    detailsRef.value.open = !detailsRef.value.open
+  const quantity = ref(1)
+  const increase = () => quantity.value++
+  const decrease = () => {
+    if (quantity.value > 1) quantity.value--
   }
-}
 
-const counterReviews = ref(0)
-onMounted(() => {
-  try {
-    const stored = localStorage.getItem(`reviews_${props.product.id}`)
-    if (stored) {
-      const reviews = JSON.parse(stored)
-      counterReviews.value = Array.isArray(reviews) ? reviews.length : 0
+  const addToCart = () => {
+    cartStore.addToCart(props.product, quantity.value)
+    const addedCount = quantity.value
+    quantity.value = 1
+
+    notify({
+      message: `${addedCount} item(s) added to your Shopping bag.`,
+      type: 'success',
+      button: {
+        text: 'View Cart',
+        handler: () => cartStore.toggleCart(),
+      },
+    })
+  }
+
+  const isShareModalOpen = ref(false)
+  const toggleShare = () => {
+    isShareModalOpen.value = !isShareModalOpen.value
+  }
+
+  const detailsRef = ref<HTMLDetailsElement | null>(null)
+  const isOpen = ref(false)
+
+  const onToggle = (e: Event) => {
+    isOpen.value = (e.target as HTMLDetailsElement).open
+  }
+
+  function toggleDetails() {
+    if (detailsRef.value) {
+      detailsRef.value.open = !detailsRef.value.open
     }
-  } catch (e) {
-    console.error("Failed to parse reviews from storage", e)
   }
-})
 
-const isLiked = ref(false)
-const toggleLike = () => { isLiked.value = !isLiked.value }
+  const counterReviews = ref(0)
+  onMounted(() => {
+    try {
+      const stored = localStorage.getItem(`reviews_${props.product.id}`)
+      if (stored) {
+        const reviews = JSON.parse(stored)
+        counterReviews.value = Array.isArray(reviews) ? reviews.length : 0
+      }
+    } catch (e) {
+      console.error('Failed to parse reviews from storage', e)
+    }
+  })
+
+  const isLiked = ref(false)
+  const toggleLike = () => {
+    isLiked.value = !isLiked.value
+  }
 </script>
 
 <style scoped lang="scss">

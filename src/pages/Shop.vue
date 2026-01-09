@@ -5,8 +5,8 @@
     <header v-if="isMobile" class="mobile__container">
       <BaseSearchInput label="Search products" />
       <p class="mobile__title" aria-hidden="true">Shop</p>
-      <button 
-        class="filter-toggle" 
+      <button
+        class="filter-toggle"
         :aria-expanded="showFilters"
         aria-controls="filter-panel"
         @click="showFilters = !showFilters"
@@ -23,21 +23,17 @@
       </div>
     </aside>
 
-    <BaseSlidePanel 
-      id="filter-panel" 
-      v-model="showFilters" 
-      role="dialog" 
+    <BaseSlidePanel
+      id="filter-panel"
+      v-model="showFilters"
+      role="dialog"
       aria-label="Filter selection"
     >
       <h2 class="filter-mobile__title">Filters</h2>
       <ShopFilters v-model:filters="filters" :categories="categories" />
     </BaseSlidePanel>
 
-    <section 
-      class="product-content" 
-      aria-live="polite" 
-      :aria-busy="pending"
-    >
+    <section class="product-content" aria-live="polite" :aria-busy="pending">
       <div v-if="pending" class="product-grid__status">
         <BaseLoader label="Loading products..." />
       </div>
@@ -55,7 +51,7 @@
           class="product-grid__item"
           tag="article"
         />
-        
+
         <nav class="product-grid__pagination" aria-label="Pagination">
           <BasePagination
             :current-page="currentPage"
@@ -85,9 +81,10 @@
   useHead({
     title: 'Shop - Browse Products',
     meta: [
-      { 
-        name: 'description', 
-        content: 'Browse our exclusive collection of products. Filter by category, price, and availability.' 
+      {
+        name: 'description',
+        content:
+          'Browse our exclusive collection of products. Filter by category, price, and availability.',
       },
     ],
   })
@@ -98,8 +95,8 @@
     search: (route.query.search as string) || '',
     category: (route.query.category as string) || '',
     sortBy: (route.query.sortBy as string) || '',
-    priceRange: route.query.priceRange 
-      ? (route.query.priceRange as string).split(',').map(Number) as [number, number]
+    priceRange: route.query.priceRange
+      ? ((route.query.priceRange as string).split(',').map(Number) as [number, number])
       : [0, 200],
     onSale: route.query.onSale === 'true',
     inStock: route.query.inStock === 'true',
@@ -181,9 +178,9 @@
 
   .product-content {
     display: flex;
-    width: 100%;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    width: 100%;
   }
 
   .product-grid {
@@ -235,20 +232,20 @@
     }
 
     &__empty {
-      text-align: center;
-      color: vars.$color-gray;
       font-size: 18px;
       font-weight: 500;
+      color: vars.$color-gray;
+      text-align: center;
 
       &--button {
-        margin-block-start: 16px;
         padding: 10px 20px;
+        margin-block-start: 16px;
         font-size: 16px;
         color: vars.$color-light;
+        cursor: pointer;
         background-color: vars.$color-dark;
         border: none;
         border-radius: 4px;
-        cursor: pointer;
         transition: all 0.4s;
 
         &:hover {

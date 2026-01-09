@@ -6,7 +6,6 @@
     </p>
 
     <form ref="formRef" class="review-form__form" novalidate @submit.prevent="handleSubmit">
-      
       <div class="review-form__field">
         <label for="review-msg" class="visually-hidden">Your message*</label>
         <BaseTextarea
@@ -53,11 +52,7 @@
 
       <div class="review-form__field">
         <label class="review-form__checkbox-label">
-          <input 
-            v-model="rememberMe" 
-            type="checkbox" 
-            class="review-form__checkbox" 
-          />
+          <input v-model="rememberMe" type="checkbox" class="review-form__checkbox" />
           <span>Save my name, email, and website in this browser for the next time I comment</span>
         </label>
       </div>
@@ -69,8 +64,8 @@
         </fieldset>
       </div>
 
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         class="review-form__submit-button"
         :aria-label="'Submit review for ' + productTitle"
       >
@@ -81,164 +76,164 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { useNotification } from '@/composables/useNotification'
-import { validateValue } from '@/utils/validate'
-import type { Review, FormData } from '@/types/Reviews'
-import BaseInput from '@/components/ui/base/BaseInput.vue'
-import BaseTextarea from '@/components/ui/base/BaseTextarea.vue'
-import StarRating from '@/components/ui/base/BaseStarRating.vue'
-import { VALIDATION_CONFIGS } from '@/constants/validation'
-import {
-  getFromLocalStorage,
-  removeFromLocalStorage,
-  setToLocalStorage,
-} from '@/utils/localStorage'
+  import { ref, reactive, onMounted } from 'vue'
+  import { useNotification } from '@/composables/useNotification'
+  import { validateValue } from '@/utils/validate'
+  import type { Review, FormData } from '@/types/Reviews'
+  import BaseInput from '@/components/ui/base/BaseInput.vue'
+  import BaseTextarea from '@/components/ui/base/BaseTextarea.vue'
+  import StarRating from '@/components/ui/base/BaseStarRating.vue'
+  import { VALIDATION_CONFIGS } from '@/constants/validation'
+  import {
+    getFromLocalStorage,
+    removeFromLocalStorage,
+    setToLocalStorage,
+  } from '@/utils/localStorage'
 
-const props = defineProps<{
-  productId: number | string
-  productTitle: string
-}>()
+  defineProps<{
+    productId: number | string
+    productTitle: string
+  }>()
 
-const emit = defineEmits<{
-  (e: 'add-review', review: Review): void
-}>()
+  const emit = defineEmits<{
+    (e: 'add-review', review: Review): void
+  }>()
 
-const form = reactive<FormData>({
-  id: '',
-  name: '',
-  message: '',
-  email: '',
-  rating: 5,
-})
+  const form = reactive<FormData>({
+    id: '',
+    name: '',
+    message: '',
+    email: '',
+    rating: 5,
+  })
 
-const rememberMe = ref(false)
-const errors = reactive({
-  name: '',
-  email: '',
-  message: '',
-})
+  const rememberMe = ref(false)
+  const errors = reactive({
+    name: '',
+    email: '',
+    message: '',
+  })
 
-const { notify } = useNotification()
+  const { notify } = useNotification()
 
-const loadSavedUserData = () => {
-  const rememberMeSaved = getFromLocalStorage('reviewRememberMe') === 'true'
+  const loadSavedUserData = () => {
+    const rememberMeSaved = getFromLocalStorage('reviewRememberMe') === 'true'
 
-  if (rememberMeSaved) {
-    const saved = getFromLocalStorage('reviewUserData')
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved)
-        form.name = parsed.name || ''
-        form.email = parsed.email || ''
-        rememberMe.value = true
-      } catch {
-        console.error('The data is corrupted')
+    if (rememberMeSaved) {
+      const saved = getFromLocalStorage('reviewUserData')
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved)
+          form.name = parsed.name || ''
+          form.email = parsed.email || ''
+          rememberMe.value = true
+        } catch {
+          console.error('The data is corrupted')
+        }
       }
     }
   }
-}
 
-const saveUserData = () => {
-  if (rememberMe.value) {
-    setToLocalStorage(
-      'reviewUserData',
-      JSON.stringify({
-        name: form.name,
-        email: form.email,
-      }),
+  const saveUserData = () => {
+    if (rememberMe.value) {
+      setToLocalStorage(
+        'reviewUserData',
+        JSON.stringify({
+          name: form.name,
+          email: form.email,
+        }),
+      )
+      setToLocalStorage('reviewRememberMe', 'true')
+    } else {
+      removeUserData()
+    }
+  }
+
+  const removeUserData = () => {
+    removeFromLocalStorage('reviewUserData')
+    removeFromLocalStorage('reviewRememberMe')
+  }
+
+  const resetErrors = () => {
+    errors.name = ''
+    errors.email = ''
+    errors.message = ''
+  }
+
+  const validateForm = () => {
+    resetErrors()
+
+    const messageError = validateValue(
+      form.message,
+      VALIDATION_CONFIGS.message.rules,
+      VALIDATION_CONFIGS.message.messages,
     )
-    setToLocalStorage('reviewRememberMe', 'true')
-  } else {
-    removeUserData()
+    if (messageError) errors.message = messageError
+
+    const nameError = validateValue(
+      form.name,
+      VALIDATION_CONFIGS.name.rules,
+      VALIDATION_CONFIGS.name.messages,
+    )
+    if (nameError) errors.name = nameError
+
+    const emailError = validateValue(
+      form.email,
+      VALIDATION_CONFIGS.email.rules,
+      VALIDATION_CONFIGS.email.messages,
+    )
+    if (emailError) errors.email = emailError
+
+    return !(messageError || nameError || emailError)
   }
-}
 
-const removeUserData = () => {
-  removeFromLocalStorage('reviewUserData')
-  removeFromLocalStorage('reviewRememberMe')
-}
-
-const resetErrors = () => {
-  errors.name = ''
-  errors.email = ''
-  errors.message = ''
-}
-
-const validateForm = () => {
-  resetErrors()
-
-  const messageError = validateValue(
-    form.message,
-    VALIDATION_CONFIGS.message.rules,
-    VALIDATION_CONFIGS.message.messages,
-  )
-  if (messageError) errors.message = messageError
-
-  const nameError = validateValue(
-    form.name,
-    VALIDATION_CONFIGS.name.rules,
-    VALIDATION_CONFIGS.name.messages,
-  )
-  if (nameError) errors.name = nameError
-
-  const emailError = validateValue(
-    form.email,
-    VALIDATION_CONFIGS.email.rules,
-    VALIDATION_CONFIGS.email.messages,
-  )
-  if (emailError) errors.email = emailError
-
-  return !(messageError || nameError || emailError)
-}
-
-const resetForm = () => {
-  if (!rememberMe.value) {
-    form.name = ''
-    form.email = ''
+  const resetForm = () => {
+    if (!rememberMe.value) {
+      form.name = ''
+      form.email = ''
+    }
+    form.message = ''
+    form.rating = 5
   }
-  form.message = ''
-  form.rating = 5
-}
 
-const handleSubmit = () => {
-  if (!validateForm()) {
+  const handleSubmit = () => {
+    if (!validateForm()) {
+      notify({
+        message: 'Check that the form is filled out correctly',
+        type: 'warning',
+      })
+      return
+    }
+
+    const newReview: Review = {
+      id: Date.now(),
+      name: form.name.trim(),
+      email: form.email.trim(),
+      message: form.message.trim(),
+      date: new Date().toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }),
+      rating: form.rating,
+    }
+
+    emit('add-review', newReview)
+
+    saveUserData()
+
     notify({
-      message: 'Check that the form is filled out correctly',
-      type: 'warning',
+      message: 'Your review has been sent successfully!',
+      type: 'success',
     })
-    return
+
+    resetForm()
+    resetErrors()
   }
 
-  const newReview: Review = {
-    id: Date.now(),
-    name: form.name.trim(),
-    email: form.email.trim(),
-    message: form.message.trim(),
-    date: new Date().toLocaleDateString('en-US', { 
-      day: 'numeric', 
-      month: 'short', 
-      year: 'numeric' 
-    }),
-    rating: form.rating,
-  }
-
-  emit('add-review', newReview)
-
-  saveUserData()
-
-  notify({
-    message: 'Your review has been sent successfully!',
-    type: 'success',
+  onMounted(() => {
+    loadSavedUserData()
   })
-
-  resetForm()
-  resetErrors()
-}
-
-onMounted(() => {
-  loadSavedUserData()
-})
 </script>
 
 <style scoped lang="scss">
@@ -283,9 +278,9 @@ onMounted(() => {
     }
 
     &__rating-fieldset {
-      border: none;
       padding: 0;
       margin: 0;
+      border: none;
     }
 
     &__field {

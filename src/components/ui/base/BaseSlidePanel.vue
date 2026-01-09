@@ -1,16 +1,8 @@
 <template>
-  <div 
-    :class="{ open: modelValue }" 
-    class="slide-panel"
-    :aria-hidden="!modelValue"
-  >
-    <div 
-      class="slide-panel__backdrop" 
-      aria-hidden="true" 
-      @click="close" 
-    />
-    
-    <div 
+  <div :class="{ open: modelValue }" class="slide-panel" :aria-hidden="!modelValue">
+    <div class="slide-panel__backdrop" aria-hidden="true" @click="close" />
+
+    <div
       ref="panelRef"
       :class="['slide-panel__container', containerSideClass]"
       role="dialog"
@@ -18,9 +10,9 @@
       :aria-label="props.ariaLabel || 'Side panel'"
       tabindex="-1"
     >
-      <button 
-        v-if="props.showCloseButton !== false" 
-        class="slide-panel__close" 
+      <button
+        v-if="props.showCloseButton !== false"
+        class="slide-panel__close"
         aria-label="Close panel"
         @click="close"
       >
@@ -35,48 +27,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
-import type { SlidePanelProps } from '@/types/SlidePanel'
+  import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
+  import type { SlidePanelProps } from '@/types/SlidePanel'
 
-const props = defineProps<SlidePanelProps>()
+  const props = defineProps<SlidePanelProps>()
 
-const emit = defineEmits(['update:modelValue'])
-const panelRef = ref<HTMLElement | null>(null)
+  const emit = defineEmits(['update:modelValue'])
+  const panelRef = ref<HTMLElement | null>(null)
 
-function close() {
-  emit('update:modelValue', false)
-}
-
-function handleKeyDown(e: KeyboardEvent) {
-  if (e.key === 'Escape' && props.modelValue) {
-    close()
+  function close() {
+    emit('update:modelValue', false)
   }
-}
 
-watch(() => props.modelValue, (isOpen) => {
-  if (isOpen) {
-    document.addEventListener('keydown', handleKeyDown)
-    document.body.style.overflow = 'hidden'
-    setTimeout(() => panelRef.value?.focus(), 100)
-  } else {
+  function handleKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Escape' && props.modelValue) {
+      close()
+    }
+  }
+
+  watch(
+    () => props.modelValue,
+    (isOpen) => {
+      if (isOpen) {
+        document.addEventListener('keydown', handleKeyDown)
+        document.body.style.overflow = 'hidden'
+        setTimeout(() => panelRef.value?.focus(), 100)
+      } else {
+        document.removeEventListener('keydown', handleKeyDown)
+        document.body.style.overflow = ''
+      }
+    },
+  )
+
+  onMounted(() => {
+    if (props.modelValue) document.body.style.overflow = 'hidden'
+  })
+
+  onUnmounted(() => {
     document.removeEventListener('keydown', handleKeyDown)
     document.body.style.overflow = ''
-  }
-})
+  })
 
-onMounted(() => {
-  if (props.modelValue) document.body.style.overflow = 'hidden'
-})
-
-onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeyDown)
-  document.body.style.overflow = ''
-})
-
-const containerSideClass = computed(() =>
-  props.side === 'right' ? 'slide-panel__container--right' : 'slide-panel__container--left'
-)
-
+  const containerSideClass = computed(() =>
+    props.side === 'right' ? 'slide-panel__container--right' : 'slide-panel__container--left',
+  )
 </script>
 
 <style scoped lang="scss">
@@ -101,12 +95,12 @@ const containerSideClass = computed(() =>
       display: flex;
       flex-direction: column;
       inline-size: 100%;
-      block-size: 100%;
       max-inline-size: 500px;
+      block-size: 100%;
       background: vars.$color-light;
       transform: translateX(-100%);
       transition: transform 0.3s ease;
-      
+
       @media (max-width: vars.$breakpoints-l) {
         max-inline-size: 320px;
       }

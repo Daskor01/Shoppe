@@ -2,27 +2,27 @@
   <div class="product-gallery">
     <div v-if="isMobile" class="product-gallery__mobile-slider">
       <ClientOnly>
-      <Swiper
-        :modules="[Navigation]"
-        :slides-per-view="1"
-        :space-between="20"
-        class="swiper"
-        :loop="true"
-        @slideChange="onSlideChange"
-        @swiper="onSwiperInit"
-      >
-        <SwiperSlide v-for="(img, idx) in ProductImages" :key="idx" class="swiper__slide">
-          <NuxtImg 
-            :src="img" 
-            :alt="`Product view ${idx + 1}`"
-            format="webp"
-            class="product-gallery__mobile-image"
-            :fetchpriority="idx === 0 ? 'high' : 'auto'"
-            width="273"
-            loading="eager"
-          />
-        </SwiperSlide>
-      </Swiper>
+        <Swiper
+          :modules="[Navigation]"
+          :slides-per-view="1"
+          :space-between="20"
+          class="swiper"
+          :loop="true"
+          @slideChange="onSlideChange"
+          @swiper="onSwiperInit"
+        >
+          <SwiperSlide v-for="(img, idx) in ProductImages" :key="idx" class="swiper__slide">
+            <NuxtImg
+              :src="img"
+              :alt="`Product view ${idx + 1}`"
+              format="webp"
+              class="product-gallery__mobile-image"
+              :fetchpriority="idx === 0 ? 'high' : 'auto'"
+              width="273"
+              loading="eager"
+            />
+          </SwiperSlide>
+        </Swiper>
       </ClientOnly>
       <div class="product-gallery__steps" role="tablist" aria-label="Product image navigation">
         <button
@@ -46,7 +46,7 @@
           :key="index"
           class="product-gallery__thumbnail-button"
           :aria-selected="index === currentIndex"
-          :aria-controls="`panel-${index}`" 
+          :aria-controls="`panel-${index}`"
           :aria-label="`Показать изображение товара ${index + 1}`"
           role="tab"
           type="button"
@@ -63,7 +63,7 @@
           />
         </button>
       </div>
-      
+
       <div class="product-gallery__main-content">
         <div class="product-gallery__main-image" aria-live="polite">
           <NuxtImg
@@ -95,8 +95,8 @@
   import { Swiper, SwiperSlide } from 'swiper/vue'
   import { Navigation } from 'swiper/modules'
   import type { Swiper as SwiperType } from 'swiper'
-  import 'swiper/css';
-  import 'swiper/css/navigation';
+  import 'swiper/css'
+  import 'swiper/css/navigation'
   import { ref, computed } from 'vue'
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
@@ -132,7 +132,6 @@
 </script>
 
 <style lang="scss" scoped>
-
   .product-gallery {
     &__mobile-slider {
       margin-inline: auto;
@@ -147,8 +146,8 @@
     }
 
     &__mobile-image {
-      display: block;
       box-sizing: border-box;
+      display: block;
       width: 400px;
       aspect-ratio: 1 / 1;
       padding: 30px;
@@ -192,8 +191,8 @@
     }
 
     &__thumbnail-image {
-      display: block;
       box-sizing: border-box;
+      display: block;
       inline-size: 120px;
       aspect-ratio: 1;
       padding: 8px;
@@ -225,8 +224,8 @@
     }
 
     &__main-image {
-      display: block;
       box-sizing: border-box;
+      display: block;
       inline-size: 540px;
       aspect-ratio: 540 / 600;
       padding: 12px;
@@ -296,14 +295,14 @@
         content: '';
       }
     }
-    
+
     &__thumbnail-button,
     &__step {
       padding: 0;
-      border: none;
-      background: none;
       cursor: pointer;
       outline-offset: 2px;
+      background: none;
+      border: none;
     }
   }
 
@@ -323,5 +322,4 @@
       gap: 16px;
     }
   }
-
 </style>

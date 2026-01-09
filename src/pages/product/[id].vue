@@ -3,15 +3,9 @@
     <div v-if="pending" class="loading" aria-live="polite">Loading product...</div>
 
     <section v-else-if="product" class="product" aria-label="Product details">
-      <ProductGallery 
-        :ProductImages="productImages" 
-        class="product__gallery" 
-      />
+      <ProductGallery :ProductImages="productImages" class="product__gallery" />
 
-      <ProductInfo 
-        :product="product" 
-        class="product__info" 
-      />
+      <ProductInfo :product="product" class="product__info" />
 
       <component
         :is="isMobile ? BaseAccordion : BaseTabs"
@@ -35,9 +29,9 @@
         </template>
 
         <template #reviews>
-          <Reviews 
-            :productId="product.id" 
-            :productTitle="product.title" 
+          <Reviews
+            :productId="product.id"
+            :productTitle="product.title"
             @update-count="updateReviewsCount"
           />
         </template>
@@ -71,7 +65,11 @@
         </div>
 
         <div class="product__similar-сontinue">
-          <NuxtLink to="/Shop" class="product__similar-link" aria-label="Continue shopping and return to shop">
+          <NuxtLink
+            to="/Shop"
+            class="product__similar-link"
+            aria-label="Continue shopping and return to shop"
+          >
             <span>Continue shopping</span>
             <IconBaseArrowRight aria-hidden="true" />
           </NuxtLink>
@@ -82,62 +80,61 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, shallowRef } from 'vue'
-import { useRoute } from 'vue-router'
-import { useProductsStore } from '@/stores/useProductsStore'
-import { useBreakpoint } from '@/composables/useBreakpoint'
-import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
-import type { Product } from '@/types/Product'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Navigation, Pagination } from 'swiper/modules'
-import { useApi } from '@/composables/useApi'
-import { useRuntimeConfig } from 'nuxt/app'
+  import { computed, onMounted, shallowRef } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { useProductsStore } from '@/stores/useProductsStore'
+  import { useBreakpoint } from '@/composables/useBreakpoint'
+  import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
+  import type { Product } from '@/types/Product'
+  import { Swiper, SwiperSlide } from 'swiper/vue'
+  import { Navigation, Pagination } from 'swiper/modules'
+  import { useApi } from '@/composables/useApi'
+  import { useRuntimeConfig } from 'nuxt/app'
 
-import BaseTabs from '@/components/ui/base/BaseTabs.vue'
-import BaseAccordion from '@/components/ui/base/BaseAccordion.vue'
-import ProductGallery from '@/components/ui/product/ProductGallery.vue'
-import ProductInfo from '@/components/ui/product/ProductInfo.vue'
-import Reviews from '@/components/ui/reviews/Reviews.vue'
-import ProductCard from '@/components/ui/product/ProductCard.vue'
-import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
+  import BaseTabs from '@/components/ui/base/BaseTabs.vue'
+  import BaseAccordion from '@/components/ui/base/BaseAccordion.vue'
+  import ProductGallery from '@/components/ui/product/ProductGallery.vue'
+  import ProductInfo from '@/components/ui/product/ProductInfo.vue'
+  import Reviews from '@/components/ui/reviews/Reviews.vue'
+  import ProductCard from '@/components/ui/product/ProductCard.vue'
+  import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
 
-const route = useRoute()
-const config = useRuntimeConfig()
-const productStore = useProductsStore()
-const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
-const { fetchApi } = useApi(config.public.productApi)
+  const route = useRoute()
+  const config = useRuntimeConfig()
+  const productStore = useProductsStore()
+  const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
+  const { fetchApi } = useApi(config.public.productApi)
 
-const { data: product, pending } = await useAsyncData<Product>(
-  `product-${route.params.id}`,
-  () => fetchApi<Product>(`/products/${route.params.id}`)
-)
+  const { data: product, pending } = await useAsyncData<Product>(`product-${route.params.id}`, () =>
+    fetchApi<Product>(`/products/${route.params.id}`),
+  )
 
-const productImages = computed(() => {
-  if (!product.value) return []
-  return Array(4).fill(product.value.image)
-})
+  const productImages = computed(() => {
+    if (!product.value) return []
+    return Array(4).fill(product.value.image)
+  })
 
-const reviewsCount = shallowRef(0)
+  const reviewsCount = shallowRef(0)
 
-const tabs = computed(() => [
-  { label: 'Description', name: 'description' },
-  { label: 'Additional Information', name: 'additional' },
-  { label: `Reviews(${reviewsCount.value})`, name: 'reviews' },
-])
+  const tabs = computed(() => [
+    { label: 'Description', name: 'description' },
+    { label: 'Additional Information', name: 'additional' },
+    { label: `Reviews(${reviewsCount.value})`, name: 'reviews' },
+  ])
 
-const updateReviewsCount = () => {
-  if (import.meta.client && product.value) {
-    const stored = localStorage.getItem(`reviews_${product.value.id}`)
-    reviewsCount.value = stored ? JSON.parse(stored).length : 0
+  const updateReviewsCount = () => {
+    if (import.meta.client && product.value) {
+      const stored = localStorage.getItem(`reviews_${product.value.id}`)
+      reviewsCount.value = stored ? JSON.parse(stored).length : 0
+    }
   }
-}
 
-onMounted(() => {
-  productStore.fetchAllProducts()
-  updateReviewsCount()
-})
+  onMounted(() => {
+    productStore.fetchAllProducts()
+    updateReviewsCount()
+  })
 
-const visibleProducts = computed(() => productStore.products.slice(0, 3))
+  const visibleProducts = computed(() => productStore.products.slice(0, 3))
 </script>
 
 <style scoped lang="scss">

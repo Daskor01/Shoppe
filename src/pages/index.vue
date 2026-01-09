@@ -1,8 +1,6 @@
 <template>
   <main>
-    <h1 class="visually-hidden">
-        Shoppe Store
-    </h1>
+    <h1 class="visually-hidden">Shoppe Store</h1>
     <Carousel />
     <ProductList />
   </main>
@@ -15,7 +13,7 @@
   useHead({
     title: 'Shoppe | Clothing Store',
     meta: [
-      { name: 'description', content: 'Explore our carefully curated collection of clothing.' }
+      { name: 'description', content: 'Explore our carefully curated collection of clothing.' },
     ],
   })
 </script>

@@ -2,10 +2,7 @@
   <NuxtLayout name="default">
     <div v-if="error?.statusCode === 404" class="error">
       <h1 class="error__title">404 Error</h1>
-      <p class="error__subtitle">
-        This page not found. 
-        Please go back to home and start again.
-      </p>
+      <p class="error__subtitle">This page not found. Please go back to home and start again.</p>
       <BaseButton class="error__button" @click="handleError()"> HomePage </BaseButton>
     </div>
     <div v-else class="error">
@@ -13,7 +10,6 @@
       <p class="error__subtitle">{{ error?.statusMessage }}</p>
       <BaseButton class="error__button" @click="handleError()"> HomePage </BaseButton>
     </div>
-
   </NuxtLayout>
 </template>
 
