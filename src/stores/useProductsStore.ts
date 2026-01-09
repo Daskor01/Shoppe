@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { type Product } from '@/types/Product'
 import { useApi } from '@/composables/useApi'
+import { useRuntimeConfig } from 'nuxt/app'
 
 export const useProductsStore = defineStore('products', () => {
   const products = ref<Product[]>([])
@@ -9,8 +10,9 @@ export const useProductsStore = defineStore('products', () => {
   const error = ref<string | null>(null)
   const activePromises = new Map<string, Promise<void>>()
   const currentCategory = ref<string>('')
+  const config = useRuntimeConfig()
 
-  const api = useApi('https://fakestoreapi.com')
+  const api = useApi(config.public.productApi)
 
   async function fetchData(url: string, key: string) {
     if (activePromises.has(key)) {
@@ -25,12 +27,13 @@ export const useProductsStore = defineStore('products', () => {
         const data = await api.fetchApi<Product[]>(url)
         if (data) {
           products.value = data
+          return data
         }
       } catch (err: unknown) {
         if (err instanceof Error) {
           error.value = err.message
         } else {
-          error.value = String(err) // или просто "Неизвестная ошибка"
+          error.value = String(err)
         }
         console.error('API request failed:', err)
         throw err
@@ -40,14 +43,12 @@ export const useProductsStore = defineStore('products', () => {
       }
     })()
 
-    activePromises.set(key, promise)
-
+    activePromises.set(key, promise as Promise<void>)
     return promise
   }
 
   async function fetchProductsByCategory(category: string) {
     if (products.value.length && currentCategory.value === category) {
-      // Уже есть данные для этой категории — не делаем запрос
       return
     }
     currentCategory.value = category
@@ -59,7 +60,7 @@ export const useProductsStore = defineStore('products', () => {
       return
     }
     currentCategory.value = ''
-    await fetchData('/products', 'all-products')
+    return await fetchData('/products', 'all-products')
   }
 
   return {

@@ -1,105 +1,143 @@
 <template>
   <div class="base-tabs">
-    <div class="base-tabs__header">
+    <div class="base-tabs__header" role="tablist" aria-label="Product information">
       <button
         v-for="(tab, index) in tabs"
-        :key="index"
-        :class="['base-tabs__tab', { 'base-tabs__tab--active': activeIndex === index }]"
-        @click="setActiveTab(index)"
+        :key="tab.name"
+        :id="`tab-${tab.name}`"
+        type="button"
+        role="tab"
+        :aria-selected="modelValue === index"
+        :aria-controls="`panel-${tab.name}`"
+        :tabindex="modelValue === index ? 0 : -1"
+        :class="['base-tabs__tab', { 'base-tabs__tab--active': modelValue === index }]"
+        @click="modelValue = index"
+        @keydown.left.prevent="selectPrev"
+        @keydown.right.prevent="selectNext"
       >
         {{ tab.label }}
       </button>
     </div>
 
-    <div class="base-tabs__divider"></div>
+    <div class="base-tabs__divider" aria-hidden="true"></div>
 
     <div class="base-tabs__content">
-      <slot :name="activeTab.name" />
+      <Transition name="fade" mode="out-in">
+        <div
+          :key="modelValue"
+          :id="`panel-${activeTab.name}`"
+          role="tabpanel"
+          :aria-labelledby="`tab-${activeTab.name}`"
+          class="base-tabs__panel"
+        >
+          <slot :name="activeTab.name" />
+        </div>
+      </Transition>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, watch } from 'vue'
+import { computed } from 'vue'
 
-  interface Tab {
-    label: string
-    name: string
-  }
+interface Tab {
+  label: string
+  name: string
+}
 
-  const props = defineProps<{
-    tabs: Tab[]
-  }>()
+const props = defineProps<{
+  tabs: Tab[]
+}>()
 
-  const activeIndex = ref(0)
+const modelValue = defineModel<number>({ default: 0 })
 
-  const activeTab = computed(() => props.tabs[activeIndex.value])
+const activeTab = computed(() => props.tabs[modelValue.value])
 
-  const setActiveTab = (index: number) => {
-    activeIndex.value = index
-  }
-
-  const modelValue = defineModel<number>('activeIndex', { default: 0 })
-
-  watch(modelValue, (newVal) => {
-    activeIndex.value = newVal
-  })
-
-  watch(activeIndex, (newVal) => {
-    modelValue.value = newVal
-  })
+const selectNext = () => {
+  modelValue.value = (modelValue.value + 1) % props.tabs.length
+}
+const selectPrev = () => {
+  modelValue.value = (modelValue.value - 1 + props.tabs.length) % props.tabs.length
+}
 </script>
 
 <style scoped lang="scss">
-  .base-tabs {
-    &__header {
-      display: flex;
-      gap: 100px;
+.base-tabs {
+  &__header {
+    display: flex;
+    gap: 100px;
+    
+    @media (max-width: vars.$breakpoints-m) {
+      gap: 40px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scrollbar-width: none;
+      &::-webkit-scrollbar { display: none; }
+    }
+  }
+
+  &__tab {
+    position: relative;
+    padding: 0;
+    font-size: 20px;
+    line-height: 130%;
+    color: vars.$color-gray;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+
+    @media (max-width: vars.$breakpoints-xl) {
+      font-size: 16px;
     }
 
-    &__tab {
-      position: relative;
-      padding: 0;
-      font-size: 20px;
-      line-height: 130%;
-      color: vars.$color-gray;
-      cursor: pointer;
-      background: transparent;
-      border: none;
-      transition: color 0.2s ease;
+    &:focus-visible {
+      outline: 2px solid vars.$color-dark;
+      outline-offset: 8px;
+    }
 
-      @media (max-width: vars.$breakpoints-xl) {
-        font-size: 16px;
-      }
+    &--active {
+      color: vars.$color-dark;
 
-      &:hover {
-        color: vars.$color-dark;
-      }
+      &::after {
+        position: absolute;
+        inset-block-end: -34px;
+        display: block;
+        width: 100%;
+        height: 2px;
+        content: '';
+        background-color: vars.$color-dark;
 
-      &--active {
-        color: vars.$color-dark;
-
-        &::after {
-          position: absolute;
-          inset-block-end: -34px;
-          display: block;
-          width: 100%;
-          height: 2px;
-          content: '';
-          background-color: vars.$color-dark;
+        @media (max-width: vars.$breakpoints-m) {
+          inset-block-end: -10px;
         }
       }
     }
+  }
 
-    &__divider {
-      height: 1px;
-      margin-top: 34px;
-      background-color: vars.$color-ligth-gray;
-    }
+  &__divider {
+    height: 1px;
+    margin-top: 34px;
+    background-color: vars.$color-ligth-gray;
 
-    &__content {
-      margin-top: 40px;
-      line-height: 170%;
+    @media (max-width: vars.$breakpoints-m) {
+      margin-top: 10px;
     }
   }
+
+  &__content {
+    margin-top: 40px;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

@@ -1,40 +1,51 @@
 <template>
-  <div class="cart-content">
-    <button class="cart-content__close" @click="cartStore.closeCart">
-      <IconBaseArrowLeft />
+  <div class="cart-content" role="region" aria-label="Shopping cart">
+    <button 
+      class="cart-content__close" 
+      aria-label="Close shopping bag"
+      @click="cartStore.closeCart"
+    >
+      <IconBaseArrowLeft aria-hidden="true" />
     </button>
 
     <h2 class="cart-content__title">Shopping bag</h2>
 
-    <div v-if="!cartStore.isLoaded" class="cart-content__loading">Загрузка корзины...</div>
+    <div v-if="!cartStore.isLoaded" class="cart-content__loading" role="status">
+      Загрузка корзины...
+    </div>
 
-    <div v-else-if="cartStore.cartItems.length === 0" class="cart-content__empty">
+    <div v-else-if="cartStore.cartItems.length === 0" class="cart-content__empty" role="status">
       Ваша корзина пуста
     </div>
 
     <div v-else>
-      <h3 class="cart-content__counter">{{ cartStore.cartItems.length }} item{{ itemSuffix }}</h3>
+      <h3 class="cart-content__counter" aria-live="polite">
+        {{ cartStore.cartItems.length }} item{{ itemSuffix }}
+      </h3>
 
       <TransitionGroup name="cart-list" tag="div" class="cart-content__list">
         <CartItem
           v-for="item in cartStore.cartItems"
           :key="item.product.id"
           :item="item"
-          @increase="increase(item.product.id)"
-          @decrease="decrease(item.product.id)"
-          @remove="remove(item.product.id)"
+          @increase="cartStore.updateQuantity(item.product.id, item.quantity + 1)"
+          @decrease="cartStore.updateQuantity(item.product.id, item.quantity - 1)"
+          @remove="cartStore.removeFromCart(item.product.id)"
         />
       </TransitionGroup>
     </div>
 
     <div v-if="cartStore.cartItems.length" class="cart-content__footer">
-      <div class="cart-content__line" />
-      <div class="cart-content__total">
+      <div class="cart-content__line" aria-hidden="true" />
+      
+      <div class="cart-content__total" aria-live="polite">
         <span> Subtotal ({{ itemsCounter }} item{{ itemSuffix }}) </span>
-        <span> $ {{ formattedTotalPrice }} </span>
+        <span class="cart-content__total-price"> $ {{ formattedTotalPrice }} </span>
       </div>
 
-      <BaseButton class="cart-content__checkout" @click="goToCheckout"> View Cart </BaseButton>
+      <BaseButton class="cart-content__checkout" @click="goToCheckout">
+        View Cart
+      </BaseButton>
     </div>
   </div>
 </template>
@@ -48,26 +59,7 @@
 
   const router = useRouter()
   const cartStore = useCartStore()
-
   const { itemsCounter, itemSuffix, formattedTotalPrice } = storeToRefs(cartStore)
-
-  function remove(id: number) {
-    cartStore.removeFromCart(id)
-  }
-
-  function increase(id: number) {
-    const item = cartStore.cartItems.find((i) => i.product.id === id)
-    if (item) {
-      cartStore.updateQuantity(id, item.quantity + 1)
-    }
-  }
-
-  function decrease(id: number) {
-    const item = cartStore.cartItems.find((i) => i.product.id === id)
-    if (item) {
-      cartStore.updateQuantity(id, item.quantity - 1)
-    }
-  }
 
   function goToCheckout() {
     cartStore.closeCart()

@@ -1,18 +1,19 @@
-import { defineNuxtRouteMiddleware, navigateTo } from 'nuxt/app'
-import { useAuthStore } from '@/stores/useAuthStore'
-
+// middleware/auth.global.ts
 export default defineNuxtRouteMiddleware((to) => {
   const authStore = useAuthStore()
+  const token = useCookie('auth-token')
 
-  if (to.matched.length === 0) {
-    return
+  const path = to.path.toLowerCase()
+  const publicPages = ['/', '/account', '/reset-password']
+
+  if (publicPages.includes(path)) return
+
+  if (!authStore.isAuthenticated && token.value) {
+    authStore.user = token.value as string
+    return 
   }
 
-  if (to.path === '/' || to.path === '/ResetPassword' || to.path === '/account') {
-    return
-  }
-
-  if (!authStore.isAuthenticated) {
+  if (!authStore.isAuthenticated && !token.value) {
     return navigateTo('/account')
   }
 })

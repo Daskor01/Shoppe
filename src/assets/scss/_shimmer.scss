@@ -1,0 +1,18 @@
+@use "@/assets/scss/_variables.scss" as vars;
+
+@mixin shimmer-effect {
+  background: linear-gradient(
+    90deg, 
+    vars.$color-ligth-gray 25%, 
+    #f0f0f0 50%, 
+    vars.$color-ligth-gray 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

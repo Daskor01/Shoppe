@@ -1,58 +1,88 @@
 <template>
   <div class="product-gallery">
     <div v-if="isMobile" class="product-gallery__mobile-slider">
+      <ClientOnly>
       <Swiper
         :modules="[Navigation]"
         :slides-per-view="1"
         :space-between="20"
-        :pagination="{ clickable: true }"
         class="swiper"
         :loop="true"
         @slideChange="onSlideChange"
         @swiper="onSwiperInit"
       >
         <SwiperSlide v-for="(img, idx) in ProductImages" :key="idx" class="swiper__slide">
-          <img :src="img" alt="Product image" class="product-gallery__mobile-image" />
+          <NuxtImg 
+            :src="img" 
+            :alt="`Product view ${idx + 1}`"
+            format="webp"
+            class="product-gallery__mobile-image"
+            :fetchpriority="idx === 0 ? 'high' : 'auto'"
+            width="273"
+            loading="eager"
+          />
         </SwiperSlide>
       </Swiper>
-
-      <div class="product-gallery__steps">
-        <div
+      </ClientOnly>
+      <div class="product-gallery__steps" role="tablist" aria-label="Product image navigation">
+        <button
           v-for="(img, idx) in ProductImages"
           :key="`step-${idx}`"
           class="product-gallery__step"
           :class="{ active: idx === currentIndex }"
+          :aria-label="`Go to slide ${idx + 1}`"
+          :aria-selected="idx === currentIndex"
+          role="tab"
+          type="button"
           @click="setActive(idx)"
         />
       </div>
     </div>
 
     <div v-else class="product-gallery__desktop">
-      <div class="product-gallery__thumbnails">
-        <img
+      <div class="product-gallery__thumbnails" role="tablist" aria-orientation="vertical">
+        <button
           v-for="(img, index) in ProductImages"
           :key="index"
-          :src="img"
-          :class="{ active: index === currentIndex }"
-          class="product-gallery__thumbnail-image"
+          class="product-gallery__thumbnail-button"
+          :aria-selected="index === currentIndex"
+          :aria-controls="`panel-${index}`" 
+          :aria-label="`Показать изображение товара ${index + 1}`"
+          role="tab"
+          type="button"
           @click="setActive(index)"
-        />
+        >
+          <NuxtImg
+            :src="img"
+            :class="{ active: index === currentIndex }"
+            format="webp"
+            class="product-gallery__thumbnail-image"
+            alt=""
+            quality="70"
+            loading="lazy"
+          />
+        </button>
       </div>
-
+      
       <div class="product-gallery__main-content">
-        <div class="product-gallery__main-image">
-          <img
+        <div class="product-gallery__main-image" aria-live="polite">
+          <NuxtImg
             :src="ProductImages[activeIndex]"
-            alt="Main product image"
+            format="webp"
+            alt="Main product view"
             class="product-gallery__main-image"
+            fetchpriority="high"
           />
         </div>
-        <div class="product-gallery__steps">
-          <div
+        <div class="product-gallery__steps" role="tablist">
+          <button
             v-for="(img, idx) in ProductImages"
             :key="`step-${idx}`"
             class="product-gallery__step"
             :class="{ active: idx === currentIndex }"
+            :aria-selected="idx === currentIndex"
+            role="tab"
+            type="button"
             @click="setActive(idx)"
           />
         </div>
@@ -65,8 +95,8 @@
   import { Swiper, SwiperSlide } from 'swiper/vue'
   import { Navigation } from 'swiper/modules'
   import type { Swiper as SwiperType } from 'swiper'
-  import 'swiper/css'
-  import 'swiper/css/navigation'
+  import 'swiper/css';
+  import 'swiper/css/navigation';
   import { ref, computed } from 'vue'
   import { useBreakpoint } from '@/composables/useBreakpoint'
   import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
@@ -102,6 +132,7 @@
 </script>
 
 <style lang="scss" scoped>
+
   .product-gallery {
     &__mobile-slider {
       margin-inline: auto;
@@ -116,9 +147,10 @@
     }
 
     &__mobile-image {
+      display: block;
       box-sizing: border-box;
       width: 400px;
-      aspect-ratio: 288 / 374;
+      aspect-ratio: 1 / 1;
       padding: 30px;
       object-fit: contain;
       background-color: vars.$color-ligth-gray;
@@ -160,6 +192,7 @@
     }
 
     &__thumbnail-image {
+      display: block;
       box-sizing: border-box;
       inline-size: 120px;
       aspect-ratio: 1;
@@ -192,6 +225,7 @@
     }
 
     &__main-image {
+      display: block;
       box-sizing: border-box;
       inline-size: 540px;
       aspect-ratio: 540 / 600;
@@ -262,6 +296,15 @@
         content: '';
       }
     }
+    
+    &__thumbnail-button,
+    &__step {
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline-offset: 2px;
+    }
   }
 
   .swiper {
@@ -280,4 +323,5 @@
       gap: 16px;
     }
   }
+
 </style>

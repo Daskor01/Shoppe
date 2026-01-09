@@ -1,41 +1,71 @@
 <template>
-  <section class="shop">
-    <div v-if="isMobile" class="mobile__container">
-      <BaseSearchInput />
-      <h1 class="mobile__title">Shop</h1>
-      <button class="filter-toggle" @click="showFilters = !showFilters">
-        <IconFilter />
-        Filters
-      </button>
-    </div>
+  <main class="shop" aria-labelledby="shop-title">
+    <h1 id="shop-title" class="visually-hidden">Product Catalog</h1>
 
-    <div v-else class="filter-container">
+    <header v-if="isMobile" class="mobile__container">
+      <BaseSearchInput label="Search products" />
+      <p class="mobile__title" aria-hidden="true">Shop</p>
+      <button 
+        class="filter-toggle" 
+        :aria-expanded="showFilters"
+        aria-controls="filter-panel"
+        @click="showFilters = !showFilters"
+      >
+        <IconFilter aria-hidden="true" />
+        <span>Filters</span>
+      </button>
+    </header>
+
+    <aside v-else class="filter-container" aria-label="Product filters">
       <div class="filter-desktop">
         <h2 class="filter-desktop__title">Shop The Latest</h2>
         <ShopFilters v-model:filters="filters" :categories="categories" />
       </div>
-    </div>
+    </aside>
 
-    <BaseSlidePanel v-model="showFilters">
+    <BaseSlidePanel 
+      id="filter-panel" 
+      v-model="showFilters" 
+      role="dialog" 
+      aria-label="Filter selection"
+    >
       <h2 class="filter-mobile__title">Filters</h2>
       <ShopFilters v-model:filters="filters" :categories="categories" />
     </BaseSlidePanel>
 
-    <div class="product-grid">
-      <ProductCard
-        v-for="product in paginatedItems"
-        :key="product.id"
-        :product="product"
-        class="product-grid__item"
-      />
-      <BasePagination
-        :current-page="currentPage"
-        :total-pages="totalPages"
-        class="product-grid__pagination"
-        @update:page="goToPage"
-      />
-    </div>
-  </section>
+    <section 
+      class="product-content" 
+      aria-live="polite" 
+      :aria-busy="pending"
+    >
+      <div v-if="pending" class="product-grid__status">
+        <BaseLoader label="Loading products..." />
+      </div>
+
+      <div v-else-if="paginatedItems.length === 0" class="product-grid__empty">
+        <p>No products found matching your criteria.</p>
+        <button class="product-grid__empty--button" @click="clearFilter">Clear all filters</button>
+      </div>
+
+      <div v-else class="product-grid">
+        <ProductCard
+          v-for="product in paginatedItems"
+          :key="product.id"
+          :product="product"
+          class="product-grid__item"
+          tag="article"
+        />
+        
+        <nav class="product-grid__pagination" aria-label="Pagination">
+          <BasePagination
+            :current-page="currentPage"
+            :total-pages="totalPages"
+            @update:page="goToPage"
+          />
+        </nav>
+      </div>
+    </section>
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -50,60 +80,59 @@
   import type { Filters } from '@/types/Filters'
   import { usePagination } from '@/composables/usePagination'
   import { useBreakpoint } from '@/composables/useBreakpoint'
+  import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
 
-  const route = useRoute()
-  const query = route.query
-
-  const filters = ref<Filters>({
-    search: '',
-    category: '',
-    sortBy: '',
-    priceRange: [0, 200],
-    onSale: false,
-    inStock: false,
+  useHead({
+    title: 'Shop - Browse Products',
+    meta: [
+      { 
+        name: 'description', 
+        content: 'Browse our exclusive collection of products. Filter by category, price, and availability.' 
+      },
+    ],
   })
 
-  const { filteredProducts, categories } = useShopFilters(filters)
+  const route = useRoute()
 
-  //Инициализируем фильтры из query-параметров при загрузке страницы
-  const initialFilters: Partial<Filters> = Object.fromEntries(
-    Object.entries(query).map(([key, value]) => {
-      if (!value) return [key, '']
-      switch (key) {
-        case 'priceRange':
-          return [key, (value as string).split(',').map(Number)]
-        case 'onSale':
-        case 'inStock':
-          return [key, value === 'true']
-        default:
-          return [key, value]
-      }
-    }),
-  )
+  const filters = ref<Filters>({
+    search: (route.query.search as string) || '',
+    category: (route.query.category as string) || '',
+    sortBy: (route.query.sortBy as string) || '',
+    priceRange: route.query.priceRange 
+      ? (route.query.priceRange as string).split(',').map(Number) as [number, number]
+      : [0, 200],
+    onSale: route.query.onSale === 'true',
+    inStock: route.query.inStock === 'true',
+  })
 
-  filters.value = {
-    ...filters.value,
-    ...initialFilters,
-  }
+  const { filteredProducts, categories, pending } = useShopFilters(filters)
 
   const { currentPage, totalPages, paginatedItems, goToPage } = usePagination(
     () => filteredProducts.value,
     6,
   )
 
-  //Адаптация под мобильные
+  function clearFilter() {
+    filters.value = {
+      search: '',
+      category: '',
+      sortBy: '',
+      priceRange: [0, 200],
+      onSale: false,
+      inStock: false,
+    }
+  }
+
   const showFilters = ref(false)
 
-  const { isBelow: isMobile } = useBreakpoint(991.5)
+  const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
 </script>
 
 <style scoped lang="scss">
   .shop {
     position: relative;
     display: flex;
-    gap: 28px;
-    justify-content: space-between;
-    margin-block-start: 78px;
+    gap: 20px;
 
     @media (max-width: vars.$breakpoints-m) {
       flex-direction: column;
@@ -150,12 +179,19 @@
     }
   }
 
+  .product-content {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
   .product-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 26px;
     width: 100%;
-    margin-block-start: 106px;
+    margin-block-start: 100px;
 
     @media (max-width: vars.$breakpoints-xxl) {
       grid-template-columns: repeat(3, 1fr);
@@ -195,6 +231,29 @@
 
       @media (max-width: vars.$breakpoints-xs) {
         inline-size: 136px;
+      }
+    }
+
+    &__empty {
+      text-align: center;
+      color: vars.$color-gray;
+      font-size: 18px;
+      font-weight: 500;
+
+      &--button {
+        margin-block-start: 16px;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: vars.$color-light;
+        background-color: vars.$color-dark;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.4s;
+
+        &:hover {
+          opacity: 0.5;
+        }
       }
     }
 

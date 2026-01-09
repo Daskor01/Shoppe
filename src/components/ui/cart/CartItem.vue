@@ -1,21 +1,53 @@
 <template>
-  <div class="cart-item">
+  <div class="cart-item" role="listitem">
     <div class="cart-item__image-container">
-      <img :src="item.product.image" :alt="item.product.title" class="cart-item__image" />
+      <NuxtImg 
+        :src="item.product.image" 
+        :alt="item.product.title" 
+        class="cart-item__image"
+        width="150"
+        height="150"
+        fit="contain"
+        loading="lazy"
+        background="transparent"
+      />
     </div>
+
     <div class="cart-item__details">
-      <div class="card-item__text-container">
+      <div class="cart-item__text-container">
         <h3 class="cart-item__name">{{ item.product.title }}</h3>
-        <p class="cart-item__price">{{ item.product.price.toFixed(2) }} $</p>
+        <p class="cart-item__price">$ {{ item.product.price.toFixed(2) }}</p>
       </div>
+
       <div class="cart-item__controls">
-        <button class="cart-item__controls-button" @click="decrease">−</button>
-        <span>{{ item.quantity }}</span>
-        <button class="cart-item__controls-button" @click="increase">+</button>
+        <button 
+          class="cart-item__controls-button" 
+          :aria-label="`Decrease quantity of ${item.product.title}`"
+          @click="emit('decrease')"
+        >
+          −
+        </button>
+        
+        <span aria-live="polite" aria-atomic="true">
+          {{ item.quantity }}
+        </span>
+        
+        <button 
+          class="cart-item__controls-button" 
+          :aria-label="`Increase quantity of ${item.product.title}`"
+          @click="emit('increase')"
+        >
+          +
+        </button>
       </div>
     </div>
-    <button class="cart-item__remove" @click="remove">
-      <IconClose class="cart-item__remove-icon" />
+
+    <button 
+      class="cart-item__remove" 
+      :aria-label="`Remove ${item.product.title} from cart`"
+      @click="emit('remove')"
+    >
+      <IconClose class="cart-item__remove-icon" aria-hidden="true" />
     </button>
   </div>
 </template>
@@ -28,19 +60,7 @@
     item: CartItem
   }>()
 
-  const { item } = props
-
   const emit = defineEmits(['increase', 'decrease', 'remove'])
-
-  function increase() {
-    emit('increase')
-  }
-  function decrease() {
-    emit('decrease')
-  }
-  function remove() {
-    emit('remove')
-  }
 </script>
 
 <style scoped lang="scss">
@@ -48,108 +68,84 @@
     position: relative;
     display: flex;
     gap: 1rem;
-    min-inline-size: 288px;
-    min-block-size: 140px;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid vars.$color-ligth-gray;
+    padding-block: 6px;
 
     &__image-container {
-      inline-size: 136px;
-      block-size: 126px;
+      flex-shrink: 0;
+      width: 100px;
+      height: 100px;
+      background-color: vars.$color-ligth-gray;
+      border-radius: 8px;
+      padding: 10px;
+      box-sizing: border-box;
+      overflow: hidden;
 
       @media (min-width: vars.$breakpoints-l) {
-        inline-size: 160px;
-        block-size: 150px;
-        margin-inline-end: 20px;
-      }
-
-      @media (min-width: vars.$breakpoints-l) {
-        inline-size: 200px;
-        block-size: 190px;
+        width: 120px;
+        height: 120px;
       }
     }
 
     &__image {
-      inline-size: 100%;
-      block-size: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      border-radius: 4px;
     }
 
     &__details {
-      display: grid;
-      inline-size: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+      padding-right: 2rem; 
     }
 
     &__name {
-      display: -webkit-box;
-      max-inline-size: 100px;
-      margin: 0 0 0.25rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      -webkit-line-clamp: 3;
+      margin: 0;
       font-size: 0.9rem;
-      font-weight: 400;
+      font-weight: 500;
+      line-height: 1.2;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
-
-      @media (min-width: vars.$breakpoints-l) {
-        font-size: 1.2rem;
-      }
+      overflow: hidden;
     }
 
-    &__price {
-      margin-block: 6px;
-      font-size: 0.8rem;
-      color: #666;
+    &__controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      width: fit-content;
+      background: vars.$color-ligth-gray;
+      padding: 4px 12px;
+      border-radius: 4px;
 
-      @media (min-width: vars.$breakpoints-l) {
-        font-size: 1rem;
+      &-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 1.2rem;
+        color: vars.$color-gray;
+        
+        &:hover { color: vars.$color-dark; }
       }
     }
 
     &__remove {
       position: absolute;
-      inset-block-start: 0;
-      inset-inline-end: 0;
-      cursor: pointer;
-      background: transparent;
+      top: 0;
+      right: 0;
+      background: none;
       border: none;
+      cursor: pointer;
+      padding: 4px;
+      opacity: 0.5;
+      transition: opacity 0.2s;
 
-      &-icon {
-        inline-size: 10px;
-        block-size: 10px;
-
-        @media (min-width: vars.$breakpoints-l) {
-          inline-size: 20px;
-          block-size: 20px;
-        }
-      }
-    }
-
-    &__controls {
-      display: flex;
-      place-self: end end;
-      align-items: center;
-      justify-content: space-between;
-      inline-size: 100px;
-      block-size: 34px;
-      color: vars.$color-gray;
-      background-color: vars.$color-ligth-gray;
-      border-radius: 4px;
-
-      @media (min-width: vars.$breakpoints-l) {
-        inline-size: 130px;
-        block-size: 45px;
-        font-size: 1.2rem;
-      }
-
-      &-button {
-        color: vars.$color-gray;
-        cursor: pointer;
-        border: none;
-
-        @media (min-width: vars.$breakpoints-l) {
-          font-size: 1.2rem;
-        }
-      }
+      &:hover { opacity: 1; }
     }
   }
 </style>

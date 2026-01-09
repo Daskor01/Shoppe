@@ -1,45 +1,82 @@
 <template>
   <div class="base-select">
     <select
-      :value="modelValue"
-      class="base-select__native"
-      @change="model = ($event.target as HTMLSelectElement).value"
+      :id="uid"
+      v-model="model"
+      v-bind="$attrs"
+      :class="['base-select__native', { 'base-select__native--placeholder': !model && placeholder }]"
+      :aria-label="placeholder"
     >
-      <option v-if="placeholder" value="" disabled hidden>
+      <option 
+        v-if="placeholder" 
+        value="" 
+        disabled 
+        hidden
+      >
         {{ placeholder }}
       </option>
 
-      <option v-for="option in options" :key="option.value" :value="option.value">
+      <option 
+        v-for="option in options" 
+        :key="option.value" 
+        :value="option.value"
+      >
         {{ option.label }}
       </option>
     </select>
-    <IconBaseArrowDown class="base-select__icon" />
+    
+    <IconBaseArrowDown 
+      class="base-select__icon" 
+      aria-hidden="true" 
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-  import IconBaseArrowDown from '@/components/icons/IconBaseArrowDown.vue'
+import { useId } from 'vue'
+import IconBaseArrowDown from '@/components/icons/IconBaseArrowDown.vue'
 
-  const model = defineModel<string>()
+defineOptions({
+  inheritAttrs: false
+})
 
-  defineProps<{
-    options: { value: string; label: string }[]
-    placeholder?: string
-  }>()
+interface Option {
+  value: string | number
+  label: string
+}
+
+const props = defineProps<{
+  options: Option[]
+  placeholder?: string
+}>()
+
+const model = defineModel<string | number>()
+
+const uid = useId()
 </script>
 
 <style scoped lang="scss">
   .base-select {
     position: relative;
+    display: flex;
 
     &__native {
       inline-size: 100%;
+      block-size: 54px;
+      box-sizing: border-box;
       padding: 12px 16px;
       font-size: 14px;
+      line-height: 1.2;
       appearance: none;
       cursor: pointer;
+      background-color: transparent;
       border: 1px solid vars.$color-ligth-gray;
       border-radius: 4px;
+      transition: border-color 0.2s;
+
+      &--placeholder {
+        color: vars.$color-gray;
+      }
     }
 
     &__icon {
@@ -48,6 +85,7 @@
       right: 20px;
       pointer-events: none;
       transform: translateY(-50%);
+      transition: transform 0.2s;
     }
   }
 </style>

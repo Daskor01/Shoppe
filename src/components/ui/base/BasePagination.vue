@@ -1,72 +1,108 @@
 <template>
-  <div class="pagination">
-    <button :disabled="currentPage === 1" class="pagination__button" @click="prevPage">
-      <IconBaseArrowLeft />
+  <nav class="pagination" role="navigation" aria-label="Pagination">
+    <button
+      class="pagination__button"
+      :disabled="currentPage === 1"
+      aria-label="Go to previous page"
+      type="button"
+      @click="prevPage"
+    >
+      <IconBaseArrowLeft aria-hidden="true" />
     </button>
+
+    <ul class="pagination__list">
+      <li v-for="page in pageRange" :key="page === '...' ? `dots-${Math.random()}` : page">
+        <template v-if="page === '...'">
+          <span class="pagination__dots" aria-hidden="true">{{ page }}</span>
+        </template>
+        
+        <button
+          v-else
+          class="pagination__button"
+          :class="{ 'pagination__button--active': currentPage === page }"
+          :aria-current="currentPage === page ? 'page' : undefined"
+          :aria-label="`Go to page ${page}`"
+          type="button"
+          @click="goToPage(page as number)"
+        >
+          {{ page }}
+        </button>
+      </li>
+    </ul>
 
     <button
-      v-for="page in visiblePages"
-      :key="page"
-      :class="{ active: currentPage === page }"
       class="pagination__button"
-      @click="goToPage(page)"
+      :disabled="currentPage === totalPages"
+      aria-label="Go to next page"
+      type="button"
+      @click="nextPage"
     >
-      {{ page }}
+      <IconBaseArrowRight aria-hidden="true" />
     </button>
-
-    <button :disabled="currentPage === totalPages" class="pagination__button" @click="nextPage">
-      <IconBaseArrowRight />
-    </button>
-  </div>
+  </nav>
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue'
-  import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
-  import IconBaseArrowLeft from '@/components/icons/IconBaseArrowLeft.vue'
+import { computed } from 'vue'
+import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
+import IconBaseArrowLeft from '@/components/icons/IconBaseArrowLeft.vue'
 
-  const props = defineProps<{
-    currentPage: number
-    totalPages: number
-  }>()
+const props = defineProps<{
+  currentPage: number
+  totalPages: number
+  siblingCount?: number
+}>()
 
-  const emit = defineEmits<{
-    (e: 'update:page', page: number): void
-  }>()
+const emit = defineEmits<{
+  (e: 'update:page', page: number): void
+}>()
 
-  function goToPage(page: number) {
-    if (page >= 1 && page <= props.totalPages && page !== props.currentPage) {
-      emit('update:page', page)
-    }
+const siblingCount = props.siblingCount ?? 1
+
+const pageRange = computed(() => {
+  const totalPageNumbers = siblingCount + 5
+  
+  if (totalPageNumbers >= props.totalPages) {
+    return Array.from({ length: props.totalPages }, (_, i) => i + 1)
   }
 
-  function nextPage() {
-    if (props.currentPage < props.totalPages) {
-      emit('update:page', props.currentPage + 1)
-    }
+  const leftSiblingIndex = Math.max(props.currentPage - siblingCount, 1)
+  const rightSiblingIndex = Math.min(props.currentPage + siblingCount, props.totalPages)
+
+  const shouldShowLeftDots = leftSiblingIndex > 2
+  const shouldShowRightDots = rightSiblingIndex < props.totalPages - 2
+
+  if (!shouldShowLeftDots && shouldShowRightDots) {
+    const leftItemCount = 3 + 2 * siblingCount
+    const leftRange = Array.from({ length: leftItemCount }, (_, i) => i + 1)
+    return [...leftRange, '...', props.totalPages]
   }
 
-  function prevPage() {
-    if (props.currentPage > 1) {
-      emit('update:page', props.currentPage - 1)
-    }
+  if (shouldShowLeftDots && !shouldShowRightDots) {
+    const rightItemCount = 3 + 2 * siblingCount
+    const rightRange = Array.from({ length: rightItemCount }, (_, i) => props.totalPages - i + 1).reverse()
+    return [1, '...', ...rightRange]
   }
 
-  const visiblePages = computed(() => {
-    const pages: number[] = []
+  if (shouldShowLeftDots && shouldShowRightDots) {
+    const middleRange = Array.from(
+      { length: rightSiblingIndex - leftSiblingIndex + 1 },
+      (_, i) => leftSiblingIndex + i
+    )
+    return [1, '...', ...middleRange, '...', props.totalPages]
+  }
+  
+  return []
+})
 
-    //Добавляем текущую страницу
-    pages.push(props.currentPage)
+function goToPage(page: number) {
+  if (page !== props.currentPage) {
+    emit('update:page', page)
+  }
+}
 
-    //Добавляем следующую страницу, если она в пределах
-    if (props.currentPage + 1 <= props.totalPages) {
-      pages.push(props.currentPage + 1)
-    } else if (props.currentPage > 1) {
-      //Если следующей страницы нет, но есть предыдущая — показываем её
-      pages.unshift(props.currentPage - 1)
-    }
-    return pages
-  })
+const nextPage = () => props.currentPage < props.totalPages && emit('update:page', props.currentPage + 1)
+const prevPage = () => props.currentPage > 1 && emit('update:page', props.currentPage - 1)
 </script>
 
 <style scoped lang="scss">
@@ -74,6 +110,14 @@
     display: flex;
     gap: 6px;
     align-items: center;
+
+    &__list {
+      display: flex;
+      gap: 6px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
 
     &__button {
       display: flex;
@@ -86,18 +130,38 @@
       background: white;
       border: 1px solid vars.$color-ligth-gray;
       border-radius: 4px;
-      transition: 0.2s ease;
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        border-color: vars.$color-dark;
+      }
+
+      &:focus-visible {
+        outline: 2px solid vars.$color-dark;
+        outline-offset: 2px;
+      }
+
+      &--active {
+        font-weight: bold;
+        color: vars.$color-light;
+        background: vars.$color-dark;
+        border-color: vars.$color-dark;
+        cursor: default;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.3;
+      }
     }
 
-    &__button.active {
-      font-weight: bold;
-      color: vars.$color-light;
-      background: vars.$color-dark;
-    }
-
-    &__button:disabled {
-      pointer-events: none;
-      opacity: 0;
+    &__dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      inline-size: 44px;
+      block-size: 44px;
+      color: vars.$color-gray;
     }
   }
 </style>

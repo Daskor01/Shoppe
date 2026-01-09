@@ -1,246 +1,244 @@
 <template>
-  <div class="review-form">
-    <h3 class="review-form__title">Add a Review</h3>
+  <section class="review-form" aria-labelledby="review-form-title">
+    <h3 id="review-form-title" class="review-form__title">Add a Review</h3>
     <p class="review-form__description">
       Your email address will not be published. Required fields are marked *
     </p>
 
     <form ref="formRef" class="review-form__form" novalidate @submit.prevent="handleSubmit">
+      
       <div class="review-form__field">
+        <label for="review-msg" class="visually-hidden">Your message*</label>
         <BaseTextarea
+          id="review-msg"
           v-model="form.message"
           :error="errors.message"
+          :aria-invalid="!!errors.message"
           class="review-form__input"
           placeholder="Enter your message*"
           name="message"
+          required
         />
       </div>
 
       <div class="review-form__field">
+        <label for="review-name" class="visually-hidden">Name*</label>
         <BaseInput
+          id="review-name"
           v-model="form.name"
           :error="errors.name"
+          :aria-invalid="!!errors.name"
           class="review-form__input"
           type="text"
           placeholder="Enter your name*"
           name="name"
+          required
         />
       </div>
 
       <div class="review-form__field">
+        <label for="review-email" class="visually-hidden">Email*</label>
         <BaseInput
+          id="review-email"
           v-model="form.email"
           :error="errors.email"
+          :aria-invalid="!!errors.email"
           class="review-form__input"
           type="email"
           placeholder="Enter your email*"
           name="email"
+          required
         />
       </div>
 
       <div class="review-form__field">
         <label class="review-form__checkbox-label">
-          <input v-model="rememberMe" type="checkbox" class="review-form__checkbox" />
-          Save my name, email, and website in this browser for the next time I comment
+          <input 
+            v-model="rememberMe" 
+            type="checkbox" 
+            class="review-form__checkbox" 
+          />
+          <span>Save my name, email, and website in this browser for the next time I comment</span>
         </label>
       </div>
 
       <div class="review-form__field">
-        <label class="review-form__rating-label">
-          Your rating*
-          <StarRating v-model="form.rating" />
-        </label>
+        <fieldset class="review-form__rating-fieldset">
+          <legend class="review-form__rating-label">Your rating*</legend>
+          <StarRating v-model="form.rating" aria-required="true" />
+        </fieldset>
       </div>
 
-      <button type="submit" class="review-form__submit-button">Submit</button>
+      <button 
+        type="submit" 
+        class="review-form__submit-button"
+        :aria-label="'Submit review for ' + productTitle"
+      >
+        Submit
+      </button>
     </form>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive, onMounted } from 'vue'
-  import { useNotification } from '@/composables/useNotification'
-  import { validateValue } from '@/utils/validate'
-  import type { Review, FormData } from '@/types/Reviews'
-  import BaseInput from '@/components/ui/base/BaseInput.vue'
-  import BaseTextarea from '@/components/ui/base/BaseTextarea.vue'
-  import StarRating from '@/components/ui/base/BaseStarRating.vue'
-  import { VALIDATION_CONFIGS } from '@/constants/validation'
-  import {
-    getFromLocalStorage,
-    removeFromLocalStorage,
-    setToLocalStorage,
-  } from '@/utils/localStorage'
+import { ref, reactive, onMounted } from 'vue'
+import { useNotification } from '@/composables/useNotification'
+import { validateValue } from '@/utils/validate'
+import type { Review, FormData } from '@/types/Reviews'
+import BaseInput from '@/components/ui/base/BaseInput.vue'
+import BaseTextarea from '@/components/ui/base/BaseTextarea.vue'
+import StarRating from '@/components/ui/base/BaseStarRating.vue'
+import { VALIDATION_CONFIGS } from '@/constants/validation'
+import {
+  getFromLocalStorage,
+  removeFromLocalStorage,
+  setToLocalStorage,
+} from '@/utils/localStorage'
 
-  defineProps<{
-    productId: number | string
-    productTitle: string
-  }>()
+const props = defineProps<{
+  productId: number | string
+  productTitle: string
+}>()
 
-  const reviews = defineModel<Review[]>('reviews', { required: true })
+const emit = defineEmits<{
+  (e: 'add-review', review: Review): void
+}>()
 
-  const form = reactive<FormData>({
-    name: '',
-    message: '',
-    email: '',
-    rating: 5,
-  })
+const form = reactive<FormData>({
+  id: '',
+  name: '',
+  message: '',
+  email: '',
+  rating: 5,
+})
 
-  const rememberMe = ref(false)
-  const errors = reactive({
-    name: '',
-    email: '',
-    message: '',
-  })
+const rememberMe = ref(false)
+const errors = reactive({
+  name: '',
+  email: '',
+  message: '',
+})
 
-  const { notify } = useNotification()
+const { notify } = useNotification()
 
-  const loadSavedUserData = () => {
-    const rememberMeSaved = Boolean(getFromLocalStorage('reviewRememberMe'))
+const loadSavedUserData = () => {
+  const rememberMeSaved = getFromLocalStorage('reviewRememberMe') === 'true'
 
-    if (rememberMeSaved) {
-      const saved = getFromLocalStorage('reviewUserData')
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved)
-          form.name = parsed.name || ''
-          form.email = parsed.email || ''
-          rememberMe.value = true
-        } catch {
-          console.error('The data is corrupted')
-        }
+  if (rememberMeSaved) {
+    const saved = getFromLocalStorage('reviewUserData')
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        form.name = parsed.name || ''
+        form.email = parsed.email || ''
+        rememberMe.value = true
+      } catch {
+        console.error('The data is corrupted')
       }
-    } else {
-      form.name = ''
-      form.email = ''
-      rememberMe.value = false
     }
   }
+}
 
-  const saveUserData = () => {
-    if (rememberMe) {
-      setToLocalStorage(
-        'reviewUserData',
-        JSON.stringify({
-          name: form.name,
-          email: form.email,
-        }),
-      )
-      setToLocalStorage('reviewRememberMe', 'true')
-    } else {
-      removeUserData()
-    }
-  }
-
-  const removeUserData = () => {
-    removeFromLocalStorage('reviewUserData')
-    removeFromLocalStorage('reviewRememberMe')
-  }
-
-  const resetErrors = () => {
-    errors.name = ''
-    errors.email = ''
-    errors.message = ''
-  }
-
-  const validateForm = () => {
-    resetErrors()
-
-    // Validate message
-    const messageError = validateValue(
-      form.message,
-      VALIDATION_CONFIGS.message.rules,
-      VALIDATION_CONFIGS.message.messages,
-    )
-    if (messageError) {
-      errors.message = messageError
-    }
-
-    // Validate name
-    const nameError = validateValue(
-      form.name,
-      VALIDATION_CONFIGS.name.rules,
-      VALIDATION_CONFIGS.name.messages,
-    )
-    if (nameError) {
-      errors.name = nameError
-    }
-
-    // Validate email
-    const emailError = validateValue(
-      form.email,
-      VALIDATION_CONFIGS.email.rules,
-      VALIDATION_CONFIGS.email.messages,
-    )
-    if (emailError) {
-      errors.email = emailError
-    }
-
-    return !(messageError || nameError || emailError)
-  }
-
-  const resetForm = () => {
-    if (!rememberMe) {
-      form.name = ''
-      form.email = ''
-    }
-    form.message = ''
-    form.rating = 5
-  }
-
-  const isReviewDuplicate = (email: string) => {
-    return reviews.value.some((r) => r.email === email.trim())
-  }
-
-  const handleSubmit = () => {
-    if (!validateForm()) {
-      notify({
-        message: 'Check that the form is filled out correctly',
-        type: 'warning',
-      })
-      return
-    }
-
-    if (isReviewDuplicate(form.email)) {
-      notify({
-        message: 'Have you already left a review for this product.',
-        type: 'info',
-      })
-      return
-    }
-
-    const newReview: Review = {
-      name: form.name.trim(),
-      email: form.email.trim(),
-      message: form.message.trim(),
-      date: new Date().toLocaleDateString('en-US', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
+const saveUserData = () => {
+  if (rememberMe.value) {
+    setToLocalStorage(
+      'reviewUserData',
+      JSON.stringify({
+        name: form.name,
+        email: form.email,
       }),
-      rating: form.rating,
-    }
+    )
+    setToLocalStorage('reviewRememberMe', 'true')
+  } else {
+    removeUserData()
+  }
+}
 
-    reviews.value.push(newReview)
+const removeUserData = () => {
+  removeFromLocalStorage('reviewUserData')
+  removeFromLocalStorage('reviewRememberMe')
+}
 
-    if (rememberMe) {
-      saveUserData()
-    } else {
-      removeUserData()
-    }
+const resetErrors = () => {
+  errors.name = ''
+  errors.email = ''
+  errors.message = ''
+}
 
+const validateForm = () => {
+  resetErrors()
+
+  const messageError = validateValue(
+    form.message,
+    VALIDATION_CONFIGS.message.rules,
+    VALIDATION_CONFIGS.message.messages,
+  )
+  if (messageError) errors.message = messageError
+
+  const nameError = validateValue(
+    form.name,
+    VALIDATION_CONFIGS.name.rules,
+    VALIDATION_CONFIGS.name.messages,
+  )
+  if (nameError) errors.name = nameError
+
+  const emailError = validateValue(
+    form.email,
+    VALIDATION_CONFIGS.email.rules,
+    VALIDATION_CONFIGS.email.messages,
+  )
+  if (emailError) errors.email = emailError
+
+  return !(messageError || nameError || emailError)
+}
+
+const resetForm = () => {
+  if (!rememberMe.value) {
+    form.name = ''
+    form.email = ''
+  }
+  form.message = ''
+  form.rating = 5
+}
+
+const handleSubmit = () => {
+  if (!validateForm()) {
     notify({
-      message: 'Your review has been sent successfully!',
-      type: 'success',
+      message: 'Check that the form is filled out correctly',
+      type: 'warning',
     })
-
-    resetForm()
-    resetErrors()
+    return
   }
 
-  onMounted(() => {
-    loadSavedUserData()
+  const newReview: Review = {
+    id: Date.now(),
+    name: form.name.trim(),
+    email: form.email.trim(),
+    message: form.message.trim(),
+    date: new Date().toLocaleDateString('en-US', { 
+      day: 'numeric', 
+      month: 'short', 
+      year: 'numeric' 
+    }),
+    rating: form.rating,
+  }
+
+  emit('add-review', newReview)
+
+  saveUserData()
+
+  notify({
+    message: 'Your review has been sent successfully!',
+    type: 'success',
   })
+
+  resetForm()
+  resetErrors()
+}
+
+onMounted(() => {
+  loadSavedUserData()
+})
 </script>
 
 <style scoped lang="scss">
@@ -282,6 +280,12 @@
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
+    }
+
+    &__rating-fieldset {
+      border: none;
+      padding: 0;
+      margin: 0;
     }
 
     &__field {

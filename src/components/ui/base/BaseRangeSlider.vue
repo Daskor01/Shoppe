@@ -5,76 +5,104 @@
 
       <input
         v-model.number="localMin"
+        type="range"
         :min="min"
         :max="max"
-        type="range"
-        class="range-slider__thumb range-slider__thumb--left"
-        @input="onMinChange"
+        :step="step"
+        class="range-slider__thumb"
+        aria-label="Minimum price"
+        :aria-valuemin="min"
+        :aria-valuemax="localMax"
+        :aria-valuenow="localMin"
+        @input="onMinInput"
       />
+      
       <input
         v-model.number="localMax"
+        type="range"
         :min="min"
         :max="max"
-        type="range"
-        class="range-slider__thumb range-slider__thumb--right"
-        @input="onMaxChange"
+        :step="step"
+        class="range-slider__thumb"
+        aria-label="Maximum price"
+        :aria-valuemin="localMin"
+        :aria-valuemax="max"
+        :aria-valuenow="localMax"
+        @input="onMaxInput"
       />
     </div>
+
     <div class="range-slider__text-container">
-      <span class="range-slider__text"> Price: ${{ modelValue[0] }} – ${{ modelValue[1] }} </span>
-      <button class="range-slider__filter-button" @click="emit('apply')">Filter</button>
+      <p class="range-slider__text" aria-live="polite">
+        Price: <span>${{ localMin }}</span> – <span>${{ localMax }}</span>
+      </p>
+      <button 
+        type="button"
+        class="range-slider__filter-button" 
+        @click="$emit('apply')"
+      >
+        Filter
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { watch, ref, computed } from 'vue'
+import { computed } from 'vue'
 
-  const props = defineProps<{
-    modelValue: [number, number]
-    min?: number
-    max?: number
-    step?: number
-  }>()
+const props = withDefaults(defineProps<{
+  modelValue: [number, number]
+  min?: number
+  max?: number
+  step?: number
+}>(), {
+  min: 0,
+  max: 1000,
+  step: 1
+})
 
-  const rangeStyle = computed(() => {
-    const [start, end] = props.modelValue
-    return {
-      left: ((start - min) / (max - min)) * 100 + '%',
-      width: ((end - start) / (max - min)) * 100 + '%',
-    }
-  })
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: [number, number]): void
+  (e: 'apply'): void
+}>()
 
-  const emit = defineEmits(['update:modelValue', 'apply'])
+const model = defineModel<[number, number]>({ required: true })
 
-  const min = props.min ?? 0
-  const max = props.max ?? 1000
-  const step = props.step ?? 1
-
-  const localMin = ref(props.modelValue[0])
-  const localMax = ref(props.modelValue[1])
-
-  watch(
-    () => props.modelValue,
-    ([newMin, newMax]) => {
-      localMin.value = newMin
-      localMax.value = newMax
-    },
-  )
-
-  function onMinChange() {
-    if (localMin.value >= localMax.value - step) {
-      localMin.value = localMax.value - step
-    }
-    emit('update:modelValue', [localMin.value, localMax.value])
+const localMin = computed({
+  get: () => model.value[0],
+  set: (val) => {
+    const newMax = Math.max(val + props.step, model.value[1])
+    model.value = [val, model.value[1]]
   }
+})
 
-  function onMaxChange() {
-    if (localMax.value <= localMin.value + step) {
-      localMax.value = localMin.value + step
-    }
-    emit('update:modelValue', [localMin.value, localMax.value])
+const localMax = computed({
+  get: () => model.value[1],
+  set: (val) => {
+    model.value = [model.value[0], val]
   }
+})
+
+const rangeStyle = computed(() => {
+  const start = ((model.value[0] - props.min) / (props.max - props.min)) * 100
+  const end = ((model.value[1] - props.min) / (props.max - props.min)) * 100
+  return {
+    left: `${start}%`,
+    width: `${end - start}%`,
+  }
+})
+
+function onMinInput() {
+  if (localMin.value >= localMax.value) {
+    localMin.value = localMax.value - props.step
+  }
+}
+
+function onMaxInput() {
+  if (localMax.value <= localMin.value) {
+    localMax.value = localMin.value + props.step
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -85,15 +113,9 @@
     gap: 10px;
     padding-block: 1rem;
 
-    &__header {
-      display: flex;
-      justify-content: space-between;
-      margin-block-end: 0.5rem;
-    }
-
     &__track {
       position: relative;
-      block-size: 4px;
+      block-size: 2px;
       background-color: #ccc;
       border-radius: 2px;
     }
@@ -102,7 +124,8 @@
       position: absolute;
       block-size: 100%;
       background-color: vars.$color-dark;
-      border-radius: 2px;
+      border-radius: 3px;
+      z-index: 1;
     }
 
     &__text-container {
@@ -118,10 +141,6 @@
       color: vars.$color-gray;
     }
 
-    &__thumb--left {
-      inset-inline-start: -3px;
-    }
-
     &__filter-button {
       color: vars.$color-accent-light;
       cursor: pointer;
@@ -133,24 +152,38 @@
         opacity: 0.7;
       }
     }
-  }
 
-  input[type='range'] {
-    position: absolute;
-    z-index: 2;
-    inline-size: 100%;
-    block-size: 0;
-    appearance: none;
-    pointer-events: none;
-    background: none;
-  }
+    &__thumb {
+      position: absolute;
+      z-index: 2;
+      inline-size: 100%;
+      block-size: 0;
+      appearance: none;
+      pointer-events: none;
+      background: none;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0;
 
-  input[type='range']::-webkit-slider-thumb {
-    inline-size: 4px;
-    block-size: 10px;
-    appearance: none;
-    pointer-events: all;
-    background-color: vars.$color-dark;
-    border: none;
+      &::-webkit-slider-thumb {
+        inline-size: 2px;
+        block-size: 10px;
+        appearance: none;
+        pointer-events: all;
+        background-color: vars.$color-dark;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.1s;
+      }
+
+      &:active::-webkit-slider-thumb {
+        transform: scaleY(1.5);
+      }
+
+      &:focus-visible::-webkit-slider-thumb {
+        outline: 2px solid vars.$color-dark;
+        outline-offset: 4px;
+      }
+    }
   }
 </style>
