@@ -12,20 +12,20 @@
         :space-between="20"
         :pagination="{ clickable: true }"
         class="swiper"
-        role="region" 
+        role="region"
         aria-label="Product Carousel"
       >
-        <SwiperSlide v-for="item, index in images" :key="item.id">
+        <SwiperSlide v-for="(item, index) in images" :key="item.id">
           <div class="slide">
             <NuxtImg
               :src="item.download_url"
               :alt="`Featured product by ${item.author}`"
-              :preload="index === 0" 
+              :preload="index === 0"
               :loading="index === 0 ? 'eager' : 'lazy'"
               :fetchpriority="index === 0 ? 'high' : 'auto'"
               sizes="sm:100vw md:100vw lg:1200px"
               class="slide__image"
-              width="1200" 
+              width="1200"
               height="800"
               format="webp"
             />
@@ -66,13 +66,13 @@
       query: { page: 1, limit: 5 },
     })
 
-  images.value = data.map(img => {
-    const baseUrl = img.download_url.split('/').slice(0, -2).join('/')
-    return {
-      ...img,
-      download_url: `${baseUrl}/1200/800`
-    }
-  })
+    images.value = data.map((img) => {
+      const baseUrl = img.download_url.split('/').slice(0, -2).join('/')
+      return {
+        ...img,
+        download_url: `${baseUrl}/1200/800`,
+      }
+    })
   }
 
   onMounted(() => {
@@ -124,8 +124,8 @@
   }
 
   .carousel {
-    min-block-size: 354px;
     position: relative;
+    min-block-size: 354px;
 
     &-info {
       position: absolute;
@@ -146,11 +146,11 @@
         margin-block-end: 8px;
         font-size: 33px;
 
-        @media(max-width: vars.$breakpoints-m) {
+        @media (max-width: vars.$breakpoints-m) {
           font-size: 26px;
         }
 
-        @media(max-width: vars.$breakpoints-s) {
+        @media (max-width: vars.$breakpoints-s) {
           font-size: 18px;
         }
       }
@@ -159,11 +159,11 @@
         margin-block-end: 16px;
         font-size: 26px;
 
-        @media(max-width: vars.$breakpoints-m) {
+        @media (max-width: vars.$breakpoints-m) {
           font-size: 18px;
         }
 
-        @media(max-width: vars.$breakpoints-s) {
+        @media (max-width: vars.$breakpoints-s) {
           font-size: 14px;
         }
       }
@@ -175,13 +175,14 @@
         border: 1px solid vars.$color-light;
         border-radius: 6px;
         transition: 0.2s;
+
         @include mixins.flexCenter;
 
-        @media(max-width: vars.$breakpoints-m) {
+        @media (max-width: vars.$breakpoints-m) {
           font-size: 14px;
         }
 
-        @media(max-width: vars.$breakpoints-s) {
+        @media (max-width: vars.$breakpoints-s) {
           padding: 6px 10px;
         }
 

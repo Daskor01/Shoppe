@@ -10,7 +10,7 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (!authStore.isAuthenticated && token.value) {
     authStore.user = token.value as string
-    return 
+    return
   }
 
   if (!authStore.isAuthenticated && !token.value) {

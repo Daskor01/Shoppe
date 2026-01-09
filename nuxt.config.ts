@@ -7,7 +7,7 @@ export default defineNuxtConfig({
 
   css: ['~/assets/scss/main.scss'],
   features: {
-    inlineStyles: true 
+    inlineStyles: true,
   },
 
   modules: ['@pinia/nuxt', '@nuxt/image'],
@@ -43,7 +43,7 @@ export default defineNuxtConfig({
       },
     },
     build: {
-      assetsInlineLimit: 4096
+      assetsInlineLimit: 4096,
     },
   },
 
@@ -68,7 +68,7 @@ export default defineNuxtConfig({
     head: {
       title: 'Shoppe - Your Online Store',
       htmlAttrs: {
-        lang: 'en'
+        lang: 'en',
       },
       link: [
         {
@@ -76,17 +76,17 @@ export default defineNuxtConfig({
           href: '/fonts/DMSans-Variable.woff2',
           as: 'font',
           type: 'font/woff2',
-          crossorigin: 'anonymous'
+          crossorigin: 'anonymous',
         },
         {
           rel: 'preload',
           href: '/fonts/AllertaStencil-Regular.woff2',
           as: 'font',
           type: 'font/woff2',
-          crossorigin: 'anonymous'
+          crossorigin: 'anonymous',
         },
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      ]
+      ],
     },
   },
   nitro: {
@@ -94,24 +94,27 @@ export default defineNuxtConfig({
     prerender: {
       routes: ['/'],
       crawlLinks: true,
-      failOnError: false 
-    }
+      failOnError: false,
+    },
   },
   routeRules: {
-    '/_ipx/**': { prerender: false, headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
-    '/_nuxt/**': { 
-      headers: { 
-        'cache-control': 'public, max-age=31536000, immutable' 
-      } 
+    '/_ipx/**': {
+      prerender: false,
+      headers: { 'cache-control': 'public, max-age=31536000, immutable' },
+    },
+    '/_nuxt/**': {
+      headers: {
+        'cache-control': 'public, max-age=31536000, immutable',
+      },
     },
     '/Shop/**': { ssr: true, prerender: false },
-    '/product/**': { ssr: true, prerender: false, },
-      '/fonts/**': { 
-        headers: { 'cache-control': 'public, max-age=31536000, immutable' } 
-      },
-      '/favicon.ico': { 
-        headers: { 'cache-control': 'public, max-age=31536000, immutable' } 
-      }
+    '/product/**': { ssr: true, prerender: false },
+    '/fonts/**': {
+      headers: { 'cache-control': 'public, max-age=31536000, immutable' },
+    },
+    '/favicon.ico': {
+      headers: { 'cache-control': 'public, max-age=31536000, immutable' },
+    },
   },
   compatibilityDate: '2025-05-31',
 })

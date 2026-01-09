@@ -16,7 +16,7 @@
         :aria-valuenow="localMin"
         @input="onMinInput"
       />
-      
+
       <input
         v-model.number="localMax"
         type="range"
@@ -36,11 +36,7 @@
       <p class="range-slider__text" aria-live="polite">
         Price: <span>${{ localMin }}</span> – <span>${{ localMax }}</span>
       </p>
-      <button 
-        type="button"
-        class="range-slider__filter-button" 
-        @click="$emit('apply')"
-      >
+      <button type="button" class="range-slider__filter-button" @click="$emit('apply')">
         Filter
       </button>
     </div>
@@ -48,61 +44,63 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+  import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-  modelValue: [number, number]
-  min?: number
-  max?: number
-  step?: number
-}>(), {
-  min: 0,
-  max: 1000,
-  step: 1
-})
+  const props = withDefaults(
+    defineProps<{
+      modelValue: [number, number]
+      min?: number
+      max?: number
+      step?: number
+    }>(),
+    {
+      min: 0,
+      max: 1000,
+      step: 1,
+    },
+  )
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: [number, number]): void
-  (e: 'apply'): void
-}>()
+  defineEmits<{
+    (e: 'update:modelValue', value: [number, number]): void
+    (e: 'apply'): void
+  }>()
 
-const model = defineModel<[number, number]>({ required: true })
+  const model = defineModel<[number, number]>({ required: true })
 
-const localMin = computed({
-  get: () => model.value[0],
-  set: (val) => {
-    const newMax = Math.max(val + props.step, model.value[1])
-    model.value = [val, model.value[1]]
+  const localMin = computed({
+    get: () => model.value[0],
+    set: (val) => {
+      model.value = [val, model.value[1]]
+    },
+  })
+
+  const localMax = computed({
+    get: () => model.value[1],
+    set: (val) => {
+      model.value = [model.value[0], val]
+    },
+  })
+
+  const rangeStyle = computed(() => {
+    const start = ((model.value[0] - props.min) / (props.max - props.min)) * 100
+    const end = ((model.value[1] - props.min) / (props.max - props.min)) * 100
+    return {
+      left: `${start}%`,
+      width: `${end - start}%`,
+    }
+  })
+
+  function onMinInput() {
+    if (localMin.value >= localMax.value) {
+      localMin.value = localMax.value - props.step
+    }
   }
-})
 
-const localMax = computed({
-  get: () => model.value[1],
-  set: (val) => {
-    model.value = [model.value[0], val]
+  function onMaxInput() {
+    if (localMax.value <= localMin.value) {
+      localMax.value = localMin.value + props.step
+    }
   }
-})
-
-const rangeStyle = computed(() => {
-  const start = ((model.value[0] - props.min) / (props.max - props.min)) * 100
-  const end = ((model.value[1] - props.min) / (props.max - props.min)) * 100
-  return {
-    left: `${start}%`,
-    width: `${end - start}%`,
-  }
-})
-
-function onMinInput() {
-  if (localMin.value >= localMax.value) {
-    localMin.value = localMax.value - props.step
-  }
-}
-
-function onMaxInput() {
-  if (localMax.value <= localMin.value) {
-    localMax.value = localMin.value + props.step
-  }
-}
 </script>
 
 <style scoped lang="scss">
@@ -122,10 +120,10 @@ function onMaxInput() {
 
     &__range {
       position: absolute;
+      z-index: 1;
       block-size: 100%;
       background-color: vars.$color-dark;
       border-radius: 3px;
-      z-index: 1;
     }
 
     &__text-container {
@@ -155,24 +153,24 @@ function onMaxInput() {
 
     &__thumb {
       position: absolute;
+      top: 50%;
       z-index: 2;
       inline-size: 100%;
       block-size: 0;
+      margin: 0;
       appearance: none;
       pointer-events: none;
       background: none;
-      top: 50%;
       transform: translateY(-50%);
-      margin: 0;
 
       &::-webkit-slider-thumb {
         inline-size: 2px;
         block-size: 10px;
         appearance: none;
         pointer-events: all;
+        cursor: pointer;
         background-color: vars.$color-dark;
         border: none;
-        cursor: pointer;
         transition: transform 0.1s;
       }
 

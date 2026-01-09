@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useRuntimeConfig, navigateTo } from 'nuxt/app'
+import { useApi } from '@/composables/useApi'
+import type { ApiError } from '@/types/ApiError'
 
 export const useAuthStore = defineStore('auth', () => {
   const config = useRuntimeConfig()
@@ -7,7 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
   const tokenCookie = useCookie<string | null>('auth-token', {
     maxAge: 60 * 60 * 24 * 7,
     sameSite: 'lax',
-    path: '/'
+    path: '/',
   })
 
   const user = ref<string | null>(tokenCookie.value || null)
@@ -18,7 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const authorise = (token: string) => {
     user.value = token
-    tokenCookie.value = token 
+    tokenCookie.value = token
   }
 
   const logout = () => {
@@ -35,7 +38,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   const loginWithApi = async (credentials: { username: string; password: string }) => {
     try {
-     
       const data = await fetchApi<{ token: string }>('/auth/login', {
         method: 'POST',
         body: credentials,
@@ -45,18 +47,19 @@ export const useAuthStore = defineStore('auth', () => {
         authorise(data.token)
         return data.token
       }
-      
+
       throw new Error('No token received from API')
-    } catch (error: any) {
-      const status = error.response?.status
-      const apiMessage = error.response?._data?.message
+    } catch (error: unknown) {
+      const errors = error as ApiError
+      const status = errors.response?.status
+      const apiMessage = errors.response?._data?.message
 
       if (status === 401) {
         throw new Error('Invalid username or password')
       } else if (status === 500) {
         throw new Error('Server-side error. Please try again later')
       }
-      
+
       throw new Error(apiMessage || 'Authentication error. Please try again.')
     }
   }

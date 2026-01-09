@@ -7,11 +7,11 @@
 
     <div class="review-item__rating-wrapper">
       <span class="visually-hidden">Rating: {{ review.rating }} out of 5</span>
-      <StarRating 
-        :model-value="review.rating ?? 0" 
-        readonly 
+      <StarRating
+        :model-value="review.rating ?? 0"
+        readonly
         aria-hidden="true"
-        class="review-item__rating" 
+        class="review-item__rating"
       />
     </div>
 
@@ -22,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Review } from '@/types/Reviews'
-import StarRating from '@/components/ui/base/BaseStarRating.vue'
+  import type { Review } from '@/types/Reviews'
+  import StarRating from '@/components/ui/base/BaseStarRating.vue'
 
-defineProps<{
-  review: Review
-}>()
+  defineProps<{
+    review: Review
+  }>()
 </script>
 
 <style scoped lang="scss">

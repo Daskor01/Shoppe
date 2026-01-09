@@ -4,55 +4,46 @@
       :id="uid"
       v-model="model"
       v-bind="$attrs"
-      :class="['base-select__native', { 'base-select__native--placeholder': !model && placeholder }]"
+      :class="[
+        'base-select__native',
+        { 'base-select__native--placeholder': !model && placeholder },
+      ]"
       :aria-label="placeholder"
     >
-      <option 
-        v-if="placeholder" 
-        value="" 
-        disabled 
-        hidden
-      >
+      <option v-if="placeholder" value="" disabled hidden>
         {{ placeholder }}
       </option>
 
-      <option 
-        v-for="option in options" 
-        :key="option.value" 
-        :value="option.value"
-      >
+      <option v-for="option in options" :key="option.value" :value="option.value">
         {{ option.label }}
       </option>
     </select>
-    
-    <IconBaseArrowDown 
-      class="base-select__icon" 
-      aria-hidden="true" 
-    />
+
+    <IconBaseArrowDown class="base-select__icon" aria-hidden="true" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useId } from 'vue'
-import IconBaseArrowDown from '@/components/icons/IconBaseArrowDown.vue'
+  import { useId } from 'vue'
+  import IconBaseArrowDown from '@/components/icons/IconBaseArrowDown.vue'
 
-defineOptions({
-  inheritAttrs: false
-})
+  defineOptions({
+    inheritAttrs: false,
+  })
 
-interface Option {
-  value: string | number
-  label: string
-}
+  interface Option {
+    value: string | number
+    label: string
+  }
 
-const props = defineProps<{
-  options: Option[]
-  placeholder?: string
-}>()
+  defineProps<{
+    options: Option[]
+    placeholder?: string
+  }>()
 
-const model = defineModel<string | number>()
+  const model = defineModel<string | number>()
 
-const uid = useId()
+  const uid = useId()
 </script>
 
 <style scoped lang="scss">
@@ -61,9 +52,9 @@ const uid = useId()
     display: flex;
 
     &__native {
+      box-sizing: border-box;
       inline-size: 100%;
       block-size: 54px;
-      box-sizing: border-box;
       padding: 12px 16px;
       font-size: 14px;
       line-height: 1.2;

@@ -81,10 +81,10 @@
     }
 
     &__field {
+      box-sizing: border-box;
       width: 100%;
       height: 40px;
       font-size: 1rem;
-      box-sizing: border-box;
       background: transparent;
       border: none;
       border-radius: 4px;

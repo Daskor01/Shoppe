@@ -17,10 +17,10 @@
     position: relative;
 
     &__input {
+      box-sizing: border-box;
       inline-size: 100%;
       block-size: 32px;
       padding: 0 10px;
-      box-sizing: border-box;
       background-color: vars.$color-ligth-gray;
       border: none;
       border-radius: 4px;

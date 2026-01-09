@@ -1,15 +1,16 @@
 <template>
   <div class="reviews">
-    <div 
-      v-if="reviews.length" 
-      class="reviews__list" 
-      role="region" 
+    <div
+      v-if="reviews.length"
+      class="reviews__list"
+      role="region"
       aria-labelledby="reviews-heading"
     >
       <h3 id="reviews-heading" class="reviews__title">
-        {{ reviews.length }} {{ reviews.length === 1 ? 'Review' : 'Reviews' }} for {{ productTitle }}
+        {{ reviews.length }} {{ reviews.length === 1 ? 'Review' : 'Reviews' }} for
+        {{ productTitle }}
       </h3>
-      
+
       <ReviewItem
         v-for="review in reviews"
         :key="review.id"
@@ -17,10 +18,8 @@
         class="reviews__item"
       />
     </div>
-    
-    <p v-else class="reviews__empty" role="status">
-      There are no reviews yet. Be the first!
-    </p>
+
+    <p v-else class="reviews__empty" role="status">There are no reviews yet. Be the first!</p>
 
     <ReviewForm
       :product-id="productId"
@@ -32,52 +31,52 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-import type { Review } from '@/types/Reviews'
-import ReviewForm from '@/components/ui/reviews/ReviewForm.vue'
-import ReviewItem from '@/components/ui/reviews/ReviewItem.vue'
+  import { ref, onMounted, onUnmounted, computed } from 'vue'
+  import type { Review } from '@/types/Reviews'
+  import ReviewForm from '@/components/ui/reviews/ReviewForm.vue'
+  import ReviewItem from '@/components/ui/reviews/ReviewItem.vue'
 
-const props = defineProps<{
-  productId: number | string
-  productTitle: string
-}>()
+  const props = defineProps<{
+    productId: number | string
+    productTitle: string
+  }>()
 
-const reviews = ref<Review[]>([])
-const storageKey = computed(() => `reviews_${props.productId}`)
+  const reviews = ref<Review[]>([])
+  const storageKey = computed(() => `reviews_${props.productId}`)
 
-const loadReviews = () => {
-  if (!import.meta.client) return
-  const stored = localStorage.getItem(storageKey.value)
-  reviews.value = stored ? JSON.parse(stored) : []
-}
-
-const saveReviews = (data: Review[]) => {
-  if (!import.meta.client) return
-  localStorage.setItem(storageKey.value, JSON.stringify(data))
-}
-
-const handleAddReview = (newReview: Review) => {
-  const isDuplicate = reviews.value.some(r => r.email === newReview.email)
-  if (isDuplicate) return
-
-  reviews.value = [newReview, ...reviews.value]
-  saveReviews(reviews.value)
-}
-
-const handleStorageChange = (event: StorageEvent) => {
-  if (event.key === storageKey.value) {
-    loadReviews()
+  const loadReviews = () => {
+    if (!import.meta.client) return
+    const stored = localStorage.getItem(storageKey.value)
+    reviews.value = stored ? JSON.parse(stored) : []
   }
-}
 
-onMounted(() => {
-  loadReviews()
-  window.addEventListener('storage', handleStorageChange)
-})
+  const saveReviews = (data: Review[]) => {
+    if (!import.meta.client) return
+    localStorage.setItem(storageKey.value, JSON.stringify(data))
+  }
 
-onUnmounted(() => {
-  window.removeEventListener('storage', handleStorageChange)
-})
+  const handleAddReview = (newReview: Review) => {
+    const isDuplicate = reviews.value.some((r) => r.email === newReview.email)
+    if (isDuplicate) return
+
+    reviews.value = [newReview, ...reviews.value]
+    saveReviews(reviews.value)
+  }
+
+  const handleStorageChange = (event: StorageEvent) => {
+    if (event.key === storageKey.value) {
+      loadReviews()
+    }
+  }
+
+  onMounted(() => {
+    loadReviews()
+    window.addEventListener('storage', handleStorageChange)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('storage', handleStorageChange)
+  })
 </script>
 
 <style scoped lang="scss">

@@ -1,7 +1,7 @@
 <template>
   <div class="cart-content" role="region" aria-label="Shopping cart">
-    <button 
-      class="cart-content__close" 
+    <button
+      class="cart-content__close"
       aria-label="Close shopping bag"
       @click="cartStore.closeCart"
     >
@@ -37,15 +37,13 @@
 
     <div v-if="cartStore.cartItems.length" class="cart-content__footer">
       <div class="cart-content__line" aria-hidden="true" />
-      
+
       <div class="cart-content__total" aria-live="polite">
         <span> Subtotal ({{ itemsCounter }} item{{ itemSuffix }}) </span>
         <span class="cart-content__total-price"> $ {{ formattedTotalPrice }} </span>
       </div>
 
-      <BaseButton class="cart-content__checkout" @click="goToCheckout">
-        View Cart
-      </BaseButton>
+      <BaseButton class="cart-content__checkout" @click="goToCheckout"> View Cart </BaseButton>
     </div>
   </div>
 </template>
