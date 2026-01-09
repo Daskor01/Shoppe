@@ -1,4 +1,6 @@
-// middleware/auth.global.ts
+import { defineNuxtRouteMiddleware, navigateTo, useCookie } from 'nuxt/app'
+import { useAuthStore } from '@/stores/useAuthStore'
+
 export default defineNuxtRouteMiddleware((to) => {
   const authStore = useAuthStore()
   const token = useCookie('auth-token')

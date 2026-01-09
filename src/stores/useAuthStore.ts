@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useRuntimeConfig, navigateTo } from 'nuxt/app'
+import { useRuntimeConfig, navigateTo, useCookie } from 'nuxt/app'
 import { useApi } from '@/composables/useApi'
 import type { ApiError } from '@/types/ApiError'
 
