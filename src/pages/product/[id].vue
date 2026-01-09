@@ -89,7 +89,7 @@
   import { Swiper, SwiperSlide } from 'swiper/vue'
   import { Navigation, Pagination } from 'swiper/modules'
   import { useApi } from '@/composables/useApi'
-  import { useRuntimeConfig } from 'nuxt/app'
+  import { useRuntimeConfig, useAsyncData } from 'nuxt/app'
 
   import BaseTabs from '@/components/ui/base/BaseTabs.vue'
   import BaseAccordion from '@/components/ui/base/BaseAccordion.vue'

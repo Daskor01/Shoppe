@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+  import { useHead } from 'nuxt/app'
   import ProductList from '@/components/ui/product/ProductList.vue'
   import Carousel from '@/components/ui/home/Carousel.vue'
 

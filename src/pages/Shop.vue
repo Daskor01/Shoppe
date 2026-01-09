@@ -67,6 +67,7 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { useRoute } from 'vue-router'
+  import { useHead } from 'nuxt/app'
   import ProductCard from '@/components/ui/product/ProductCard.vue'
   import ShopFilters from '@/components/ui/shop/ShopFilters.vue'
   import BaseSlidePanel from '@/components/ui/base/BaseSlidePanel.vue'
