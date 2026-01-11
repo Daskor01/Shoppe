@@ -7,19 +7,18 @@ export default defineNuxtRouteMiddleware((to) => {
   const config = useRuntimeConfig()
 
   let path = to.path
-  if (config.app.baseURL && path.startsWith(config.app.baseURL)) {
-    path = path.replace(config.app.baseURL, '/')
+  const baseUrl = config.app.baseURL
+  
+  if (baseUrl && path.startsWith(baseUrl)) {
+    path = path.replace(baseUrl, '/')
   }
-
   path = path.replace(/\/+$/, '') || '/'
 
   const publicPages = ['/', '/account', '/reset-password']
-
   if (publicPages.includes(path)) return
 
   if (!authStore.isAuthenticated && token.value) {
-    authStore.authorise(token.value)
-    return
+    authStore.user = token.value
   }
 
   if (!authStore.isAuthenticated) {
