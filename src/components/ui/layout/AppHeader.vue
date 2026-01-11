@@ -2,14 +2,15 @@
   <header ref="headerRef" class="header">
     <div class="header__container">
       <NuxtLink to="/" class="header__logo" aria-label="Shoppe Home">
-        <img
-          src="@/assets/Logo.png"
+        <NuxtImg
+          src="/Logo.png"
           alt="Shoppe Store"
           class="header__logo-image"
           width="129"
           height="27"
           fetchpriority="high"
           loading="eager"
+          format="webp"
         />
       </NuxtLink>
 
