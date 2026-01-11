@@ -3,7 +3,7 @@
     <div class="header__container">
       <NuxtLink to="/" class="header__logo" aria-label="Shoppe Home">
         <NuxtImg
-          src="Logo.png"
+          :src=Logo
           alt="Shoppe Store"
           class="header__logo-image"
           width="129"
@@ -125,6 +125,7 @@
   import IconUser from '@/components/icons/IconUser.vue'
   import IconAddAccount from '@/components/icons/IconAddAccount.vue'
   import { useRoute } from 'vue-router'
+  import Logo from '/Logo.png'
 
   const cartStore = useCartStore()
   const authStore = useAuthStore()

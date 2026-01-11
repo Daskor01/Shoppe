@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
     maxAge: 60 * 60 * 24 * 7,
     sameSite: 'lax',
     path: config.app.baseURL || '/',
+    secure: true,
   })
 
   const user = ref<string | null>(tokenCookie.value || null)

@@ -74,19 +74,19 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'preload',
-          href: 'fonts/DMSans-Variable.woff2',
+          href: '/fonts/DMSans-Variable.woff2',
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
         {
           rel: 'preload',
-          href: 'fonts/AllertaStencil-Regular.woff2',
+          href: '/fonts/AllertaStencil-Regular.woff2',
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
-        { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],
     },
   },
