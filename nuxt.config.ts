@@ -13,6 +13,7 @@ export default defineNuxtConfig({
   modules: ['@pinia/nuxt', '@nuxt/image'],
 
   image: {
+    provider: process.env.GITHUB_ACTIONS === 'true' ? 'static' : 'ipx',
     domains: ['fakestoreapi.com'],
     format: ['webp', 'avif', 'png'],
     screens: {
@@ -73,19 +74,19 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'preload',
-          href: '/fonts/DMSans-Variable.woff2',
+          href: 'fonts/DMSans-Variable.woff2',
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
         {
           rel: 'preload',
-          href: '/fonts/AllertaStencil-Regular.woff2',
+          href: 'fonts/AllertaStencil-Regular.woff2',
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/x-icon', href: 'favicon.ico' },
       ],
     },
   },
