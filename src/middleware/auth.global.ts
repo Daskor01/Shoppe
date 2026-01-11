@@ -1,3 +1,7 @@
+import { useAuthStore } from '@/stores/useAuthStore'
+import { defineNuxtRouteMiddleware, navigateTo, useCookie } from 'nuxt/app'
+
+
 export default defineNuxtRouteMiddleware((to) => {
   const authStore = useAuthStore()
   const token = useCookie('auth-token')
