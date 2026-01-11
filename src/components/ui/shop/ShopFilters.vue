@@ -17,7 +17,7 @@
     </div>
 
     <div class="shop-filters__container">
-      <fieldset class="shop-filters__section" style=" padding: 0; margin: 0;border: none">
+      <fieldset class="shop-filters__section" style="padding: 0; margin: 0; border: none">
         <legend class="visually-hidden">Filter and Sort Options</legend>
 
         <BaseSelect

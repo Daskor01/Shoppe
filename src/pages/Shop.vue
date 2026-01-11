@@ -206,8 +206,8 @@
     }
 
     @media (max-width: vars.$breakpoints-m) {
-      margin-block-start: 40px;
       gap: 16px;
+      margin-block-start: 40px;
     }
 
     &__item {

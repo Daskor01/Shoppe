@@ -136,18 +136,17 @@
       border-radius: 4px;
       transition: all 0.2s ease;
 
-      @media(max-width: vars.$breakpoints-m) {
+      @media (max-width: vars.$breakpoints-m) {
         inline-size: 36px;
         block-size: 36px;
         font-size: 0.875rem;
       }
 
-      
       &:focus-visible {
         outline: 2px solid vars.$color-dark;
         outline-offset: 2px;
       }
-      
+
       &--active {
         font-weight: bold;
         color: vars.$color-light;
@@ -155,12 +154,12 @@
         background: vars.$color-dark;
         border-color: vars.$color-dark;
       }
-      
+
       &:disabled {
         cursor: not-allowed;
         opacity: 0.3;
       }
-      
+
       &:hover:not(:disabled) {
         border-color: vars.$color-dark;
       }

@@ -108,44 +108,44 @@ const selectPrev = () => {
   }
 
   .base-tabs__tab {
-      position: relative;
-      padding: 0;
-      font-size: 20px;
-      line-height: 130%;
-      color: vars.$color-gray;
-      white-space: nowrap;
-      cursor: pointer;
-      background: transparent;
-      border: none;
-      transition: color 0.2s ease;
+    position: relative;
+    padding: 0;
+    font-size: 20px;
+    line-height: 130%;
+    color: vars.$color-gray;
+    white-space: nowrap;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    transition: color 0.2s ease;
 
-      @media (max-width: vars.$breakpoints-xl) {
-        font-size: 16px;
-      }
+    @media (max-width: vars.$breakpoints-xl) {
+      font-size: 16px;
+    }
 
-      &:focus-visible {
-        outline: 2px solid vars.$color-dark;
-        outline-offset: 8px;
-      }
+    &:focus-visible {
+      outline: 2px solid vars.$color-dark;
+      outline-offset: 8px;
+    }
 
-      &--active {
-        color: vars.$color-dark;
+    &--active {
+      color: vars.$color-dark;
 
-        &::after {
-          position: absolute;
-          inset-block-end: -34px;
-          display: block;
-          width: 100%;
-          height: 2px;
-          content: '';
-          background-color: vars.$color-dark;
+      &::after {
+        position: absolute;
+        inset-block-end: -34px;
+        display: block;
+        width: 100%;
+        height: 2px;
+        content: '';
+        background-color: vars.$color-dark;
 
-          @media (max-width: vars.$breakpoints-m) {
-            inset-block-end: -10px;
-          }
+        @media (max-width: vars.$breakpoints-m) {
+          inset-block-end: -10px;
         }
       }
     }
+  }
 
   .fade-enter-active,
   .fade-leave-active {
