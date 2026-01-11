@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   modules: ['@pinia/nuxt', '@nuxt/image'],
 
   image: {
-    provider: process.env.GITHUB_ACTIONS === 'true' ? 'static' : 'ipx',
+    provider: process.env.GITHUB_ACTIONS === 'true' ? 'none' : 'ipx',
     domains: ['fakestoreapi.com'],
     format: ['webp', 'avif', 'png'],
     screens: {
@@ -66,6 +66,7 @@ export default defineNuxtConfig({
   },
   app: {
     baseURL: process.env.GITHUB_ACTIONS === 'true' ? '/Shoppe/' : '/',
+    buildAssetsDir: 'assets',
     head: {
       title: 'Shoppe - Your Online Store',
       htmlAttrs: {
