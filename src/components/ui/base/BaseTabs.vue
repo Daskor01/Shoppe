@@ -45,33 +45,21 @@
     name: string
   }
 
-  <<<<<<< HEAD
   const props = defineProps<{
     tabs: Tab[],
     modelValue?: number
   }>()
 
-  const emit = defineEmits<{
-    (e: 'update:modelValue', value: number):void
-  }>()
-
-  const activeIndex = ref(props.modelValue ?? 0)
-=======
-const props = defineProps<{
-    tabs: Tab[]
-  }>()
-
   const modelValue = defineModel<number>({ default: 0 })
->>>>>>> e7872bd (Отпимизированы страницы('/', '/Shop','/product/' и их компоненты)
 
   const activeTab = computed(() => props.tabs[modelValue.value])
 
-const selectNext = () => {
-  modelValue.value = (modelValue.value + 1) % props.tabs.length
-}
-const selectPrev = () => {
-  modelValue.value = (modelValue.value - 1 + props.tabs.length) % props.tabs.length
-}
+  const selectNext = () => {
+    modelValue.value = (modelValue.value + 1) % props.tabs.length
+  }
+  const selectPrev = () => {
+    modelValue.value = (modelValue.value - 1 + props.tabs.length) % props.tabs.length
+  }
 </script>
 
 <style scoped lang="scss">

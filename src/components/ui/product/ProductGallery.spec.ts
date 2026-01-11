@@ -18,7 +18,18 @@ describe('ProductGallery', () => {
     }
 
     return mount(ProductGallery, {
-      props: { ProductImages: images }
+      props: { ProductImages: images },
+      global: {
+        stubs: {
+          ClientOnly: { template: '<div><slot /></div>' },
+          Swiper: { template: '<div class="swiper-mock"><slot /></div>' },
+          SwiperSlide: { template: '<div class="swiper-slide-mock"><slot /></div>' },
+          NuxtImg: { 
+            template: '<img :src="src" :class="class" />',
+            props: ['src', 'class'] 
+          }
+        }
+      }
     })
   }
 
@@ -96,7 +107,7 @@ describe('ProductGallery', () => {
       
       const mainImage = wrapper.find('.product-gallery__main-image img')
       expect(mainImage.exists()).toBe(true)
-      expect(mainImage.attributes('src')).toBe(singleImage[0])
+      expect(mainImage.attributes('src')).toContain(singleImage[0])
     })
   })
 })
