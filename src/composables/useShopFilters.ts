@@ -28,24 +28,24 @@ export default function useShopFilters(filters: Ref<Filters>) {
     },
   )
 
-function updateQuery() {
-  const query: LocationQueryRaw = {
-    search: filters.value.search || undefined,
-    category: filters.value.category || undefined,
-    sortBy: filters.value.sortBy || undefined,
-    onSale: filters.value.onSale ? 'true' : undefined,
-    inStock: filters.value.inStock ? 'true' : undefined,
-    priceRange: filters.value.priceRange.join(','),
-  }
-
-  Object.keys(query).forEach((key) => {
-    if (query[key] === undefined) {
-      delete query[key]
+  function updateQuery() {
+    const query: LocationQueryRaw = {
+      search: filters.value.search || undefined,
+      category: filters.value.category || undefined,
+      sortBy: filters.value.sortBy || undefined,
+      onSale: filters.value.onSale ? 'true' : undefined,
+      inStock: filters.value.inStock ? 'true' : undefined,
+      priceRange: filters.value.priceRange.join(','),
     }
-  })
 
-  router.replace({ query })
-}
+    Object.keys(query).forEach((key) => {
+      if (query[key] === undefined) {
+        delete query[key]
+      }
+    })
+
+    router.replace({ query })
+  }
 
   const filteredProducts = computed(() => {
     let products = [...store.products]

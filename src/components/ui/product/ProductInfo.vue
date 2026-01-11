@@ -81,7 +81,11 @@
       <div class="product-info__share" aria-label="Share on social media">
         <IconMail class="product-info__share-icon" role="link" aria-label="Share via Email" />
         <IconFacebook class="product-info__share-icon" role="link" aria-label="Share on Facebook" />
-        <IconInstagram class="product-info__share-icon" role="link" aria-label="Share on Instagram" />
+        <IconInstagram
+          class="product-info__share-icon"
+          role="link"
+          aria-label="Share on Instagram"
+        />
         <IconTwitter class="product-info__share-icon" role="link" aria-label="Share on Twitter" />
       </div>
     </div>
@@ -341,6 +345,7 @@
 
       &-like {
         @include mixins.reset-appearance;
+
         color: vars.$color-gray;
         transition: color 0.3s ease;
 
