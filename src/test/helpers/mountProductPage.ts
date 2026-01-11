@@ -3,7 +3,7 @@ import { defineComponent, h, Suspense } from 'vue'
 import ProductPage from '@/pages/product/[id].vue'
 
 export const mountProductPage = async () => {
-  const Wrapper = defineComponent({
+  const wrapperComponent = defineComponent({
     render() {
       return h(Suspense, null, {
         default: h(ProductPage),
@@ -12,7 +12,7 @@ export const mountProductPage = async () => {
     }
   })
 
-  const wrapper = mount(Wrapper, {
+  const wrapper = mount(wrapperComponent, {
     global: {
       stubs: {
         ProductGallery: {
