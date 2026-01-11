@@ -6,15 +6,19 @@ export default defineNuxtRouteMiddleware((to) => {
   const token = useCookie('auth-token')
   const config = useRuntimeConfig()
 
-  let path = to.path
-  const baseUrl = config.app.baseURL
-  
+  let path = to.path.toLowerCase()
+  const baseUrl = config.app.baseURL.toLowerCase()
+
   if (baseUrl && path.startsWith(baseUrl)) {
     path = path.replace(baseUrl, '/')
   }
+  
   path = path.replace(/\/+$/, '') || '/'
 
   const publicPages = ['/', '/account', '/reset-password']
+
+  console.log('Final normalized path:', path)
+
   if (publicPages.includes(path)) return
 
   if (!authStore.isAuthenticated && token.value) {
