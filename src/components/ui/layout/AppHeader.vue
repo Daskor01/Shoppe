@@ -3,7 +3,7 @@
     <div class="header__container">
       <NuxtLink to="/" class="header__logo" aria-label="Shoppe Home">
         <NuxtImg
-          src="/Logo.png"
+          src="Logo.png"
           alt="Shoppe Store"
           class="header__logo-image"
           width="129"

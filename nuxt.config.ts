@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   srcDir: 'src',
   ssr: true,
 
-  css: ['~/assets/scss/main.scss'],
+  css: ['@/assets/scss/main.scss'],
   features: {
     inlineStyles: true,
   },
@@ -66,7 +66,6 @@ export default defineNuxtConfig({
   },
   app: {
     baseURL: process.env.GITHUB_ACTIONS === 'true' ? '/Shoppe/' : '/',
-    buildAssetsDir: 'assets',
     head: {
       title: 'Shoppe - Your Online Store',
       htmlAttrs: {
