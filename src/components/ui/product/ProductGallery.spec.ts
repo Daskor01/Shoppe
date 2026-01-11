@@ -11,27 +11,34 @@ describe('ProductGallery', () => {
   })
 
   const createWrapper = (images: string[] = MOCK_IMAGES, isMobile = false) => {
-    if (isMobile) {
-      setMobile()
-    } else {
-      resetMobile()
-    }
+  if (isMobile) {
+    setMobile()
+  } else {
+    resetMobile()
+  }
 
-    return mount(ProductGallery, {
-      props: { ProductImages: images },
-      global: {
-        stubs: {
-          ClientOnly: { template: '<div><slot /></div>' },
-          Swiper: { template: '<div class="swiper-mock"><slot /></div>' },
-          SwiperSlide: { template: '<div class="swiper-slide-mock"><slot /></div>' },
-          NuxtImg: { 
-            template: '<img :src="src" :class="class" />',
-            props: ['src', 'class'] 
-          }
+  return mount(ProductGallery, {
+    props: { 
+      ProductImages: images 
+    },
+    global: {
+      stubs: {
+        ClientOnly: { template: '<div><slot /></div>' },
+        
+        Swiper: { 
+          template: '<div class="swiper-mock"><slot /></div>',
+          methods: { slideToLoop: vi.fn() } 
+        },
+        SwiperSlide: { template: '<div class="swiper-slide-mock"><slot /></div>' },
+        
+        NuxtImg: { 
+          template: '<img :src="src" class="nuxt-img-stub" />',
+          props: ['src', 'alt', 'format', 'quality', 'loading', 'fetchpriority', 'width'] 
         }
       }
-    })
-  }
+    }
+  })
+}
 
   describe('Mobile version', () => {
     it('displays all product images', () => {

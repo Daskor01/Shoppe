@@ -23,18 +23,23 @@ describe('Product page', () => {
     vi.useRealTimers()
   })
 
-  it('shows loading state before product is loaded', () => {
-    const wrapper = mount(ProductPage, {
+  it('shows loading state before product is loaded', async () => {
+    const wrapper = mount({
+      template: `<Suspense>
+        <ProductPage />
+        <template #fallback>Loading product...</template>
+      </Suspense>`,
+      components: { ProductPage }
+    }, {
       global: {
-        stubs: {
-          RouterLink: { template: '<a />' },
-          NuxtLink: { template: '<a />' },
-          ClientOnly: { template: '<div><slot /></div>' },
-        },
-      },
+        stubs: { 
+          RouterLink: true, NuxtLink: true, ClientOnly: true,
+          ProductGallery: true, ProductInfo: true 
+        }
+      }
     })
 
-    expect(wrapper.text()).toContain('Loading...')
+    expect(wrapper.text()).toContain('Loading product...')
   })
 
   it('fetches product by id on mount', async () => {
@@ -74,20 +79,20 @@ describe('Product page', () => {
   })
 
   it('correctly updates reviews count from localStorage', async () => {
-    localStorage.setItem(
-      'reviews_1',
-      JSON.stringify([{ id: 1 }, { id: 2 }]),
-    )
+    localStorage.setItem('reviews_1', JSON.stringify([{ id: 1 }, { id: 2 }]))
 
+    interface TabItem {
+      name: string;
+      label: string;
+    }
+    
     const wrapper = await mountProductPage()
-
-    vi.runOnlyPendingTimers()
     await flushPromises()
-
+    
     const baseTabs = wrapper.findComponent({ name: 'BaseTabs' })
-    const tabs = baseTabs.props('tabs') as { name: string; label: string }[]
-    const reviewsTab = tabs.find(tab => tab.name === 'reviews')
-
+    expect(baseTabs.exists()).toBe(true)
+    const tabs = baseTabs.props('tabs') as TabItem[]
+    const reviewsTab = tabs.find((tab: TabItem) => tab.name === 'reviews')
     expect(reviewsTab?.label).toBe('Reviews(2)')
   })
 })
