@@ -1,68 +1,63 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useApi } from '@/composables/useApi'
-import { useRuntimeConfig } from 'nuxt/app'
-import {
-  getFromLocalStorage,
-  setToLocalStorage,
-  removeFromLocalStorage,
-} from '@/utils/localStorage'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<string | null>(null)
+  const config = useRuntimeConfig()
+
+  const tokenCookie = useCookie<string | null>('auth-token', {
+    maxAge: 60 * 60 * 24 * 7,
+    sameSite: 'lax',
+    path: '/'
+  })
+
+  const user = ref<string | null>(tokenCookie.value || null)
 
   const isAuthenticated = computed(() => !!user.value)
 
-  const { fetchApi } = useApi(useRuntimeConfig().public.productApi)
+  const { fetchApi } = useApi(config.public.productApi)
 
-  //actions
   const authorise = (token: string) => {
     user.value = token
-    setToLocalStorage('auth-token', token)
+    tokenCookie.value = token 
   }
 
   const logout = () => {
     user.value = null
-    removeFromLocalStorage('auth-token')
+    tokenCookie.value = null
+    navigateTo('/account')
   }
 
   const initialize = () => {
-    if (import.meta.client) {
-      const token = getFromLocalStorage('auth-token')
-      if (token) {
-        user.value = token
-      }
+    if (tokenCookie.value) {
+      user.value = tokenCookie.value
     }
   }
 
-  //New action for API authentication using useApi
   const loginWithApi = async (credentials: { username: string; password: string }) => {
     try {
+     
       const data = await fetchApi<{ token: string }>('/auth/login', {
         method: 'POST',
         body: credentials,
       })
 
-      if (data.token) {
+      if (data?.token) {
         authorise(data.token)
         return data.token
-      } else {
-        throw new Error('No token received from API')
       }
-    } catch (error) {
-      console.error('Login error:', error)
+      
+      throw new Error('No token received from API')
+    } catch (error: any) {
+      const status = error.response?.status
+      const apiMessage = error.response?._data?.message
 
-      if (error instanceof Error) {
-        if (error.message.includes('Failed to fetch')) {
-          throw new Error(`Network error. ${error.message}`)
-        } else if (error.message.includes('401')) {
-          throw new Error(`Invalid username or password.`)
-        } else {
-          throw new Error(`Authentication failed. ${error.message}`)
-        }
-      } else {
-        throw new Error(`Authentication failed.`)
+      if (status === 401) {
+        throw new Error('Invalid username or password')
+      } else if (status === 500) {
+        throw new Error('Server-side error. Please try again later')
       }
+      
+      throw new Error(apiMessage || 'Authentication error. Please try again.')
     }
   }
 

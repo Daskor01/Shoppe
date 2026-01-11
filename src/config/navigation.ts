@@ -19,8 +19,8 @@ export const headerLinks = [
 ]
 
 export const headerActions = [
-  { icon: IconSearch, action: 'openSearch' },
-  { icon: IconCart, action: 'openCart' },
+  { icon: IconSearch, action: 'openSearch', label: 'Search' },
+  { icon: IconCart, action: 'openCart', label: 'Shopping Cart' },
 ]
 
 export const navigationLinks: LinkItem[] = [

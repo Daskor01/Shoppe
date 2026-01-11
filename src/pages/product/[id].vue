@@ -1,141 +1,143 @@
 <template>
-  <section v-if="product" class="product">
-    <ProductGallery :ProductImages="productImages" class="product__gallery" />
+  <main class="product-page">
+    <div v-if="pending" class="loading" aria-live="polite">Loading product...</div>
 
-    <ProductInfo :product="product" class="product__info" />
+    <section v-else-if="product" class="product" aria-label="Product details">
+      <ProductGallery 
+        :ProductImages="productImages" 
+        class="product__gallery" 
+      />
 
-    <BaseTabs v-if="!isMobile" :tabs="tabs" class="product__tabs">
-      <template #description>
-        <p>{{ product.description }}</p>
-      </template>
+      <ProductInfo 
+        :product="product" 
+        class="product__info" 
+      />
 
-      <template #additional>
-        <p><b>Weight:</b> 0.3 kg</p>
-        <p><b>Dimentions:</b> 15 x 10 x 1 cm</p>
-        <p><b>Colours:</b> Black, Browns, White</p>
-        <p><b>Materials:</b> Metal</p>
-      </template>
+      <component
+        :is="isMobile ? BaseAccordion : BaseTabs"
+        :tabs="tabs"
+        :items="tabs"
+        class="product__tabs"
+      >
+        <template #description>
+          <article class="product__description">
+            <p>{{ product.description }}</p>
+          </article>
+        </template>
 
-      <template #reviews>
-          <Reviews :productId="product.id" :productTitle="product.title" />
-      </template>
-    </BaseTabs>
+        <template #additional>
+          <ul class="product__specs">
+            <li><b>Weight:</b> 0.3 kg</li>
+            <li><b>Dimensions:</b> 15 x 10 x 1 cm</li>
+            <li><b>Colours:</b> Black, Browns, White</li>
+            <li><b>Materials:</b> Metal</li>
+          </ul>
+        </template>
 
-    <BaseAccordion v-else :items="tabs" class="product__tabs">
-      <template #description>
-        <p>{{ product.description }}</p>
-      </template>
+        <template #reviews>
+          <Reviews 
+            :productId="product.id" 
+            :productTitle="product.title" 
+            @update-count="updateReviewsCount"
+          />
+        </template>
+      </component>
+    </section>
 
-      <template #additional>
-        <p><b>Weight:</b> 0.3 kg</p>
-        <p><b>Dimentions:</b> 15 x 10 x 1 cm</p>
-        <p><b>Colours:</b> Black, Browns, White</p>
-        <p><b>Materials:</b> Metal</p>
-      </template>
+    <ClientOnly>
+      <section class="product__similar" aria-labelledby="similar-title">
+        <h2 id="similar-title" class="product__similar__title">Similar Items</h2>
 
-      <template #reviews>
-        <Reviews :productId="product.id" :productTitle="product.title" />
-      </template>
-    </BaseAccordion>
-  </section>
-  <div v-else class="loading">Loading...</div>
-
-  <ClientOnly>
-    <div class="product__similar">
-      <h2 class="product__similar__title">Similar Items</h2>
-
-      <div v-if="!isMobile" class="product__similar-grid">
-        <ProductCard
-          v-for="item in visibleProducts"
-          :key="item.id"
-          :product="item"
-          class="product__similar-grid-item"
-        />
-      </div>
-
-      <div v-else class="product__similar-carousel">
-        <Swiper
-          :modules="[Navigation, Pagination]"
-          :slides-per-view="2.2"
-          :space-between="30"
-          class="product__similar-swiper"
-        >
-          <SwiperSlide
+        <div v-if="!isMobile" class="product__similar-grid">
+          <ProductCard
             v-for="item in visibleProducts"
             :key="item.id"
-            class="product__similar-slide"
-          >
-            <ProductCard :product="item" class="product__similar-slide-item" />
-          </SwiperSlide>
-        </Swiper>
-      </div>
+            :product="item"
+            class="product__similar-grid-item"
+          />
+        </div>
 
-      <div class="product__similar-сontinue">
-        <NuxtLink to="/Shop" class="product__similar-link">
-          <span>Continue shopping</span>
-          <IconBaseArrowRight />
-        </NuxtLink>
-      </div>
-    </div>
-  </ClientOnly>
+        <div v-else class="product__similar-carousel">
+          <Swiper
+            :modules="[Navigation, Pagination]"
+            :slides-per-view="2.2"
+            :space-between="20"
+            class="product__similar-swiper"
+          >
+            <SwiperSlide v-for="item in visibleProducts" :key="item.id">
+              <ProductCard :product="item" />
+            </SwiperSlide>
+          </Swiper>
+        </div>
+
+        <div class="product__similar-сontinue">
+          <NuxtLink to="/Shop" class="product__similar-link" aria-label="Continue shopping and return to shop">
+            <span>Continue shopping</span>
+            <IconBaseArrowRight aria-hidden="true" />
+          </NuxtLink>
+        </div>
+      </section>
+    </ClientOnly>
+  </main>
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref, onUnmounted } from 'vue'
-  import { computed } from 'vue'
-  import { useRoute } from 'vue-router'
-  import { useProductsStore } from '@/stores/useProductsStore'
-  import { useApi } from '@/composables/useApi'
-  import { useBreakpoint } from '@/composables/useBreakpoint'
-  import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
-  import { type Product } from '@/types/Product'
-  import { Swiper, SwiperSlide } from 'swiper/vue'
-  import { Navigation, Pagination } from 'swiper/modules'
+import { computed, onMounted, shallowRef } from 'vue'
+import { useRoute } from 'vue-router'
+import { useProductsStore } from '@/stores/useProductsStore'
+import { useBreakpoint } from '@/composables/useBreakpoint'
+import { TABLET_BREAKPOINT } from '@/constants/breakpoints'
+import type { Product } from '@/types/Product'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation, Pagination } from 'swiper/modules'
+import { useApi } from '@/composables/useApi'
+import { useRuntimeConfig } from 'nuxt/app'
 
-  import ProductGallery from '@/components/ui/product/ProductGallery.vue'
-  import ProductInfo from '@/components/ui/product/ProductInfo.vue'
-  import Reviews from '@/components/ui/reviews/Reviews.vue'
-  import ProductCard from '@/components/ui/product/ProductCard.vue'
-  import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
+import BaseTabs from '@/components/ui/base/BaseTabs.vue'
+import BaseAccordion from '@/components/ui/base/BaseAccordion.vue'
+import ProductGallery from '@/components/ui/product/ProductGallery.vue'
+import ProductInfo from '@/components/ui/product/ProductInfo.vue'
+import Reviews from '@/components/ui/reviews/Reviews.vue'
+import ProductCard from '@/components/ui/product/ProductCard.vue'
+import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
 
-  const productStore = useProductsStore()
-  const route = useRoute()
-  const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
+const route = useRoute()
+const config = useRuntimeConfig()
+const productStore = useProductsStore()
+const { isBelow: isMobile } = useBreakpoint(TABLET_BREAKPOINT)
+const { fetchApi } = useApi(config.public.productApi)
 
-  const product = ref<Product | null>(null)
-  const productImages = ref<string[]>([])
+const { data: product, pending } = await useAsyncData<Product>(
+  `product-${route.params.id}`,
+  () => fetchApi<Product>(`/products/${route.params.id}`)
+)
 
-  const visibleProducts = computed(() => productStore.products.slice(0, 3))
-  const tabs = computed(() => [
-    { label: 'Description', name: 'description' },
-    { label: 'Additional Information', name: 'additional' },
-    { label: `Reviews(${reviewsCount.value})`, name: 'reviews' },
-  ])
-  const reviewsCount = ref(0)
+const productImages = computed(() => {
+  if (!product.value) return []
+  return Array(4).fill(product.value.image)
+})
 
-  const loadReviewsCount = () => {
-    if (product.value) {
-      const stored = localStorage.getItem(`reviews_${product.value.id}`)
-      const reviews = stored ? JSON.parse(stored) : []
-      reviewsCount.value = reviews.length
-    }
+const reviewsCount = shallowRef(0)
+
+const tabs = computed(() => [
+  { label: 'Description', name: 'description' },
+  { label: 'Additional Information', name: 'additional' },
+  { label: `Reviews(${reviewsCount.value})`, name: 'reviews' },
+])
+
+const updateReviewsCount = () => {
+  if (import.meta.client && product.value) {
+    const stored = localStorage.getItem(`reviews_${product.value.id}`)
+    reviewsCount.value = stored ? JSON.parse(stored).length : 0
   }
+}
 
-  onMounted(async () => {
-    const { fetchApi } = useApi('https://fakestoreapi.com')
-    const data = await fetchApi<Product>(`/products/${route.params.id}`)
+onMounted(() => {
+  productStore.fetchAllProducts()
+  updateReviewsCount()
+})
 
-    product.value = data
-    productImages.value = [data.image, data.image, data.image, data.image]
-  })
-
-  onMounted(() => {
-    productStore.fetchAllProducts()
-
-    loadReviewsCount()
-    const interval = setInterval(loadReviewsCount, 1000)
-    onUnmounted(() => clearInterval(interval))
-  })
+const visibleProducts = computed(() => productStore.products.slice(0, 3))
 </script>
 
 <style scoped lang="scss">

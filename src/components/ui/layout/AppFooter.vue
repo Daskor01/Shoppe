@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
     <div class="footer__container">
-      <nav class="footer__nav">
+      <nav class="footer__nav" aria-label="Footer navigation">
         <NuxtLink v-for="link in footerLinks" :key="link.path" :to="link.path" class="footer__link">
           {{ link.name }}
         </NuxtLink>
@@ -15,7 +15,12 @@
         </template>
       </div>
 
-      <form class="footer__form" novalidate @submit.prevent="handleSubmit">
+      <form 
+        class="footer__form" 
+        novalidate 
+        @submit.prevent="handleSubmit"
+        aria-label="Newsletter subscription"
+      >
         <BaseInput
           v-model="email"
           :error="errors.email"
@@ -23,29 +28,41 @@
           name="email"
           placeholder="Give an email, get the newsletter."
           class="footer__form-input"
+          aria-label="Email for newsletter"
         />
 
-        <button type="submit" class="footer__form-button">
-          <IconArrowRight class="footer__icon" />
+        <button type="submit" class="footer__form-button" aria-label="Subscribe">
+          <IconArrowRight class="footer__form-button--icon" aria-hidden="true"/>
         </button>
 
         <div class="footer__form-consent-container">
-          <input type="checkbox" class="footer__form-consent-checkbox" required checked />
-          <p class="footer__form-consent-text">i agree to the website’s terms and conditions</p>
+          <input 
+            v-model="consent"
+            type="checkbox" 
+            class="footer__form-consent-checkbox" 
+            required 
+            checked
+            aria-label="Agree to terms and conditions"
+          />
+          <span class="footer__form-consent-text">i agree to the website’s terms and conditions</span>
         </div>
       </form>
 
       <div class="footer__socials">
-        <p class="footer__socials-text">Follow us</p>
-        <div class="footer__socials-separator"></div>
-        <NuxtLink
-          v-for="link in socialLinks"
-          :key="link.name"
-          :to="link.path"
-          class="footer__socials-link"
-        >
-          <component :is="link.icon" />
-        </NuxtLink>
+        <p class="footer__socials-text" id="socials-label">Follow us</p>
+        <div class="footer__socials-separator" role="presentation"></div>
+        <div class="footer__socials-list" role="list" aria-labelledby="socials-label">
+          <NuxtLink
+            v-for="link in socialLinks"
+            :key="link.name"
+            :to="link.path"
+            class="footer__socials-link"
+            :aria-label="`Follow us on ${link.name}`"
+            role="listitem"
+          >
+            <component class="footer__socials-link--icon" :is="link.icon" aria-hidden="true" />
+          </NuxtLink>
+        </div>
       </div>
     </div>
   </footer>
@@ -72,7 +89,6 @@
     Object.keys(errors).forEach((key) => (errors[key as keyof typeof errors] = ''))
   }
 
-  //Валидируем форму перед отправкой
   const validateForm = () => {
     resetErrors()
 
@@ -93,7 +109,6 @@
     return !emailError
   }
 
-  //Получаем сохраненные email из localStorage
   const getStoredEmails = () => {
     const stored = localStorage.getItem('subscribedEmails') || '[]'
     try {
@@ -107,7 +122,6 @@
     return !emails.includes(emailValue)
   }
 
-  // Сохраняем email в localStorage
   const saveEmail = (emailValue: string, emails: string[]): void => {
     emails.push(emailValue)
     localStorage.setItem('subscribedEmails', JSON.stringify(emails))
@@ -118,7 +132,6 @@
     consent.value = true
   }
 
-  //Обработчик отправки формы
   const handleSubmit = () => {
     email.value.trim()
 
@@ -150,213 +163,169 @@
 </script>
 
 <style scoped lang="scss">
-  .footer {
-    position: relative;
-    inline-size: 100%;
-    padding-block: 2rem 20px;
-    margin-block-start: 220px;
+.footer {
+  position: relative;
+  inline-size: 100%;
+  padding-block: 2rem 20px;
+  margin-block-start: 220px;
+
+  @media (max-width: vars.$breakpoints-l) { margin-block-start: 120px; }
+  @media (max-width: vars.$breakpoints-m) { margin-block-start: 70px; }
+  @media (max-width: vars.$breakpoints-s) { font-size: 14px; }
+
+  &::before {
+    position: absolute;
+    top: -22px;
+    width: 100%;
+    height: 2px;
+    content: '';
+    background-color: vars.$color-ligth-gray;
+
+    @media (max-width: vars.$breakpoints-s) { display: none; }
+  }
+
+  &__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'nav form'
+      'copyright socials';
+    row-gap: 50px;
 
     @media (max-width: vars.$breakpoints-l) {
-      margin-block-start: 120px;
-    }
-
-    @media (max-width: vars.$breakpoints-m) {
-      margin-block-start: 70px;
-    }
-
-    &::before {
-      position: absolute;
-      top: -22px;
-      width: 100%;
-      height: 2px;
-      content: '';
-      background-color: vars.$color-ligth-gray;
-
-      @media (max-width: vars.$breakpoints-s) {
-        display: none;
-      }
-    }
-
-    &__container {
-      display: grid;
+      grid-template-columns: 1fr;
       grid-template-areas:
-        'nav form'
-        'copyright socials';
-      grid-template-columns: 1fr 1fr;
-      row-gap: 50px;
-    }
-
-    &__nav {
-      display: flex;
-      grid-area: nav;
-      column-gap: 40px;
-      text-transform: uppercase;
-    }
-
-    &__link {
-      line-height: 169%;
-      color: vars.$color-gray;
-      text-decoration: none;
-      transition: 0.5s;
-
-      &:hover {
-        opacity: 0.5;
-      }
-    }
-
-    &__copyright {
-      grid-area: copyright;
-    }
-
-    &__form {
-      position: relative;
-      display: flex;
-      grid-area: form;
-      align-items: center;
-      justify-self: end;
-      min-inline-size: 288px;
-      max-inline-size: 396px;
-      max-block-size: 40px;
-      padding: 0;
-      border-block-end: 2px solid vars.$color-gray;
-      transition: 0.2s;
-
-      &:has(input:focus) {
-        border-block-end-color: vars.$color-dark;
-      }
-
-      &-input {
-        grid-area: input;
-        inline-size: 100%;
-        padding-block-start: 10px;
-      }
-
-      &-button {
-        grid-area: button;
-        color: vars.$color-gray;
-        cursor: pointer;
-        background-color: transparent;
-        border: none;
-        transition: 0.3s;
-
-        &:hover {
-          opacity: 0.5;
-        }
-      }
-
-      &-consent-container {
-        display: none;
-      }
-
-      &-consent-checkbox {
-        accent-color: vars.$color-gray;
-        border-color: vars.$color-gray;
-      }
-    }
-
-    &__socials {
-      display: flex;
-      grid-area: socials;
-      column-gap: 30px;
-      align-items: center;
-      justify-self: end;
-      list-style: none;
-
-      @media (max-width: vars.$breakpoints-l) {
-        justify-self: start;
-      }
-
-      &-text {
-        @media (min-width: vars.$breakpoints-s) {
-          display: none;
-        }
-      }
-
-      &-separator {
-        inline-size: 54px;
-        height: 2px;
-        background-color: vars.$color-dark;
-
-        @media (min-width: vars.$breakpoints-s) {
-          display: none;
-        }
-      }
-
-      &-link {
-        transition: 0.3s;
-
-        &:hover {
-          opacity: 0.5;
-        }
-      }
-    }
-
-    @media (max-width: vars.$breakpoints-l) {
-      &__container {
-        display: grid;
-        grid-template: auto / 1fr;
-        grid-template-areas:
-          'form'
-          'nav'
-          'socials'
-          'copyright';
-        row-gap: 50px;
-      }
-
-      &__form {
-        justify-self: start;
-      }
-
-      &__soc1als {
-        justify-self: start;
-      }
-    }
-
-    @media (max-width: vars.$breakpoints-s) {
-      font-size: 14px;
-
-      &__nav {
-        flex-direction: column;
-        margin-block-start: 40px;
-      }
-
-      &__form {
-        display: grid;
-        grid-template-areas:
-          'input button'
-          'consent .';
-        grid-template-columns: 2fr;
-
-        &-input {
-          font-size: 14px;
-        }
-
-        &-consent-container {
-          display: flex;
-          grid-area: consent;
-          align-items: center;
-          margin-block-start: 10px;
-        }
-
-        &-consent-text {
-          font-size: 12px;
-        }
-      }
-
-      &__soc1als {
-        column-gap: 16px;
-
-        &-text {
-          display: block;
-        }
-
-        &-separator {
-          display: block;
-          inline-size: 47px;
-          block-size: 1px;
-          background-color: vars.$color-dark;
-        }
-      }
+        'form'
+        'nav'
+        'socials'
+        'copyright';
     }
   }
+
+  &__nav {
+    display: flex;
+    grid-area: nav;
+    column-gap: 40px;
+    text-transform: uppercase;
+
+    @media (max-width: vars.$breakpoints-s) {
+      flex-direction: column;
+      margin-block-start: 40px;
+      gap: 15px;
+    }
+  }
+
+  &__link {
+    line-height: 169%;
+    color: vars.$color-gray;
+    text-decoration: none;
+    transition: color 0.4s;
+
+    &:hover { color: vars.$color-dark; }
+  }
+
+  &__form {
+    position: relative;
+    display: flex;
+    gap: 14px;
+    grid-area: form;
+    align-items: center;
+    justify-self: end;
+    min-inline-size: 288px;
+    max-inline-size: 396px;
+    block-size: 40px;
+    border-block-end: 2px solid vars.$color-gray;
+    transition: border-color 0.2s;
+
+    @media (max-width: vars.$breakpoints-l) { justify-self: start; }
+
+    @media (max-width: vars.$breakpoints-s) {
+      display: grid;
+      grid-template-areas:
+        'input button'
+        'consent .';
+      grid-template-columns: 1fr auto;
+      inline-size: 100%;
+    }
+
+    &:has(input:focus) { border-block-end-color: vars.$color-dark; }
+
+    &-input {
+      inline-size: 100%;
+      padding-block-start: 10px;
+      @media (max-width: vars.$breakpoints-s) { font-size: 14px; }
+    }
+
+    &-consent-container {
+      display: none;
+      @media (max-width: vars.$breakpoints-s) {
+        display: flex;
+        grid-area: consent;
+        align-items: center;
+        margin-block-start: 10px;
+      }
+    }
+
+    &-consent-text {
+      @media (max-width: vars.$breakpoints-s) { font-size: 12px; }
+    }
+
+    &-button {
+      @include mixins.reset-appearance;
+      width: 24px;
+      height: 24px;
+      color: vars.$color-gray;
+      transition: color 0.3s;
+
+      &:hover { color: vars.$color-dark; }
+    }
+  }
+
+  &__socials {
+    display: flex;
+    grid-area: socials;
+    column-gap: 30px;
+    align-items: center;
+    justify-self: end;
+    list-style: none;
+
+    @media (max-width: vars.$breakpoints-l) { justify-self: start; }
+    @media (max-width: vars.$breakpoints-s) { column-gap: 16px; }
+
+    &-text {
+      display: none;
+      @media (max-width: vars.$breakpoints-s) { display: block; }
+    }
+
+    &-separator {
+      display: none;
+      inline-size: 54px;
+      height: 2px;
+      background-color: vars.$color-dark;
+
+      @media (max-width: vars.$breakpoints-s) {
+        display: block;
+        inline-size: 47px;
+        block-size: 1px;
+      }
+    }
+
+    &-list {
+      display: flex;
+      column-gap: 24px;
+    }
+
+    &-link {
+      color: vars.$color-gray;
+      text-decoration: none;
+      transition: color 0.4s;
+
+      &:hover { color: vars.$color-dark; }
+    }
+  }
+
+  &__copyright {
+    grid-area: copyright;
+  }
+}
 </style>

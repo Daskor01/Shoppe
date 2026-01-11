@@ -1,10 +1,32 @@
 <template>
-  <div :class="{ open: modelValue }" class="slide-panel">
-    <div class="slide-panel__backdrop" @click="close" />
-    <div :class="['slide-panel__container', containerSideClass]" :style="containerStyle">
-      <button v-if="props.showCloseButton !== false" class="slide-panel__close" @click="close">
-        <IconClose />
+  <div 
+    :class="{ open: modelValue }" 
+    class="slide-panel"
+    :aria-hidden="!modelValue"
+  >
+    <div 
+      class="slide-panel__backdrop" 
+      aria-hidden="true" 
+      @click="close" 
+    />
+    
+    <div 
+      ref="panelRef"
+      :class="['slide-panel__container', containerSideClass]"
+      role="dialog"
+      :aria-modal="true"
+      :aria-label="props.ariaLabel || 'Side panel'"
+      tabindex="-1"
+    >
+      <button 
+        v-if="props.showCloseButton !== false" 
+        class="slide-panel__close" 
+        aria-label="Close panel"
+        @click="close"
+      >
+        <IconClose aria-hidden="true" />
       </button>
+
       <div class="slide-panel__content">
         <slot />
       </div>
@@ -13,84 +35,48 @@
 </template>
 
 <script setup lang="ts">
-  import { watch, onUnmounted } from 'vue'
-  import IconClose from '@/components/icons/IconClose.vue'
-  import { DESKTOP_BREAKPOINT } from '@/constants/breakpoints'
-  import { useBreakpoint } from '@/composables/useBreakpoint'
-  import { computed, ref, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
+import type { SlidePanelProps } from '@/types/SlidePanel'
 
-  const props = defineProps<{
-    modelValue: boolean
-    side?: 'left' | 'right'
-    topOffset?: string
-    showCloseButton?: boolean
-    mobileOnly?: boolean
-    width?: string
-  }>()
+const props = defineProps<SlidePanelProps>()
 
-  const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
+const panelRef = ref<HTMLElement | null>(null)
 
-  function close() {
-    emit('update:modelValue', false)
+function close() {
+  emit('update:modelValue', false)
+}
+
+function handleKeyDown(e: KeyboardEvent) {
+  if (e.key === 'Escape' && props.modelValue) {
+    close()
   }
+}
 
-  //Выбираем класс для контейнера в зависимости от стороны
-  //Если side не указан, по умолчанию будет 'left'!
-  const containerSideClass = computed(() =>
-    props.side === 'right' ? 'slide-panel__container--right' : 'slide-panel__container--left',
-  )
-
-  //Вычисляем ширину контейнера
-  const isMounted = ref(false)
-
-  onMounted(() => {
-    isMounted.value = true
-  })
-
-  const containerStyle = computed(() => {
-    if (!isMounted.value) {
-      return { maxInlineSize: '320px' }
-    }
-
-    let width = props.width ?? 320
-    if (typeof width === 'number') {
-      width = width + 'px'
-    }
-
-    return {
-      maxInlineSize: width,
-    }
-  })
-
-  // Блокировка прокрутки
-  function disableBodyScroll() {
+watch(() => props.modelValue, (isOpen) => {
+  if (isOpen) {
+    document.addEventListener('keydown', handleKeyDown)
     document.body.style.overflow = 'hidden'
-  }
-
-  function enableBodyScroll() {
+    setTimeout(() => panelRef.value?.focus(), 100)
+  } else {
+    document.removeEventListener('keydown', handleKeyDown)
     document.body.style.overflow = ''
   }
+})
 
-  watch(
-    () => props.modelValue,
-    (newVal) => {
-      if (newVal) disableBodyScroll()
-      else enableBodyScroll()
-    },
-  )
+onMounted(() => {
+  if (props.modelValue) document.body.style.overflow = 'hidden'
+})
 
-  // Мобилка
-  const { isBelow } = useBreakpoint(DESKTOP_BREAKPOINT)
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyDown)
+  document.body.style.overflow = ''
+})
 
-  watch([isBelow, () => props.modelValue], ([below, opened]) => {
-    if (props.mobileOnly && !below && opened) {
-      close()
-    }
-  })
+const containerSideClass = computed(() =>
+  props.side === 'right' ? 'slide-panel__container--right' : 'slide-panel__container--left'
+)
 
-  onUnmounted(() => {
-    enableBodyScroll()
-  })
 </script>
 
 <style scoped lang="scss">
@@ -115,11 +101,15 @@
       display: flex;
       flex-direction: column;
       inline-size: 100%;
-      max-inline-size: 320px;
       block-size: 100%;
+      max-inline-size: 500px;
       background: vars.$color-light;
       transform: translateX(-100%);
       transition: transform 0.3s ease;
+      
+      @media (max-width: vars.$breakpoints-l) {
+        max-inline-size: 320px;
+      }
 
       &--left {
         inset-inline-start: 0;

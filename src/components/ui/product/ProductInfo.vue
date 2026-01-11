@@ -1,51 +1,62 @@
 <template>
-  <div class="product-info">
-    <h1 class="product-info__title" data-test="product-info__title">{{ product.title }}</h1>
+  <article class="product-info">
+    <h1 class="product-info__title">{{ product.title }}</h1>
 
     <div class="product-info__price-wrapper">
-      <p class="product-info__price" data-test="product-info__price">${{ formattedPrice }}</p>
+      <p class="product-info__price" aria-label="Price">
+        ${{ formattedPrice }}
+      </p>
 
-      <div v-if="mobile">
-        <div class="product-info__share-mobile">
-          <button class="product-info__share-mobile-button"
-          data-test="product-info__share-mobile-button"
-          @click="toggleShare">
-            <IconShare />
-          </button>
-
-          <ShareModal :is-open="isShareModalOpen" @close="isShareModalOpen = false" />
-        </div>
+      <div v-if="mobile" class="product-info__share-mobile">
+        <button 
+          class="product-info__share-mobile-button" 
+          aria-label="Share product"
+          type="button"
+          @click="toggleShare"
+        >
+          <IconShare aria-hidden="true" />
+        </button>
+        <BaseShareModal :is-open="isShareModalOpen" @close="isShareModalOpen = false" />
       </div>
     </div>
 
-    <div v-if="!mobile">
-      <div class="product-info__rating" data-test="product-info__rating">
+    <template v-if="!mobile">
+      <div class="product-info__rating" aria-label="Product rating">
         <BaseStarRating
           :modelValue="Math.round(product.rating?.rate || 0)"
           class="product-info__rating-star"
           readonly
         />
-        <span class="product-info__rating-text" data-test="product-info__rating-text">{{ counterReviews }} customer review</span>
+        <span class="product-info__rating-text">
+          {{ counterReviews }} customer {{ counterReviews === 1 ? 'review' : 'reviews' }}
+        </span>
       </div>
 
-      <div class="product-info__description" data-test="product-info__description">
+      <p class="product-info__description">
         {{ product.description }}
-      </div>
-    </div>
+      </p>
+    </template>
+
     <div class="product-info__actions">
-      <div v-if="!mobile" class="product-info__quantity" data-test="product-info__quantity">
-        <button class="product-info__quantity-button"
-        data-test="product-info__quantity-decrease"
-        @click="decrease">-</button>
-        <span class="product-info__quantity-value" data-test="product-info__quantity-value">{{ quantity }}</span>
-        <button class="product-info__quantity-button" 
-        data-test="product-info__quantity-increase"
-        @click="increase">+</button>
+      <div v-if="!mobile" class="product-info__quantity" role="group" aria-label="Select quantity">
+        <button 
+          class="product-info__quantity-button" 
+          aria-label="Decrease quantity"
+          type="button" 
+          @click="decrease"
+        >-</button>
+        <span class="product-info__quantity-value" aria-live="polite">{{ quantity }}</span>
+        <button 
+          class="product-info__quantity-button" 
+          aria-label="Increase quantity"
+          type="button" 
+          @click="increase"
+        >+</button>
       </div>
 
       <BaseButton 
         class="product-info__cart-button" 
-        data-test="product-info__add-to-cart"
+        :aria-label="`Add ${product.title} to cart`"
         @click="addToCart"
       >
         Add to cart
@@ -54,24 +65,27 @@
 
     <div v-if="!mobile" class="product-info__interaction" data-test="product-info__interaction">
       <button
-        :class="{ liked: isLiked }"
-        class="product-info__interaction-like"
-        data-test="product-info__like-button"
+        :class="['product-info__interaction-like', { liked: isLiked }]"
+        :aria-pressed="isLiked"
+        aria-label="Add to favorites"
+        type="button"
         @click="toggleLike"
       >
-        <IconLikeProduct />
+        <IconLikeProduct aria-hidden="true" />
       </button>
-      <div class="product-info__divider"></div>
-      <div class="product-info__share" data-test="product-info__share">
-        <IconMail />
-        <IconFacebook />
-        <IconInstagram />
-        <IconTwitter />
+      
+      <div class="product-info__divider" role="presentation"></div>
+      
+      <div class="product-info__share" aria-label="Share on social media">
+        <IconMail role="link" aria-label="Share via Email" />
+        <IconFacebook role="link" aria-label="Share on Facebook" />
+        <IconInstagram role="link" aria-label="Share on Instagram" />
+        <IconTwitter role="link" aria-label="Share on Twitter" />
       </div>
     </div>
 
     <div v-if="mobile" class="product-info__meta-mobile">
-      <details ref="detailsRef" class="product-info__expandable" data-test="product-info__expandable">
+      <details ref="detailsRef" class="product-info__expandable" @toggle="onToggle">
         <summary class="product-info__summary">{{ product.description }}</summary>
 
         <div class="product-info__meta">
@@ -86,118 +100,105 @@
       </details>
 
       <button 
-        class="product-info__toggle-button"
-        data-test="product-info__toggle-button"
+        class="product-info__toggle-button" 
+        type="button"
         @click="toggleDetails"
       >
-        <span v-if="!isOpen" class="product-info__toggle-text">
-          View more
-          <IconBaseArrowRight />
-        </span>
-        <span v-else class="product-info__toggle-text">
-          Hide
-          <IconBaseArrowTop />
+        <span class="product-info__toggle-text">
+          {{ isOpen ? 'Hide' : 'View more' }}
+          <component :is="isOpen ? IconBaseArrowTop : IconBaseArrowRight" aria-hidden="true" />
         </span>
       </button>
     </div>
 
-    <div v-if="!mobile" class="product-info__meta" data-test="product-info__meta">
-      <p class="product-info__meta-item" data-test="product-info__meta-sku">
-        <span class="product-info__meta-item--accent">SKU:</span> {{ product.id }}
+    <div v-if="!mobile" class="product-info__meta">
+      <p class="product-info__meta-item">
+        <b class="product-info__meta-item--accent">SKU:</b> {{ product.id }}
       </p>
-      <p class="product-info__meta-item" data-test="product-info__meta-category">
-        <span class="product-info__meta-item--accent">Category:</span> {{ product.category }}
+      <p class="product-info__meta-item">
+        <b class="product-info__meta-item--accent">Category:</b> {{ product.category }}
       </p>
     </div>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue'
-  import { useCartStore } from '@/stores/useCartStore'
-  import { useBreakpoint } from '@/composables/useBreakpoint'
-  import { useNotification } from '@/composables/useNotification'
-  import { type Review } from '@/types/Reviews'
-  import { type Product } from '@/types/Product'
+import { ref, computed, onMounted } from 'vue'
+import { useCartStore } from '@/stores/useCartStore'
+import { useBreakpoint } from '@/composables/useBreakpoint'
+import { useNotification } from '@/composables/useNotification'
+import { type Product } from '@/types/Product'
+import IconBaseArrowTop from '@/components/icons/IconBaseArrowTop.vue'
+import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
+import IconLikeProduct from '@/components/icons/IconLikeProduct.vue'
+import IconShare from '@/components/icons/IconShare.vue'
+import IconMail from '@/components/icons/IconMail.vue'
+import IconFacebook from '@/components/icons/IconFacebook.vue'
+import IconInstagram from '@/components/icons/IconInstagram.vue'
+import IconTwitter from '@/components/icons/IconTwitter.vue'
+import BaseStarRating from '@/components/ui/base/BaseStarRating.vue'
+import BaseButton from '@/components/ui/base/BaseButton.vue'
 
-  import ShareModal from '@/components/ui/base/BaseShareModal.vue'
-  import IconMail from '@/components/icons/IconMail.vue'
-  import IconFacebook from '@/components/icons/IconFacebook.vue'
-  import IconInstagram from '@/components/icons/IconInstagram.vue'
-  import IconLikeProduct from '@/components/icons/IconLikeProduct.vue'
-  import IconTwitter from '@/components/icons/IconTwitter.vue'
-  import IconShare from '@/components/icons/IconShare.vue'
-  import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
-  import IconBaseArrowTop from '@/components/icons/IconBaseArrowTop.vue'
-  import BaseStarRating from '@/components/ui/base/BaseStarRating.vue'
-  import BaseButton from '@/components/ui/base/BaseButton.vue'
+const props = defineProps<{
+  product: Product
+}>()
 
-  const props = defineProps<{
-    product: Product
-  }>()
+const cartStore = useCartStore()
+const { notify } = useNotification()
+const { isBelow: mobile } = useBreakpoint(1120)
 
-  const cartStore = useCartStore()
-  const { notify } = useNotification()
+const formattedPrice = computed(() => props.product.price.toFixed(2))
 
-  const { isBelow: mobile } = useBreakpoint(1120)
+const quantity = ref(1)
+const increase = () => quantity.value++
+const decrease = () => { if (quantity.value > 1) quantity.value-- }
 
-  const formattedPrice = computed(() => {
-    return props.product.price.toFixed(2)
+const addToCart = () => {
+  cartStore.addToCart(props.product, quantity.value)
+  const addedCount = quantity.value
+  quantity.value = 1
+
+  notify({
+    message: `${addedCount} item(s) added to your Shopping bag.`,
+    type: 'success',
+    button: {
+      text: 'View Cart',
+      handler: () => cartStore.toggleCart(),
+    },
   })
+}
 
-  // Quantity
-  const quantity = ref(1)
-  const increase = () => quantity.value++
-  const decrease = () => (quantity.value = Math.max(1, quantity.value - 1))
+const isShareModalOpen = ref(false)
+const toggleShare = () => { isShareModalOpen.value = !isShareModalOpen.value }
 
-  const addToCart = () => {
-    cartStore.addToCart(props.product, quantity.value)
+const detailsRef = ref<HTMLDetailsElement | null>(null)
+const isOpen = ref(false)
 
-    quantity.value = 1
+const onToggle = (e: Event) => {
+  isOpen.value = (e.target as HTMLDetailsElement).open
+}
 
-    notify({
-      message: 'The item added to your Shopping bag.',
-      type: 'success',
-      button: {
-        text: 'View Cart',
-        handler: () => {
-          cartStore.toggleCart()
-        },
-      },
-    })
+function toggleDetails() {
+  if (detailsRef.value) {
+    detailsRef.value.open = !detailsRef.value.open
   }
+}
 
-  // Share Modal
-  const isShareModalOpen = ref(false)
-
-  const toggleShare = () => {
-    isShareModalOpen.value = !isShareModalOpen.value
-  }
-
-  // Details
-  const detailsRef = ref<HTMLDetailsElement | null>(null)
-  const isOpen = ref(false)
-
-  function toggleDetails() {
-    if (!detailsRef.value) return
-    isOpen.value = !isOpen.value
-    detailsRef.value.open = isOpen.value
-  }
-
-  // Counter Reviews
-  const counterReviews = ref(0)
-
-  onMounted(() => {
+const counterReviews = ref(0)
+onMounted(() => {
+  try {
     const stored = localStorage.getItem(`reviews_${props.product.id}`)
-    const reviews = stored ? (JSON.parse(stored) as Review[]) : []
-    counterReviews.value = reviews.length
-  })
-
-  // Like Product
-  const isLiked = ref(false)
-  const toggleLike = () => {
-    isLiked.value = !isLiked.value
+    if (stored) {
+      const reviews = JSON.parse(stored)
+      counterReviews.value = Array.isArray(reviews) ? reviews.length : 0
+    }
+  } catch (e) {
+    console.error("Failed to parse reviews from storage", e)
   }
+})
+
+const isLiked = ref(false)
+const toggleLike = () => { isLiked.value = !isLiked.value }
 </script>
 
 <style scoped lang="scss">

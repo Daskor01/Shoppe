@@ -1,83 +1,120 @@
 <template>
-  <aside class="shop-filters">
+  <aside class="shop-filters" role="search" aria-label="Filters">
     <div class="shop-filters__search">
       <BaseInput
-        v-model="filters.search"
+        :modelValue="filters.search"
+        @update:modelValue="update('search', $event)"
         :debounce="200"
-        :name="'shop-search'"
+        name="shop-search"
         placeholder="Search"
+        aria-label="Search items in shop"
         class="shop-filters__search-input"
       />
 
-      <button class="shop-filters__search-button">
-        <IconSearch />
+      <button 
+        class="shop-filters__search-button" 
+        type="button" 
+        aria-label="Submit search"
+      >
+        <IconSearch aria-hidden="true" />
       </button>
     </div>
 
     <div class="shop-filters__container">
-      <BaseSelect v-model="filters.sortBy" :options="sortOptions" placeholder="Sort By" />
+      <fieldset class="shop-filters__section" style="border: none; padding: 0; margin: 0;">
+        <legend class="visually-hidden">Filter and Sort Options</legend>
+        
+        <BaseSelect 
+          :modelValue="filters.sortBy" 
+          @update:modelValue="update('sortBy', $event)"
+          :options="SORT_OPTIONS" 
+          placeholder="Sort By" 
+        />
 
-      <BaseSelect v-model="filters.category" :options="categoryOptions" placeholder="Category" />
+        <BaseSelect 
+          :modelValue="filters.category" 
+          @update:modelValue="update('category', $event)"
+          :options="categoryOptions" 
+          placeholder="Category" 
+        />
 
-      <BaseRangeSlider v-model="localPriceRange" :min="0" :max="200" :step="1" />
+        <BaseRangeSlider 
+          v-model="localPriceRange" 
+          :min="0" 
+          :max="200" 
+          :step="1" 
+          aria-label="Price range"
+        />
 
-      <label class="shop-filters__toggle">
-        On sale
-        <BaseSwitch :modelValue="filters.inStock" @update:modelValue="update('inStock', $event)" />
-      </label>
+        <label class="shop-filters__toggle">
+          <span>On sale</span>
+          <BaseSwitch 
+            :modelValue="filters.onSale"
+            aria-label="Toggle on sale items"
+            @update:modelValue="update('onSale', $event)" 
+          />
+        </label>
 
-      <label class="shop-filters__toggle">
-        In stock
-        <BaseSwitch :modelValue="filters.inStock" @update:modelValue="update('inStock', $event)" />
-      </label>
+        <label class="shop-filters__toggle">
+          <span>In stock</span>
+          <BaseSwitch 
+            :modelValue="filters.inStock"
+            aria-label="Toggle in stock items"
+            @update:modelValue="update('inStock', $event)" 
+          />
+        </label>
+      </fieldset>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
-  import IconSearch from '@/components/icons/IconSearch.vue'
-  import BaseInput from '@/components/ui/base/BaseInput.vue'
-  import BaseRangeSlider from '@/components/ui/base/BaseRangeSlider.vue'
-  import BaseSwitch from '@/components/ui/base/BaseSwitch.vue'
-  import type { Filters } from '@/types/Filters'
-  import { ref, watch, computed } from 'vue'
-  import { useDebouncedValue } from '@/composables/useDebouncedValue'
+import { ref, watch, computed } from 'vue'
+import IconSearch from '@/components/icons/IconSearch.vue'
+import BaseInput from '@/components/ui/base/BaseInput.vue'
+import BaseRangeSlider from '@/components/ui/base/BaseRangeSlider.vue'
+import BaseSwitch from '@/components/ui/base/BaseSwitch.vue'
+import type { Filters } from '@/types/Filters'
+import { useDebouncedValue } from '@/composables/useDebouncedValue'
 
-  const sortOptions = [
-    { value: '', label: 'No sorting' },
-    { value: 'price-asc', label: 'Price: Low to High' },
-    { value: 'price-desc', label: 'Price: High to Low' },
-    { value: 'name-asc', label: 'Name: A-Z' },
-  ]
+const SORT_OPTIONS = [
+  { value: '', label: 'No sorting' },
+  { value: 'price-asc', label: 'Price: Low to High' },
+  { value: 'price-desc', label: 'Price: High to Low' },
+  { value: 'name-asc', label: 'Name: A-Z' },
+]
 
-  const categoryOptions = computed(() => [
-    { value: '', label: 'All categories' },
-    ...props.categories.map((c) => ({ value: c, label: c })),
-  ])
+const props = defineProps<{
+  filters: Filters
+  categories: string[]
+}>()
 
-  const props = defineProps<{
-    filters: Filters
-    categories: string[]
-  }>()
+const emit = defineEmits<{
+  (e: 'update:filters', value: Filters): void
+}>()
 
-  const emit = defineEmits(['update:filters'])
+const categoryOptions = computed(() => [
+  { value: '', label: 'All categories' },
+  ...props.categories.map((c) => ({ value: c, label: c })),
+])
 
-  const localPriceRange = ref<[number, number]>(props.filters.priceRange)
-  const debouncedPriceRange = useDebouncedValue(localPriceRange, 300)
+const localPriceRange = ref<[number, number]>([...props.filters.priceRange])
+const debouncedPriceRange = useDebouncedValue(localPriceRange, 300)
 
-  watch(debouncedPriceRange, (newVal) => {
-    emit('update:filters', {
-      ...props.filters,
-      priceRange: newVal,
-    })
+const update = (key: keyof Filters, value: unknown) => {
+  if (props.filters[key] === value) return
+  
+  emit('update:filters', {
+    ...props.filters,
+    [key]: value,
   })
+}
 
-  function update(key: keyof Filters, value: unknown) {
-    emit('update:filters', {
-      ...props.filters,
-      [key]: value,
-    })
+watch(debouncedPriceRange, (newVal) => {
+  if (JSON.stringify(newVal) !== JSON.stringify(props.filters.priceRange)) {
+    update('priceRange', newVal)
   }
+})
 </script>
 
 <style scoped lang="scss">
@@ -115,6 +152,12 @@
       display: flex;
       flex-direction: column;
       gap: 39px;
+    }
+
+    &__section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     &__select-container {

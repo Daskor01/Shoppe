@@ -1,12 +1,20 @@
 <template>
   <header ref="headerRef" class="header">
     <div class="header__container">
-      <NuxtLink to="/" class="header__logo">
-        <img src="@/assets/Logo.png" alt="Logo" class="header__logo-image" />
+      <NuxtLink to="/" class="header__logo" aria-label="Shoppe Home">
+        <img 
+          src="@/assets/Logo.png" 
+          alt="Shoppe Store" 
+          class="header__logo-image"
+          width="129" 
+          height="27"
+          fetchpriority="high"
+          loading="eager"
+        />
       </NuxtLink>
 
       <div class="header__nav-container">
-        <nav class="header__nav">
+        <nav class="header__nav" aria-label="Main navigation">
           <NuxtLink
             v-for="link in headerLinks"
             :key="link.name"
@@ -17,7 +25,7 @@
           </NuxtLink>
         </nav>
 
-        <div class="header__divider" />
+        <div class="header__divider" role="presentation"/>
 
         <div class="header__icons">
           <button
@@ -25,15 +33,25 @@
             :key="index"
             type="button"
             class="header__icons-button"
+            :aria-label="item.label || 'Action'"
             @click="handleAction(item.action)"
           >
-            <component :is="item.icon" />
+            <component :is="item.icon" aria-hidden="true"/>
           </button>
 
-          <button type="button" class="header__user-button" @click="handleUserAction">
-            <IconUser />
-            <span v-if="isAuthenticated" class="header__user-indicator"></span>
-          </button>
+          <ClientOnly>
+            <button 
+              type="button" 
+              class="header__user-button" 
+              :aria-label="isAuthenticated ? 'Logout' : 'Go to Account'"
+              @click="handleUserAction"
+            >
+              <IconUser aria-hidden="true"/>
+              <span v-if="isAuthenticated" class="header__user-indicator">
+                <span class="visually-hidden">Logged in</span>
+              </span>
+            </button>
+          </ClientOnly>
         </div>
       </div>
 
@@ -42,19 +60,25 @@
           v-for="btn in headerButtons"
           :key="btn.key"
           class="header__button"
+          :aria-label="btn.label"
           @click="btn.action?.()"
         >
-          <component :is="btn.altIcon && mobileOpen ? btn.altIcon : btn.icon" />
+          <component 
+          :is="btn.altIcon && mobileOpen ? btn.altIcon : btn.icon"
+          aria-hidden="true"
+          />
         </button>
       </div>
     </div>
 
     <BaseSlidePanel
       v-model="mobileOpen"
-      :top-offset="`${headerHeight}px`"
       :show-close-button="false"
     >
-      <BaseSearchInput />
+      <button class="header__mobile--button-close" @click="closeMobileMenu" aria-label="Close menu">
+        <IconClose aria-hidden="true" />
+      </button>
+      <BaseSearchInput class="header__mobile--search-input"/>
       <nav class="header__mobile-nav">
         <NuxtLink
           v-for="link in navigationLinks"
@@ -72,26 +96,27 @@
           My account
         </NuxtLink>
 
-        <button
-          v-if="isAuthenticated"
-          class="header__mobile-link header__mobile-link--button"
-          @click="handleLogout"
-        >
-          <IconLogout />
-          Logout
-        </button>
-
-        <NuxtLink v-else to="/account" class="header__mobile-link">
-          <IconAddAccount />
-          Sign In
-        </NuxtLink>
+        <ClientOnly>
+          <button
+            v-if="isAuthenticated"
+            class="header__mobile-link header__mobile-link--button"
+            @click="handleLogout"
+          >
+            <IconLogout />
+            Logout
+          </button>
+          <NuxtLink v-else to="/account" class="header__mobile-link">
+            <IconAddAccount />
+            Sign In
+          </NuxtLink>
+        </ClientOnly>
       </div>
     </BaseSlidePanel>
   </header>
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
+  import { ref, computed, watch } from 'vue'
   import { navigateTo } from 'nuxt/app'
   import BaseSearchInput from '@/components/ui/base/BaseSearchInput.vue'
   import { navigationLinks, headerLinks, headerActions } from '@/config/navigation'
@@ -127,12 +152,14 @@
     {
       icon: IconCart,
       action: toggleCart,
+      label: 'Open Cart',
       key: 'cart',
     },
     {
       icon: IconMenu,
       altIcon: IconClose,
       action: toggleMenu,
+      label: 'Toggle Menu',
       key: 'menu',
     },
   ]
@@ -165,20 +192,6 @@
     userMenuOpen.value = false
   }
 
-  //Определяем высоту header
-  const headerRef = ref<HTMLElement | null>(null)
-  const headerHeight = ref(0)
-
-  function updateHeaderHeight() {
-    const header = headerRef.value
-    if (header) {
-      const rect = header.getBoundingClientRect()
-      const style = window.getComputedStyle(header)
-      const marginTop = parseFloat(style.marginTop) || 0
-      headerHeight.value = rect.height + marginTop
-    }
-  }
-
   const closeMobileMenu = () => {
     mobileOpen.value = false
   }
@@ -189,15 +202,6 @@
       closeMobileMenu()
     },
   )
-
-  onMounted(() => {
-    updateHeaderHeight()
-    window.addEventListener('resize', updateHeaderHeight)
-  })
-
-  onBeforeUnmount(() => {
-    window.removeEventListener('resize', updateHeaderHeight)
-  })
 </script>
 
 <style scoped lang="scss">
@@ -305,6 +309,25 @@
       row-gap: 24px;
       align-items: start;
       padding-block: 40px;
+    }
+
+    &__mobile--button-close {
+      @include mixins.reset-appearance;
+
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      cursor: pointer;
+      padding: 8px;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+
+    &__mobile--search-input {
+      margin-top: 3rem;
     }
 
     &__mobile-link {

@@ -1,27 +1,44 @@
 <template>
   <div class="review-item">
-    <p class="review-item__header">
+    <div class="review-item__header">
       <span class="review-item__name">{{ review.name }}</span>
       <span class="review-item__date">{{ review.date }}</span>
+    </div>
+
+    <div class="review-item__rating-wrapper">
+      <span class="visually-hidden">Rating: {{ review.rating }} out of 5</span>
+      <StarRating 
+        :model-value="review.rating ?? 0" 
+        readonly 
+        aria-hidden="true"
+        class="review-item__rating" 
+      />
+    </div>
+
+    <p class="review-item__message">
+      {{ review.message }}
     </p>
-    <StarRating :modelValue="review.rating" readonly class="review-item__rating" />
-    <p class="review-item__message">{{ review.message }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-  import type { Review } from '@/types/Reviews'
-  import StarRating from '@/components/ui/base/BaseStarRating.vue'
+import type { Review } from '@/types/Reviews'
+import StarRating from '@/components/ui/base/BaseStarRating.vue'
 
-  defineProps<{
-    review: Review
-  }>()
+defineProps<{
+  review: Review
+}>()
 </script>
 
 <style scoped lang="scss">
   .review-item {
     padding: 0.5rem 0;
     border-bottom: 1px solid vars.$color-ligth-gray;
+
+    &__rating-wrapper {
+      display: flex;
+      align-items: center;
+    }
 
     &__header {
       display: flex;
