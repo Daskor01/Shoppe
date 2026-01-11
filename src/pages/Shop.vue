@@ -138,12 +138,18 @@
     }
   }
 
-  .mobile__container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-self: start;
-    inline-size: 100%;
+  .mobile {
+    &__container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-self: start;
+      inline-size: 100%;
+    }
+
+    &__title {
+      font-size: 20px;
+    }
   }
 
   .filter {
@@ -201,6 +207,7 @@
 
     @media (max-width: vars.$breakpoints-m) {
       margin-block-start: 40px;
+      gap: 16px;
     }
 
     &__item {

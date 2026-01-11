@@ -136,6 +136,12 @@
       border-radius: 4px;
       transition: all 0.2s ease;
 
+      @media(max-width: vars.$breakpoints-m) {
+        inline-size: 36px;
+        block-size: 36px;
+        font-size: 0.875rem;
+      }
+
       
       &:focus-visible {
         outline: 2px solid vars.$color-dark;

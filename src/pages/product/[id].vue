@@ -89,7 +89,7 @@
   import { Swiper, SwiperSlide } from 'swiper/vue'
   import { Navigation, Pagination } from 'swiper/modules'
   import { useApi } from '@/composables/useApi'
-  import { useRuntimeConfig, useAsyncData } from 'nuxt/app'
+  import { useRuntimeConfig, useAsyncData, useHead } from 'nuxt/app'
 
   import BaseTabs from '@/components/ui/base/BaseTabs.vue'
   import BaseAccordion from '@/components/ui/base/BaseAccordion.vue'
@@ -98,6 +98,17 @@
   import Reviews from '@/components/ui/reviews/Reviews.vue'
   import ProductCard from '@/components/ui/product/ProductCard.vue'
   import IconBaseArrowRight from '@/components/icons/IconBaseArrowRight.vue'
+
+  useHead({
+    title: 'Product Details',
+    meta: [
+      {
+        name: 'description',
+        content:
+          'Explore detailed information about our product, including features, specifications, and customer reviews.',
+      },
+    ],
+  })
 
   const route = useRoute()
   const config = useRuntimeConfig()

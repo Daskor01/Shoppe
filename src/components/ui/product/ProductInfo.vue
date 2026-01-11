@@ -79,10 +79,10 @@
       <div class="product-info__divider" role="presentation"></div>
 
       <div class="product-info__share" aria-label="Share on social media">
-        <IconMail role="link" aria-label="Share via Email" />
-        <IconFacebook role="link" aria-label="Share on Facebook" />
-        <IconInstagram role="link" aria-label="Share on Instagram" />
-        <IconTwitter role="link" aria-label="Share on Twitter" />
+        <IconMail class="product-info__share-icon" role="link" aria-label="Share via Email" />
+        <IconFacebook class="product-info__share-icon" role="link" aria-label="Share on Facebook" />
+        <IconInstagram class="product-info__share-icon" role="link" aria-label="Share on Instagram" />
+        <IconTwitter class="product-info__share-icon" role="link" aria-label="Share on Twitter" />
       </div>
     </div>
 
@@ -341,9 +341,12 @@
 
       &-like {
         @include mixins.reset-appearance;
+        color: vars.$color-gray;
+        transition: color 0.3s ease;
 
-        color: #707070;
-        transition: color 0.1s ease;
+        &:hover {
+          color: vars.$color-dark;
+        }
 
         &.liked {
           color: vars.$color-accent-red;
@@ -363,6 +366,16 @@
       &-mobile {
         &-button {
           @include mixins.reset-appearance;
+        }
+      }
+
+      &-icon {
+        color: vars.$color-gray;
+        cursor: pointer;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: vars.$color-dark;
         }
       }
     }
