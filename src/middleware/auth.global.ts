@@ -19,8 +19,6 @@ export default defineNuxtRouteMiddleware((to) => {
 
   const publicPages = ['/', '/account', '/reset-password']
 
-  console.log('Final normalized path:', path)
-
   if (publicPages.includes(path)) return
 
   if (!authStore.isAuthenticated && token.value) {
