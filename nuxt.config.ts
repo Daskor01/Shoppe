@@ -25,7 +25,6 @@ export default defineNuxtConfig({
       xl: 1280,
     },
   },
-
   vite: {
     css: {
       preprocessorOptions: {
@@ -48,20 +47,17 @@ export default defineNuxtConfig({
       assetsInlineLimit: 4096,
     },
   },
-
   runtimeConfig: {
     public: {
       productApi: process.env.NUXT_PUBLIC_PRODUCTS_API,
       imageApi: process.env.NUXT_PUBLIC_IMAGE_API,
     },
   },
-
   components: [
     { path: '~/components/ui' },
     { path: '~/components/icons', prefix: 'Icon' },
     '~/components',
   ],
-
   imports: {
     dirs: ['stores', 'composables/**'],
   },
@@ -75,14 +71,14 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'preload',
-          href: `${baseURL}/DMSans-Variable.woff2`,
+          href: `${baseURL}fonts/Sans-Variable.woff2`.replace(/\/+/g, '/'),
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
         {
           rel: 'preload',
-          href: `${baseURL}/public/fonts/AllertaStencil-Regular.woff2`,
+          href: `${baseURL}fonts/AllertaStencil-Regular.woff2`.replace(/\/+/g, '/'),
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
@@ -109,8 +105,8 @@ export default defineNuxtConfig({
         'cache-control': 'public, max-age=31536000, immutable',
       },
     },
-    '/Shop/**': { prerender: true },
-    '/product/**': { prerender: true },
+    '/Shop/**': { ssr: false },
+    '/product/**': { ssr: false },
     '/fonts/**': {
       headers: { 'cache-control': 'public, max-age=31536000, immutable' },
     },
