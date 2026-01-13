@@ -71,14 +71,14 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'preload',
-          href: `${baseURL}/DMSans-Variable.woff2`,
+          href: `${baseURL}fonts/Sans-Variable.woff2`.replace(/\/+/g, '/'),
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
         {
           rel: 'preload',
-          href: `${baseURL}/public/fonts/AllertaStencil-Regular.woff2`,
+          href: `${baseURL}fonts/AllertaStencil-Regular.woff2`.replace(/\/+/g, '/'),
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
@@ -105,8 +105,8 @@ export default defineNuxtConfig({
         'cache-control': 'public, max-age=31536000, immutable',
       },
     },
-    '/Shop/**': { prerender: true },
-    '/product/**': { prerender: true },
+    '/Shop/**': { ssr: false },
+    '/product/**': { ssr: false },
     '/fonts/**': {
       headers: { 'cache-control': 'public, max-age=31536000, immutable' },
     },

@@ -9,6 +9,8 @@ export default defineNuxtRouteMiddleware((to) => {
   let path = to.path.toLowerCase()
   const baseUrl = config.app.baseURL.toLowerCase()
 
+  if (import.meta.server) return
+
   if (baseUrl && path.startsWith(baseUrl)) {
     path = path.replace(baseUrl, '/')
   }
