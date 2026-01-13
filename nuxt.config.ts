@@ -24,7 +24,6 @@ export default defineNuxtConfig({
       xl: 1280,
     },
   },
-
   vite: {
     css: {
       preprocessorOptions: {
@@ -47,20 +46,17 @@ export default defineNuxtConfig({
       assetsInlineLimit: 4096,
     },
   },
-
   runtimeConfig: {
     public: {
       productApi: process.env.NUXT_PUBLIC_PRODUCTS_API,
       imageApi: process.env.NUXT_PUBLIC_IMAGE_API,
     },
   },
-
   components: [
     { path: '~/components/ui' },
     { path: '~/components/icons', prefix: 'Icon' },
     '~/components',
   ],
-
   imports: {
     dirs: ['stores', 'composables/**'],
   },
