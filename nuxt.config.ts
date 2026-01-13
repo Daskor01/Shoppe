@@ -1,6 +1,7 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import path from 'path'
-import { baseURL } from 'process'
+
+const appBaseUrl = process.env.GITHUB_ACTIONS === 'true' ? '/Shoppe/' : '/'
 
 export default defineNuxtConfig({
   srcDir: 'src',
@@ -62,7 +63,7 @@ export default defineNuxtConfig({
     dirs: ['stores', 'composables/**'],
   },
   app: {
-    baseURL: process.env.GITHUB_ACTIONS === 'true' ? '/Shoppe/' : '/',
+    baseURL: appBaseUrl,
     head: {
       title: 'Shoppe - Your Online Store',
       htmlAttrs: {
@@ -71,19 +72,19 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'preload',
-          href: `${baseURL}fonts/Sans-Variable.woff2`.replace(/\/+/g, '/'),
+          href: `${appBaseUrl}fonts/Sans-Variable.woff2`.replace(/\/+/g, '/'),
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
         {
           rel: 'preload',
-          href: `${baseURL}fonts/AllertaStencil-Regular.woff2`.replace(/\/+/g, '/'),
+          href: `${appBaseUrl}fonts/AllertaStencil-Regular.woff2`.replace(/\/+/g, '/'),
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
-        { rel: 'icon', type: 'image/x-icon', href: `${baseURL}/favicon.ico` },
+        { rel: 'icon', type: 'image/x-icon', href: `${appBaseUrl}favicon.ico` },
       ],
     },
   },
