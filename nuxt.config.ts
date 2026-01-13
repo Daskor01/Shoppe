@@ -1,5 +1,6 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import path from 'path'
+import { baseURL } from 'process'
 
 export default defineNuxtConfig({
   srcDir: 'src',
@@ -70,19 +71,19 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'preload',
-          href: '/fonts/DMSans-Variable.woff2',
+          href: `${baseURL}/DMSans-Variable.woff2`,
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
         {
           rel: 'preload',
-          href: '/fonts/AllertaStencil-Regular.woff2',
+          href: `${baseURL}/public/fonts/AllertaStencil-Regular.woff2`,
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
         },
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/x-icon', href: `${baseURL}/favicon.ico` },
       ],
     },
   },
@@ -104,8 +105,8 @@ export default defineNuxtConfig({
         'cache-control': 'public, max-age=31536000, immutable',
       },
     },
-    '/Shop/**': { ssr: true, prerender: false },
-    '/product/**': { ssr: true, prerender: false },
+    '/Shop/**': { prerender: true },
+    '/product/**': { prerender: true },
     '/fonts/**': {
       headers: { 'cache-control': 'public, max-age=31536000, immutable' },
     },
