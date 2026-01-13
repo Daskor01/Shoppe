@@ -72,7 +72,7 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'preload',
-          href: `${appBaseUrl}fonts/Sans-Variable.woff2`.replace(/\/+/g, '/'),
+          href: `${appBaseUrl}fonts/DMSans-Variable.woff2`.replace(/\/+/g, '/'),
           as: 'font',
           type: 'font/woff2',
           crossorigin: 'anonymous',
